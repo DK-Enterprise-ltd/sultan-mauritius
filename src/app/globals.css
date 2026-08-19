@@ -1,0 +1,55 @@
+:root {
+  /* Brand */
+  --sultan-navy: #152a4e;
+  --sultan-sky: #4cc3ea;
+  --sultan-green: #3e9b4f;
+  --sultan-plum: #5c2a56;
+  --sultan-sun: #f4c430;
+
+  /* Neutral ramp */
+  --neutral-50: #f8f9fa;
+  --neutral-100: #eef0f2;
+  --neutral-200: #dde1e6;
+  --neutral-300: #c3c9d1;
+  --neutral-400: #9aa3af;
+  --neutral-500: #707a87;
+  --neutral-600: #4f5964;
+  --neutral-700: #363e47;
+  --neutral-800: #23282e;
+  --neutral-900: #14171b;
+
+  --background: #ffffff;
+  --foreground: var(--neutral-900);
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}

@@ -1,0 +1,22 @@
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.filter {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  background: white;
+  color: var(--neutral-600);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.filterActive {
+  background: var(--neutral-900);
+  border-color: var(--neutral-900);
+  color: white;
+}

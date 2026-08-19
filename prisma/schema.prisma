@@ -1,0 +1,219 @@
+// Sultan Mauritius — E-commerce platform
+// Data model covers: catalog, B2C + B2B ordering, inventory tracking,
+// invoicing, and inbound inquiries. See project Scope of Work for
+// feature-level detail; this schema is the source of truth for structure.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7: connection strings live in prisma.config.ts (CLI) and in the
+// PrismaPg adapter passed to `new PrismaClient()` (app runtime), not here.
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum ProductType {
+  STILL
+  SPARKLING
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  BUSINESS
+}
+
+enum SalesChannel {
+  B2C
+  B2B
+}
+
+enum OrderStatus {
+  PENDING // submitted, awaiting admin confirmation
+  CONFIRMED // admin confirmed availability, awaiting payment
+  PAID // payment received, stock will be/has been deducted
+  FULFILLED // delivered / picked up
+  CANCELLED
+}
+
+enum StockMovementType {
+  SALE
+  RESTOCK
+  ADJUSTMENT // manual correction, damage, etc.
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+}
+
+enum InquiryType {
+  GENERAL
+  WHOLESALE
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+// ---------------------------------------------------------------------------
+// Catalog & inventory
+// ---------------------------------------------------------------------------
+
+model Product {
+  id                String   @id @default(cuid())
+  sku               String   @unique
+  name              String
+  type              ProductType
+  flavor            String? // e.g. "Watermelon Strawberry" — sparkling line only
+  sizeMl            Int
+  retailPrice       Decimal  @db.Decimal(10, 2) // B2C unit price, MUR
+  wholesalePrice    Decimal? @db.Decimal(10, 2) // B2B unit price, MUR — null falls back to retail
+  stockQuantity     Int      @default(0)
+  lowStockThreshold Int      @default(20)
+  isActive          Boolean  @default(true)
+  imageUrl          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  orderItems     OrderItem[]
+  stockMovements StockMovement[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model StockMovement {
+  id             String            @id @default(cuid())
+  product        Product           @relation(fields: [productId], references: [id])
+  productId      String
+  type           StockMovementType
+  quantityChange Int // positive for restock/adjustment-up, negative for sale/adjustment-down
+  note           String?
+  order          Order?            @relation(fields: [orderId], references: [id])
+  orderId        String?
+  createdAt      DateTime          @default(now())
+
+  @@index([productId])
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// Customers
+// ---------------------------------------------------------------------------
+
+model Customer {
+  id               String       @id @default(cuid())
+  type             CustomerType
+  name             String // contact person name
+  email            String       @unique
+  phone            String
+  companyName      String? // BUSINESS only
+  vatNumber        String? // BUSINESS only, for compliant invoicing
+  creditTermsDays  Int? // BUSINESS only — null means pay-before-fulfillment
+  deliveryAddress  String?
+  deliveryZone     String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  orders Order[]
+
+  @@index([type])
+}
+
+// ---------------------------------------------------------------------------
+// Orders & invoicing
+// ---------------------------------------------------------------------------
+
+model Order {
+  id             String       @id @default(cuid())
+  orderNumber    Int          @unique @default(autoincrement())
+  customer       Customer     @relation(fields: [customerId], references: [id])
+  customerId     String
+  channel        SalesChannel
+  status         OrderStatus  @default(PENDING)
+  deliveryAddress String?
+  deliveryZone    String?
+  subtotal       Decimal      @db.Decimal(10, 2)
+  total          Decimal      @db.Decimal(10, 2)
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  items          OrderItem[]
+  invoice        Invoice?
+  stockMovements StockMovement[]
+
+  @@index([status])
+  @@index([customerId])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        String
+  product        Product @relation(fields: [productId], references: [id])
+  productId      String
+  quantity       Int
+  unitPriceAtOrder Decimal @db.Decimal(10, 2) // snapshot — protects against later price changes
+  lineTotal      Decimal @db.Decimal(10, 2)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  invoiceNumber Int           @unique @default(autoincrement())
+  order         Order         @relation(fields: [orderId], references: [id])
+  orderId       String        @unique
+  status        InvoiceStatus @default(DRAFT)
+  issuedAt      DateTime?
+  dueDate       DateTime?
+  amountPaid    Decimal       @default(0) @db.Decimal(10, 2)
+  balanceDue    Decimal       @db.Decimal(10, 2)
+  pdfUrl        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Inbound inquiries (general contact form + wholesale lead form)
+// ---------------------------------------------------------------------------
+
+model ContactInquiry {
+  id              String      @id @default(cuid())
+  type            InquiryType
+  name            String
+  email           String
+  phone           String?
+  companyName     String? // WHOLESALE only
+  estimatedVolume String? // WHOLESALE only — free text, e.g. "50 cases/month"
+  message         String
+  handled         Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+
+  @@index([type])
+  @@index([handled])
+}
+
+// ---------------------------------------------------------------------------
+// Admin / staff accounts
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(STAFF)
+  createdAt    DateTime @default(now())
+}

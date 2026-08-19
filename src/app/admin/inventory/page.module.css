@@ -1,0 +1,24 @@
+.lowRow {
+  background: #fff7ed;
+}
+
+.lowValue {
+  color: #b45309;
+  font-weight: 700;
+}
+
+.lowBadge {
+  color: #b45309;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.okBadge {
+  color: var(--neutral-500);
+  font-size: 0.8rem;
+}
+
+.inactive {
+  color: var(--neutral-400);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,41 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 480px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--neutral-700);
+}
+
+.field input,
+.field textarea {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--neutral-200);
+  border-radius: 8px;
+  color: var(--neutral-900);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.error {
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.success {
+  color: var(--sultan-green);
+  font-weight: 600;
+}
