@@ -82,10 +82,18 @@ prisma/seed.js                      plain CommonJS seed (no ts-node), run
 - **B2B/B2C pricing** goes through `resolvePrice()` (`src/lib/pricing.ts`):
   wholesale price if the viewer is B2B *and* the product has one set,
   retail otherwise. Don't compute price inline elsewhere.
-- **Viewer/auth is stubbed** (`src/lib/auth.ts`): `isAdmin()` always
-  returns `true`, and B2B detection is a `sultan_b2b=1` cookie toggle,
-  both marked `TODO(real-auth)`. Swap these two functions for real session
-  lookups when auth is built; don't scatter new auth checks elsewhere.
+- **Admin auth is real, single-login** (`src/lib/auth.ts` + `src/lib/
+  admin-session.ts` + `src/app/actions/admin-auth.ts`): `isAdmin()` checks
+  an HMAC-signed session cookie (`sultan_admin_session`), set by the
+  `loginAdmin` server action after a timing-safe compare against
+  `ADMIN_USERNAME`/`ADMIN_PASSWORD` (`.env.local`). One shared login, no
+  user table — `/admin` renders `AdminLoginForm` in place of the dashboard
+  when unauthenticated, rather than redirecting. `/admin` is intentionally
+  not linked from anywhere in the storefront (no nav/footer entry); it
+  only exists as a path. **Customer-facing viewer/auth is still stubbed**:
+  `getViewer()`'s B2B detection is a `sultan_b2b=1` cookie toggle, marked
+  `TODO(real-auth)`. Swap that one for a real session lookup when customer
+  accounts are built; don't scatter new auth checks elsewhere.
 - **Cart is client-only**: React context + localStorage
   (`src/lib/cart-context.tsx`), no server cart. Stock/availability is only
   authoritative at order-creation time.

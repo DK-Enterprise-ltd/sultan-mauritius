@@ -2,10 +2,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { CartProvider } from "@/lib/cart-context";
 import { Link } from "@/i18n/navigation";
-import { isAdmin } from "@/lib/auth";
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
-import AdminLink from "@/components/AdminLink/AdminLink";
 import styles from "./layout.module.css";
 
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
@@ -61,7 +59,6 @@ function Footer() {
       <div className={styles.footerBottom}>
         <span>{t("copyright", { year: new Date().getFullYear() })}</span>
         <span>{t("paymentNote")}</span>
-        {isAdmin() && <AdminLink />}
       </div>
     </footer>
   );

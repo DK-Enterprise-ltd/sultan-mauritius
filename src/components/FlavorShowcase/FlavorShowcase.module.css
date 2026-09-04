@@ -278,16 +278,27 @@
 
 @media (max-width: 640px) {
   .showcase {
-    padding: 3.5rem 1.25rem 2.5rem;
+    padding: 2.5rem 1.25rem 2rem;
+    min-height: 0;
+  }
+  .body {
+    gap: 1.25rem;
+  }
+  .facts {
+    gap: 1rem;
+  }
+  .nav {
+    margin-top: 1.75rem;
   }
   .mediaWrap,
   .floatWrap {
-    width: 260px;
+    width: 220px;
   }
   .mediaWrap {
-    height: 320px;
+    height: 260px;
+    padding-bottom: 24px;
   }
   .floatWrap {
-    height: 260px;
+    height: 220px;
   }
 }

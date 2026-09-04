@@ -1,11 +1,13 @@
 import { cookies } from "next/headers";
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "./admin-session";
 
-// ponytail: stubbed auth. Real auth (sessions/JWT/NextAuth) goes here later —
-// swap these two functions for real session lookups without touching callers.
+// ponytail: customer auth (getViewer) is still stubbed below — real auth
+// (sessions/JWT/NextAuth) goes there later. Admin auth is real: a signed
+// session cookie checked against ADMIN_USERNAME/ADMIN_PASSWORD, set by
+// src/app/actions/admin-auth.ts's loginAdmin action.
 
 export function isAdmin(): boolean {
-  // TODO(real-auth): replace with an actual admin session check.
-  return true;
+  return verifyAdminSessionToken(cookies().get(ADMIN_SESSION_COOKIE)?.value);
 }
 
 export type Viewer = {

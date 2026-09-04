@@ -20,20 +20,9 @@
 }
 
 .heroImage {
-  /* ponytail: mobile viewport is close enough to the photo's own portrait
-     aspect that contain shows it whole with no visible letterboxing. Desktop
-     is landscape, so contain would letterbox with navy bars on the sides;
-     cover there instead, edge to edge, at the cost of some vertical crop. */
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center 40%;
   z-index: 0;
-}
-
-@media (min-width: 641px) {
-  .heroImage {
-    object-fit: cover;
-    object-position: center 40%;
-  }
 }
 
 .heroScrim {
