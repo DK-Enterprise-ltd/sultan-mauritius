@@ -35,8 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# unreferenced source assets from the design canvas's uploads/ mirror —
-# the catalogue PDF and its page scans aren't used by any page; every
-# image the site actually renders stays tracked.
-public/uploads/*.pdf
-public/uploads/page_*.png
+# raw source-asset dump from the design canvas. Nothing the site renders
+# lives here anymore — every used image was sorted into public/Assets/;
+# this is just the unsorted leftover library, kept locally, not tracked.
+public/uploads/

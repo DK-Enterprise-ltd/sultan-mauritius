@@ -1,33 +1,49 @@
 import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { prisma } from "@/lib/prisma";
+import { getActiveProducts, getProductCopyBySku } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { getSiteContent, pick } from "@/lib/site-content";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Button from "@/components/Button/Button";
 import Reveal from "@/components/Reveal/Reveal";
-import { formatMur } from "@/lib/format";
+import FlavorShowcase, { type ShowcaseItem } from "@/components/FlavorShowcase/FlavorShowcase";
 import { localizeFlavor } from "@/lib/catalog-i18n";
 import type { Locale } from "@/i18n/routing";
 import styles from "./page.module.css";
 
-// ponytail: real flavour -> swatch colour, keyed by name, matching the
-// design canvas's own catalog() colours exactly. Static because the SKU
-// list rarely changes; move to a Product column if it grows past ~24 rows.
-const FLAVOR_SWATCH: Record<string, string> = {
-  Lemon: "#d9c84a",
-  Apple: "#d2c77a",
-  Mandarin: "#e8963a",
-  Strawberry: "#b92b44",
-  Gazoz: "#e4eef2",
-  "Mango & Pineapple": "#e8b93a",
-  Pomegranate: "#a81e33",
-  Mojito: "#c3d96a",
-  "Black Mulberry & Blackcurrant": "#6e1746",
-  "Berry & Hibiscus": "#c93b4e",
-  "Watermelon Strawberry": "#e2607a",
+// Sensory tasting notes per flavour: not in the Turkey catalogue (which only
+// lists format/size), so these are written for the showcase strip rather
+// than sourced from brand material. Water-quality facts stay factual
+// (see productDetail.waterQuality* in messages/*.json).
+const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scale?: number }> = {
+  Lemon: { en: "Bright and citrus-forward, with a clean, tart finish.", fr: "Vive et citronnée, avec une finale nette et acidulée.", color: "#d9c84a" },
+  Apple: { en: "Crisp and lightly sweet, like biting into a fresh apple.", fr: "Croquante et légèrement sucrée, comme une pomme fraîche.", color: "#c7c25a" },
+  Mandarin: { en: "Juicy and sun-ripened, with a fragrant citrus lift.", fr: "Juteuse et gorgée de soleil, avec un parfum d'agrume.", color: "#e8963a" },
+  Strawberry: { en: "Ripe and berry-sweet, rounded off with gentle fizz.", fr: "Mûre et sucrée, adoucie par de fines bulles.", color: "#b92b44" },
+  Gazoz: { en: "The original: clean, delicately sweet, and endlessly refreshing.", fr: "L'original : pur, délicatement sucré et infiniment rafraîchissant.", color: "#8fb9c2" },
+  "Mango & Pineapple": { en: "Tropical and golden, sweet mango layered over tangy pineapple.", fr: "Tropicale et dorée, mangue sucrée relevée d'ananas acidulé.", color: "#e8b93a" },
+  Pomegranate: { en: "Deep and tart-sweet, with a rich ruby finish.", fr: "Profonde et acidulée, avec une riche finale rubis.", color: "#a81e33" },
+  Mojito: { en: "Cool mint and lime, crisp enough to feel like a garden terrace.", fr: "Menthe fraîche et citron vert, aussi vive qu'une terrasse ombragée.", color: "#7fa84a" },
+  "Black Mulberry & Blackcurrant": { en: "Dark, jammy fruit with a bold, wine-like depth.", fr: "Fruits noirs confiturés, avec une profondeur presque vineuse.", color: "#6e1746" },
+  "Berry & Hibiscus": {
+    en: "Tart mixed berries lifted by floral hibiscus notes.",
+    fr: "Baies acidulées relevées de notes florales d'hibiscus.",
+    color: "#c93b4e",
+    // ponytail: this bottle's source photo has far more transparent padding
+    // around it than the others (~48% content fill vs. ~98% for a typical
+    // one), so it renders small even in the normalized square media box.
+    // Manual correction until the source asset gets a tighter crop.
+    scale: 1.9,
+  },
+  "Watermelon Strawberry": { en: "Juicy summer watermelon rounded out by sweet strawberry.", fr: "Pastèque juteuse d'été, adoucie par la fraise.", color: "#e2607a" },
+};
+
+const STILL_TASTE: Record<number, { en: string; fr: string }> = {
+  250: { en: "Light and crisp, sized for sharing at any gathering.", fr: "Légère et vive, un format fait pour être partagé." },
+  500: { en: "The everyday size, clean and refreshing from first sip to last.", fr: "Le format du quotidien, pur et rafraîchissant jusqu'à la dernière gorgée." },
+  1500: { en: "Smooth and neutral, big enough for the whole table.", fr: "Douce et neutre, assez grande pour toute la table." },
 };
 
 // Curated selection, matching the design canvas's featured picks 1:1
@@ -43,31 +59,81 @@ const FEATURED_SKUS = [
 
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const tDetail = await getTranslations("productDetail");
   const tWholesale = await getTranslations("wholesale");
   const tNav = await getTranslations("nav");
   const locale = await getLocale();
+  const isFr = locale === "fr";
   const content = await getSiteContent("home");
   // Sanity-edited copy wins when present; messages.json is the fallback
   // for a field nobody's touched in Studio yet (see src/lib/site-content.ts).
   const c = (key: string) => pick(content, key, locale, t(key));
   const viewer = getViewer();
 
-  const allProducts = await prisma.product.findMany({ where: { isActive: true } });
+  const allProducts = await getActiveProducts();
   const bySku = new Map(allProducts.map((p) => [p.sku, p]));
   const featured = FEATURED_SKUS.map((sku) => bySku.get(sku)).filter((p): p is NonNullable<typeof p> => !!p);
 
   const sparklingFlavors = allProducts.filter((p) => p.type === "SPARKLING" && p.flavor);
-  const coreStillSizes = Array.from(
-    new Set(allProducts.filter((p) => p.type === "STILL" && p.name !== "Sultan Prime").map((p) => p.sizeMl))
-  ).sort((a, b) => a - b);
-  const priceFrom = (type: "SPARKLING" | "STILL") =>
-    Math.min(...allProducts.filter((p) => p.type === type).map((p) => resolvePrice(p, viewer)));
+  const coreStillProducts = allProducts
+    .filter((p) => p.type === "STILL" && p.name !== "Sultan Prime")
+    .sort((a, b) => a.sizeMl - b.sizeMl);
+
+  const waterFacts = [
+    { label: tDetail("sodiumLabel"), value: tDetail("sodiumValue") },
+    { label: tDetail("phLabel"), value: tDetail("phValue") },
+    { label: tDetail("sulfateLabel"), value: tDetail("sulfateValue") },
+  ];
+
+  const sparklingShowcase: ShowcaseItem[] = await Promise.all(
+    sparklingFlavors.map(async (p): Promise<ShowcaseItem> => {
+      const copy = await getProductCopyBySku(p.sku);
+      const flavorLabel = localizeFlavor(p.flavor, locale as Locale) ?? p.flavor ?? "";
+      const invented = (p.flavor && FLAVOR_TASTE[p.flavor]) || null;
+      return {
+        id: p.id,
+        name: flavorLabel,
+        subtitle: `${t("linesSparklingKicker")} · ${p.sizeMl}ml`,
+        description: t("linesSparklingBody"),
+        taste: (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || invented?.[isFr ? "fr" : "en"] || tDetail("tasteSparkling"),
+        bestServedLabel: tDetail("bestServedHeading"),
+        bestServed: (isFr ? copy?.bestServedNoteFr : copy?.bestServedNote) || tDetail("bestServedSparkling"),
+        tasteLabel: tDetail("tasteHeading"),
+        factsLabel: tDetail("waterQualityHeading"),
+        facts: waterFacts,
+        color: invented?.color || "#e8963a",
+        imageUrl: p.imageUrl,
+        imageScale: invented?.scale,
+      };
+    })
+  );
+
+  const stillShowcase: ShowcaseItem[] = await Promise.all(
+    coreStillProducts.map(async (p): Promise<ShowcaseItem> => {
+      const copy = await getProductCopyBySku(p.sku);
+      const invented = STILL_TASTE[p.sizeMl] || null;
+      return {
+        id: p.id,
+        name: formatLiters(p.sizeMl),
+        subtitle: t("linesStillKicker"),
+        description: t("linesStillBody"),
+        taste: (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || invented?.[isFr ? "fr" : "en"] || tDetail("tasteStill"),
+        bestServedLabel: tDetail("bestServedHeading"),
+        bestServed: (isFr ? copy?.bestServedNoteFr : copy?.bestServedNote) || tDetail("bestServedStill"),
+        tasteLabel: tDetail("tasteHeading"),
+        factsLabel: tDetail("waterQualityHeading"),
+        facts: waterFacts,
+        color: "#1b9aae",
+        imageUrl: p.imageUrl,
+      };
+    })
+  );
 
   return (
     <>
       <section className={styles.hero}>
         <div className={styles.heroImageWrap}>
-          <Image src="/uploads/ig-28.jpg" alt="" fill priority className={styles.heroImage} />
+          <Image src="/Assets/Lifestyle/ig-28.jpg" alt="" fill priority className={styles.heroImage} />
         </div>
         <div className={styles.heroScrim} />
         <span className={styles.heroRing} aria-hidden />
@@ -91,50 +157,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className={styles.lines}>
-        <div className={styles.lineSparkling}>
-          <span className={styles.lineKicker}>{t("linesSparklingKicker")}</span>
-          <h2 className={styles.lineTitle}>{t("linesSparklingTitle")}</h2>
-          <p className={styles.lineBody}>{t("linesSparklingBody")}</p>
-          <div className={styles.swatchGrid}>
-            {sparklingFlavors.map((p) => (
-              <div key={p.id} className={styles.swatch}>
-                <span
-                  className={styles.swatchChip}
-                  style={{ background: (p.flavor && FLAVOR_SWATCH[p.flavor]) || "var(--sultan-sun)" }}
-                />
-                <span className={styles.swatchLabel}>{localizeFlavor(p.flavor, locale as Locale)}</span>
-              </div>
-            ))}
-          </div>
-          <div className={styles.lineFooter}>
-            <Link href="/products?type=SPARKLING">
-              <Button className={styles.lineCtaSparkling}>{t("ctaSeeSparkling")}</Button>
-            </Link>
-            <span className={styles.lineFrom}>{t("from", { price: formatMur(priceFrom("SPARKLING")) })}</span>
-          </div>
-        </div>
-        <div className={styles.lineStill}>
-          <div className={styles.lineStillContent}>
-            <span className={styles.lineKicker}>{t("linesStillKicker")}</span>
-            <h2 className={styles.lineTitleLight}>{t("linesStillTitle")}</h2>
-            <div className={styles.sizeRow}>
-              {coreStillSizes.map((ml) => (
-                <span key={ml} className={styles.sizeNumber}>
-                  {formatLiters(ml)}
-                </span>
-              ))}
-            </div>
-            <p className={styles.lineBodyLight}>{t("linesStillBody")}</p>
-            <div className={styles.lineFooter}>
-              <Link href="/products?type=STILL">
-                <Button className={styles.lineCtaStill}>{t("ctaSeeStill")}</Button>
-              </Link>
-              <span className={styles.lineFromLight}>{t("from", { price: formatMur(priceFrom("STILL")) })}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FlavorShowcase items={sparklingShowcase} prevLabel={t("showcasePrev")} nextLabel={t("showcaseNext")} />
+      <FlavorShowcase items={stillShowcase} prevLabel={t("showcasePrev")} nextLabel={t("showcaseNext")} />
 
       <div className={styles.wave} aria-hidden>
         <svg viewBox="0 0 1440 88" preserveAspectRatio="none">
@@ -206,23 +230,49 @@ export default async function HomePage() {
 
       <Reveal>
         <section className={styles.social}>
-          <div className={styles.socialHeader}>
+          <div className={styles.socialCard}>
+            <div className={styles.socialBrand}>
+              <svg className={styles.igGlyph} width="26" height="26" viewBox="0 0 24 24" aria-hidden>
+                <rect width="24" height="24" rx="6" fill="url(#sultan-ig-grad)" />
+                <rect x="6" y="6" width="12" height="12" rx="4" stroke="#fff" strokeWidth="1.6" fill="none" />
+                <circle cx="12" cy="12" r="3" stroke="#fff" strokeWidth="1.6" fill="none" />
+                <circle cx="16.3" cy="7.7" r="0.9" fill="#fff" />
+                <defs>
+                  <linearGradient id="sultan-ig-grad" x1="0" y1="24" x2="24" y2="0">
+                    <stop stopColor="#FEE411" />
+                    <stop offset="0.3" stopColor="#F6002B" />
+                    <stop offset="0.65" stopColor="#B900B4" />
+                    <stop offset="1" stopColor="#5A00A8" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className={styles.igHandle}>@sultan_mauritius</span>
+            </div>
             <h2 className={styles.socialTitle}>{c("socialTitle")}</h2>
+            <div className={styles.socialGrid}>
+              {SOCIAL_IMAGES.map((img) => (
+                <div key={img.src} className={styles.socialTile} style={{ flexBasis: img.width }}>
+                  <Image src={img.src} alt="" fill sizes="(max-width: 640px) 60vw, 420px" className={styles.socialImg} />
+                  <svg className={styles.socialBadge} width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path
+                      d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              ))}
+            </div>
             <a
               href="https://instagram.com/sultan_mauritius"
               target="_blank"
               rel="noreferrer"
-              className={styles.socialCta}
+              className={styles.socialFollow}
             >
               {c("socialCta")}
             </a>
-          </div>
-          <div className={styles.socialGrid}>
-            {SOCIAL_IMAGES.map((img) => (
-              <div key={img.src} className={styles.socialTile} style={{ flexBasis: img.width }}>
-                <Image src={img.src} alt="" fill sizes="(max-width: 640px) 60vw, 420px" className={styles.socialImg} />
-              </div>
-            ))}
           </div>
         </section>
       </Reveal>
@@ -256,9 +306,9 @@ export default async function HomePage() {
 // "From Uludağ to your table" — literal port of the canvas's 3-step origin
 // story, same images (matterhorn/dolum-tesisi/ig-12), same beats.
 const ORIGIN_STEPS = [
-  { img: "/uploads/matterhorn-alps-mountains.jpg", titleKey: "origin1Title", bodyKey: "origin1Body" },
-  { img: "/uploads/dolum-tesisi.jpg", titleKey: "origin2Title", bodyKey: "origin2Body" },
-  { img: "/uploads/ig-12.jpg", titleKey: "origin3Title", bodyKey: "origin3Body" },
+  { img: "/Assets/Origin/matterhorn-alps-mountains.jpg", titleKey: "origin1Title", bodyKey: "origin1Body" },
+  { img: "/Assets/Origin/dolum-tesisi.jpg", titleKey: "origin2Title", bodyKey: "origin2Body" },
+  { img: "/Assets/Lifestyle/ig-12.jpg", titleKey: "origin3Title", bodyKey: "origin3Body" },
 ] as const;
 
 function formatLiters(ml: number): string {
@@ -268,8 +318,8 @@ function formatLiters(ml: number): string {
 
 // Same four "in the wild" shots as the canvas, same varied widths.
 const SOCIAL_IMAGES = [
-  { src: "/uploads/ig-11.jpg", width: "420px" },
-  { src: "/uploads/ig-13.jpg", width: "340px" },
-  { src: "/uploads/ig-27.jpg", width: "380px" },
-  { src: "/uploads/ig-03.jpg", width: "420px" },
+  { src: "/Assets/Lifestyle/ig-11.jpg", width: "420px" },
+  { src: "/Assets/Lifestyle/ig-13.jpg", width: "340px" },
+  { src: "/Assets/Lifestyle/ig-27.jpg", width: "380px" },
+  { src: "/Assets/Lifestyle/ig-03.jpg", width: "420px" },
 ];

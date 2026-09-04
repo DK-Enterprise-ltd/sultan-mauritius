@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
+import Reveal from "@/components/Reveal/Reveal";
 import styles from "./page.module.css";
 
 const REGION_ORDER = ["North", "Centre", "West", "East", "South"];
@@ -26,7 +27,7 @@ export default async function StockistsPage() {
         <p className={styles.empty}>{t("empty")}</p>
       ) : (
         regions.map((region) => (
-          <div key={region} className={styles.region}>
+          <Reveal key={region} className={styles.region}>
             <h2 className={styles.regionLabel}>{region}</h2>
             <ul className={styles.list}>
               {byRegion.get(region)!.map((s) => (
@@ -43,7 +44,7 @@ export default async function StockistsPage() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         ))
       )}
     </div>

@@ -51,30 +51,34 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <label className={styles.field}>
-        {t("name")}
-        <input name="name" required />
-      </label>
+    <form className={`${styles.form} ${wholesale ? styles.formCard : ""}`} onSubmit={handleSubmit}>
+      {wholesale && (
+        <label className={styles.field}>
+          {t("companyName")}
+          <input name="companyName" required />
+        </label>
+      )}
+      <div className={styles.row}>
+        <label className={styles.field}>
+          {t("name")}
+          <input name="name" required />
+        </label>
+        <label className={styles.field}>
+          {t("phone")}
+          <input name="phone" />
+        </label>
+      </div>
       <label className={styles.field}>
         {t("email")}
         <input name="email" type="email" required />
       </label>
-      <label className={styles.field}>
-        {t("phone")}
-        <input name="phone" />
-      </label>
       {wholesale && (
         <>
-          <label className={styles.field}>
-            {t("companyName")}
-            <input name="companyName" required />
-          </label>
           <label className={styles.field}>
             {t("estimatedVolume")}
             <input name="estimatedVolume" required />
           </label>
-          <div className={styles.caseRow}>
+          <div className={styles.row}>
             <label className={styles.field}>
               {t("sparklingCases")}
               <input name="sparklingCases" type="number" min={0} step={1} defaultValue={0} />
@@ -93,7 +97,12 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
 
       {error && <p className={styles.error}>{error}</p>}
 
-      <Button type="submit" variant="primary" disabled={submitting}>
+      <Button
+        type="submit"
+        variant="primary"
+        className={wholesale ? styles.submitGradient : undefined}
+        disabled={submitting}
+      >
         {submitting ? t("submitting") : t("submit")}
       </Button>
     </form>

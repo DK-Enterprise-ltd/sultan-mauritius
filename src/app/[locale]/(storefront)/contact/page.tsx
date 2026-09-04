@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import InquiryForm from "@/components/InquiryForm/InquiryForm";
+import Reveal from "@/components/Reveal/Reveal";
 import styles from "./page.module.css";
 
 export default async function ContactPage() {
@@ -8,7 +9,9 @@ export default async function ContactPage() {
     <div className={styles.page}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.subtitle}>{t("subtitle")}</p>
-      <InquiryForm />
+      <Reveal>
+        <InquiryForm />
+      </Reveal>
     </div>
   );
 }

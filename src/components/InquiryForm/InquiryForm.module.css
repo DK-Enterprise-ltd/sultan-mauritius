@@ -5,6 +5,15 @@
   max-width: 480px;
 }
 
+.formCard {
+  max-width: 560px;
+  background: linear-gradient(165deg, #f7f2e8 0%, #f0e7d6 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  box-shadow: 0 30px 60px -35px rgba(27, 42, 74, 0.35);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -41,7 +50,7 @@
   min-height: 6rem;
 }
 
-.caseRow {
+.row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
@@ -56,4 +65,25 @@
 .success {
   color: var(--sultan-green);
   font-weight: 600;
+}
+
+.submitGradient {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: linear-gradient(100deg, var(--sultan-sun) 0%, var(--sultan-plum) 130%);
+  border-color: transparent;
+}
+
+.submitGradient:not(:disabled):hover {
+  background: linear-gradient(100deg, var(--sultan-plum) 0%, var(--sultan-sun) 130%);
+  border-color: transparent;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .formCard {
+    padding: 1.75rem 1.25rem;
+  }
 }

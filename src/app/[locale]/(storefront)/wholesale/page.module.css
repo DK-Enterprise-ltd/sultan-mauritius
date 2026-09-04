@@ -1,16 +1,14 @@
 .hero {
-  background: linear-gradient(200deg, rgba(27, 154, 174, 0.35) 0%, rgba(27, 42, 74, 0.88) 82%),
-    url("/uploads/wholesale-moody.jpg") center 30% / cover no-repeat;
-  position: relative;
-  color: #fff;
-  padding: 5.5rem 3rem;
+  background: radial-gradient(ellipse 900px 420px at 50% -10%, rgba(232, 150, 58, 0.18) 0%, rgba(232, 150, 58, 0) 70%),
+    var(--paper);
+  text-align: center;
+  padding: 5.5rem 3rem 3rem;
 }
 
 .kicker,
 .title,
 .subtitle {
-  position: relative;
-  max-width: 1180px;
+  max-width: 640px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -20,28 +18,50 @@
   letter-spacing: 0.14em;
   font-weight: 700;
   font-size: 0.8rem;
-  color: var(--sultan-sky);
+  color: var(--sultan-sun);
 }
 
 .title {
-  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  color: var(--ink);
   margin: 0.6rem auto;
 }
 
 .subtitle {
-  max-width: 46ch;
-  opacity: 0.92;
+  color: var(--ink-soft);
+  line-height: 1.55;
 }
 
 .formWrap {
-  padding: 3.5rem 3rem;
-  max-width: 1180px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 3rem 5.5rem;
+}
+
+.talk {
+  margin-top: 1.75rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.talk a {
+  color: var(--sultan-teal);
+  font-weight: 600;
+}
+
+.talk a:hover {
+  color: var(--sultan-navy);
 }
 
 @media (max-width: 640px) {
   .hero,
   .formWrap {
-    padding: 2.5rem 1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  .hero {
+    padding-top: 3.5rem;
   }
 }

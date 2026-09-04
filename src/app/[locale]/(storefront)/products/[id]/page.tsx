@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { prisma } from "@/lib/prisma";
+import { getProductById, getProductCopyBySku } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { formatMur } from "@/lib/format";
@@ -20,7 +20,7 @@ export default async function ProductDetailPage({
   const t = await getTranslations("productDetail");
   const tProduct = await getTranslations("product");
   const viewer = getViewer();
-  const product = await prisma.product.findUnique({ where: { id: params.id } });
+  const product = await getProductById(params.id);
   if (!product || !product.isActive) notFound();
 
   const locale = params.locale as Locale;
@@ -33,7 +33,7 @@ export default async function ProductDetailPage({
   // Sanity-edited copy (by SKU) wins when present; the type-level static
   // copy below is the fallback — see the ponytail note on ProductCopy in
   // prisma/schema.prisma for why this isn't per-flavor.
-  const copy = await prisma.productCopy.findUnique({ where: { sku: product.sku } });
+  const copy = await getProductCopyBySku(product.sku);
   const isFr = locale === "fr";
   const tasteNote =
     (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || t(isSparkling ? "tasteSparkling" : "tasteStill");

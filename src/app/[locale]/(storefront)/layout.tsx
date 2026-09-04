@@ -2,16 +2,20 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { CartProvider } from "@/lib/cart-context";
 import { Link } from "@/i18n/navigation";
+import { isAdmin } from "@/lib/auth";
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
+import AdminLink from "@/components/AdminLink/AdminLink";
 import styles from "./layout.module.css";
 
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
-      <StorefrontNav />
-      <main className={styles.main}>{children}</main>
-      <Footer />
+      <div className={styles.shell}>
+        <StorefrontNav />
+        <main className={styles.main}>{children}</main>
+        <Footer />
+      </div>
       <CartDrawer />
     </CartProvider>
   );
@@ -25,7 +29,7 @@ function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.footerBrand}>
-          <Image src="/uploads/logo_white.svg" alt="Sultan" width={141} height={36} className={styles.footerLogo} />
+          <Image src="/Assets/Logo/logo_white.svg" alt="Sultan" width={141} height={36} className={styles.footerLogo} />
           <p className={styles.tagline}>{t("tagline")}</p>
         </div>
         <div className={styles.footerCol}>
@@ -36,6 +40,7 @@ function Footer() {
         </div>
         <div className={styles.footerCol}>
           <span className={styles.colHeading}>{t("tradeHeading")}</span>
+          <Link href="/about">{tNav("about")}</Link>
           <Link href="/wholesale">{tNav("wholesale")}</Link>
           <Link href="/stockists">{tNav("stockists")}</Link>
           <Link href="/contact">{tNav("contact")}</Link>
@@ -56,6 +61,7 @@ function Footer() {
       <div className={styles.footerBottom}>
         <span>{t("copyright", { year: new Date().getFullYear() })}</span>
         <span>{t("paymentNote")}</span>
+        {isAdmin() && <AdminLink />}
       </div>
     </footer>
   );

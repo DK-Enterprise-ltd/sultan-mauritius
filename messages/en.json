@@ -1,6 +1,7 @@
 {
   "nav": {
     "shop": "Shop",
+    "about": "About",
     "stockists": "Stockists",
     "wholesale": "Wholesale",
     "contact": "Contact",
@@ -30,12 +31,14 @@
     "legacyStat4Label": "In Mauritius since",
     "linesSparklingKicker": "Flavoured sparkling waters",
     "linesSparklingTitle": "Real flavour, one mineral water",
-    "linesSparklingBody": "Carbonated at bottling, in returnable glass. Every flavour starts as the same water from Uludağ.",
+    "linesSparklingBody": "Carbonated at bottling, in returnable glass. Every flavour starts as the same water from Uludağ, carrying nature's own character into each sip.",
     "ctaSeeSparkling": "See all sparkling",
     "linesStillKicker": "Natural spring water",
     "linesStillTitle": "Still, from the source",
-    "linesStillBody": "Multi-stage filtered and bottled without human contact at Bursa and Kütahya.",
+    "linesStillBody": "Multi-stage filtered and bottled without human contact at Bursa and Kütahya. Low in sodium, with a pH close to neutral, for a light and refined taste.",
     "ctaSeeStill": "See the still range",
+    "showcasePrev": "Previous flavour",
+    "showcaseNext": "Next flavour",
     "from": "from {price}",
     "originHeading": "From Uludağ to your table",
     "origin1Title": "A single drop from the peak",
@@ -135,10 +138,36 @@
     "cashOnDelivery": "Cash on delivery",
     "deliveryTo": "Delivery to"
   },
+  "about": {
+    "heroKicker": "Our story",
+    "heroTitle": "Fifty years from a single spring.",
+    "heroSubtitle": "A family business since the 1960s, on Mauritian tables since March 2021.",
+    "qualityKicker": "Filled with high technology",
+    "qualityTitle": "Bottled without human contact, at high quality",
+    "qualityBody": "Sourced from Uludağ, our water is bottled without human contact in state-of-the-art production facilities in Bursa and Kütahya, using fully automated, high-tech machinery. Multi-stage filtration and rigorous health testing give it a light, refined taste, low in sodium and suitable for sodium-restricted diets.",
+    "paramsHeading": "Measured at the source",
+    "paramsNote": "The same spring feeds both the Still and Sparkling lines.",
+    "paramAluminumLabel": "Aluminium",
+    "paramAluminumValue": "Not detected",
+    "paramIronLabel": "Iron",
+    "paramIronValue": "Not detected",
+    "paramManganeseLabel": "Manganese",
+    "paramManganeseValue": "Not detected",
+    "paramColiformLabel": "Coliform bacteria",
+    "paramColiformValue": "0 in 250 mL",
+    "mauritiusKicker": "Since March 2021",
+    "mauritiusTitle": "From a first order to a place on the island's tables.",
+    "mauritiusBody": "We began with Sultan's carbonated mineral water, taking our first steps into the Mauritian market with determination. With every new partnership, trust grew: restaurants, supermarkets, mini shops and wholesale stores became part of the journey. The 0.25L bottle, perfectly aligned with the Mauritian way of life, quickly became a favourite for gatherings and events.",
+    "galleryHeading": "On the island, in the wild",
+    "ctaTitle": "Taste the difference",
+    "ctaBody": "Browse the range, or set up a wholesale account for your restaurant, shop, or event."
+  },
   "wholesale": {
     "kicker": "For retailers & restaurants",
     "title": "Wholesale accounts",
-    "subtitle": "Tell us your estimated volume and we'll set you up with wholesale pricing and delivery."
+    "subtitle": "Tell us your estimated volume and we'll set you up with wholesale pricing and delivery.",
+    "talkPrefix": "Prefer to talk? Call",
+    "talkOr": "or email"
   },
   "contact": {
     "title": "Get in touch",

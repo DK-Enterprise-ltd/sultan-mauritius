@@ -1,0 +1,370 @@
+.hero {
+  position: relative;
+  min-height: 46vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--sultan-navy);
+}
+
+.heroImageWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.heroImage {
+  object-fit: cover;
+}
+
+.heroImageWrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(200deg, rgba(27, 154, 174, 0.3) 0%, rgba(27, 42, 74, 0.9) 85%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  padding: 3rem 3rem 4rem;
+  max-width: 900px;
+}
+
+.kicker,
+.kickerLight {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.kicker {
+  color: var(--sultan-sun);
+}
+
+.kickerLight {
+  color: var(--sultan-sky);
+}
+
+.heroTitle {
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  margin: 0.6rem 0 0;
+  max-width: 18ch;
+}
+
+.heroSubtitle {
+  margin-top: 1.1rem;
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.55;
+}
+
+/* Legacy: light paper, deliberately gradient-free to set off the sections around it */
+.legacy {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5.5rem 3rem 3rem;
+  text-align: center;
+}
+
+.legacyTitle {
+  color: var(--sultan-navy);
+  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+}
+
+.legacyBody {
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-top: 1.25rem;
+  max-width: 62ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.statValue {
+  font-family: "Cabinet Grotesk", var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  color: var(--sultan-teal);
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* Quality: deep teal-to-navy wash, mirrors the still-line panel on the homepage */
+.quality {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 5.5rem 3rem;
+  margin-top: 3rem;
+  background: linear-gradient(200deg, #1b9aae 0%, #0e5c6b 55%, #16233f 100%);
+  color: #fff;
+}
+
+.qualityTitle {
+  color: #fff;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin: 0.6rem 0 0;
+  max-width: 18ch;
+}
+
+.qualityBody {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-top: 1.1rem;
+  max-width: 46ch;
+}
+
+.facilityGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.facilityImg {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: var(--radius-card-sm);
+}
+
+/* Water quality: warm peach wash, mirrors the sparkling-line panel on the homepage */
+.params {
+  padding: 5.5rem 3rem;
+  text-align: center;
+  background: linear-gradient(160deg, #fceedd 0%, #f7dfc2 100%);
+}
+
+.paramsHeading {
+  color: var(--sultan-navy);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.paramsNote {
+  color: var(--ink-soft);
+  margin-top: 0.5rem;
+}
+
+.paramGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.paramTile {
+  background: var(--paper-raised);
+  border-radius: var(--radius-card-sm);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.paramValue {
+  font-weight: 700;
+  color: var(--sultan-navy);
+  font-size: 1.05rem;
+}
+
+.paramLabel {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+/* Mauritius: real photography, light paper, plum kicker to vary the accent */
+.mauritius {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+.mauritiusImageWrap {
+  position: relative;
+  min-height: 420px;
+}
+
+.mauritiusImage {
+  object-fit: cover;
+}
+
+.mauritiusText {
+  padding: 4.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mauritiusText .kicker {
+  color: var(--sultan-plum);
+}
+
+.mauritiusTitle {
+  color: var(--sultan-navy);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin: 0.6rem 0 0;
+  max-width: 18ch;
+}
+
+.mauritiusBody {
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-top: 1.1rem;
+  max-width: 46ch;
+}
+
+/* Gallery */
+.gallery {
+  padding: 5.5rem 3rem;
+  background: var(--paper-raised);
+}
+
+.galleryHeading {
+  color: var(--sultan-navy);
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  margin-bottom: 2.25rem;
+}
+
+.galleryGrid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0 3rem 0.5rem;
+  margin: 0 -3rem;
+  scroll-snap-type: x mandatory;
+}
+
+.galleryTile {
+  position: relative;
+  flex: 0 0 260px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-card-sm);
+  scroll-snap-align: start;
+}
+
+.galleryImg {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.galleryTile:hover .galleryImg {
+  transform: scale(1.06);
+}
+
+/* CTA: navy-to-teal gradient banner */
+.cta {
+  background: linear-gradient(135deg, var(--sultan-navy) 0%, #0e5c6b 100%);
+  padding: 5.5rem 3rem;
+}
+
+.ctaInner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.ctaTitle {
+  color: #fff;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  max-width: 20ch;
+}
+
+.ctaBody {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 1rem;
+  max-width: 52ch;
+  line-height: 1.6;
+}
+
+.ctaActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ctaPrimary {
+  background: var(--sultan-sky);
+  color: var(--sultan-navy);
+  border-color: var(--sultan-sky);
+}
+
+.ctaPrimary:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.ctaOutline {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+}
+
+.ctaOutline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 860px) {
+  .quality,
+  .mauritius,
+  .ctaInner {
+    grid-template-columns: 1fr;
+  }
+  .mauritiusImageWrap {
+    min-height: 300px;
+  }
+  .statGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .paramGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .heroContent {
+    padding: 2.5rem 1.25rem 3rem;
+  }
+  .legacy {
+    padding: 3.5rem 1.25rem 1rem;
+  }
+  .quality,
+  .params,
+  .gallery,
+  .cta {
+    padding: 3rem 1.25rem;
+  }
+  .mauritiusText {
+    padding: 3rem 1.25rem;
+  }
+  .galleryGrid {
+    padding: 0 1.25rem 0.5rem;
+    margin: 0 -1.25rem;
+  }
+  .galleryTile {
+    flex-basis: 220px !important;
+  }
+}

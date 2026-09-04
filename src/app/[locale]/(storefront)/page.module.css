@@ -20,9 +20,20 @@
 }
 
 .heroImage {
-  object-fit: cover;
-  object-position: center 40%;
+  /* ponytail: mobile viewport is close enough to the photo's own portrait
+     aspect that contain shows it whole with no visible letterboxing. Desktop
+     is landscape, so contain would letterbox with navy bars on the sides;
+     cover there instead, edge to edge, at the cost of some vertical crop. */
+  object-fit: contain;
+  object-position: center;
   z-index: 0;
+}
+
+@media (min-width: 641px) {
+  .heroImage {
+    object-fit: cover;
+    object-position: center 40%;
+  }
 }
 
 .heroScrim {
@@ -167,164 +178,6 @@
   color: #fff;
 }
 
-/* Shop-by-line split panel: real flavour swatches / real still sizes */
-.lines {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
-}
-
-.lineSparkling {
-  min-width: 0;
-  background: linear-gradient(160deg, #fceedd 0%, #f7dfc2 100%);
-  padding: 4.5rem 3.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.lineStill {
-  position: relative;
-  min-width: 0;
-  min-height: 560px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
-  background: linear-gradient(200deg, #1b9aae 0%, #0e5c6b 55%, #16233f 100%);
-}
-
-.lineStillContent {
-  position: relative;
-  padding: 4.5rem 3.5rem;
-}
-
-.lineKicker {
-  font-family: "Cabinet Grotesk", var(--font-display), sans-serif;
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--sultan-sun);
-}
-
-.lineStillContent .lineKicker {
-  color: var(--sultan-sky);
-}
-
-.lineTitle {
-  color: var(--sultan-navy);
-  font-size: clamp(1.9rem, 3.6vw, 3rem);
-  margin: 0.6rem 0 0;
-  max-width: 18ch;
-}
-
-.lineTitleLight {
-  color: #fff;
-  font-size: clamp(1.9rem, 3.6vw, 3rem);
-  margin: 0.6rem 0 0;
-  max-width: 16ch;
-}
-
-.lineBody {
-  color: var(--ink-soft);
-  margin-top: 1rem;
-  max-width: 42ch;
-  line-height: 1.55;
-}
-
-.lineBodyLight {
-  color: rgba(255, 255, 255, 0.88);
-  margin-top: 1.25rem;
-  max-width: 42ch;
-  line-height: 1.55;
-}
-
-.swatchGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-  gap: 1rem 0.75rem;
-  margin-top: 2.25rem;
-  align-items: end;
-}
-
-.swatch {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.swatchChip {
-  display: block;
-  width: 100%;
-  max-width: 52px;
-  height: 72px;
-  border-radius: 6px 6px 3px 3px;
-  box-shadow: inset -8px 0 14px rgba(0, 0, 0, 0.18);
-  transition: transform 0.2s ease;
-}
-
-.swatch:hover .swatchChip {
-  transform: translateY(-3px);
-}
-
-.swatchLabel {
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  line-height: 1.25;
-}
-
-.sizeRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.5rem 1.75rem;
-  margin: 1.5rem 0 0;
-}
-
-.sizeNumber {
-  font-family: "Cabinet Grotesk", var(--font-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  color: #fff;
-  letter-spacing: -0.02em;
-}
-
-.lineFooter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem 1.5rem;
-  margin-top: 2rem;
-}
-
-.lineCtaSparkling {
-  background: var(--sultan-sun);
-  border-color: var(--sultan-sun);
-}
-
-.lineCtaSparkling:hover {
-  background: var(--sultan-navy);
-  border-color: var(--sultan-navy);
-}
-
-.lineCtaStill {
-  background: var(--sultan-sky);
-  color: var(--sultan-navy);
-  border-color: var(--sultan-sky);
-}
-
-.lineCtaStill:hover {
-  background: #fff;
-  border-color: #fff;
-}
-
-.lineFrom {
-  font-size: 0.95rem;
-  color: var(--ink-soft);
-}
-
-.lineFromLight {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
 .wave {
   height: 70px;
   overflow: hidden;
@@ -423,28 +276,33 @@
   background: var(--paper-raised);
 }
 
-.socialHeader {
+.socialCard {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.socialBrand {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.igGlyph {
+  flex-shrink: 0;
+}
+
+.igHandle {
+  font-weight: 700;
+  color: var(--sultan-navy);
+  letter-spacing: 0.01em;
 }
 
 .socialTitle {
   color: var(--sultan-navy);
   font-size: clamp(1.6rem, 2.6vw, 2.4rem);
-}
-
-.socialCta {
-  color: var(--sultan-teal);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.socialCta:hover {
-  color: var(--sultan-navy);
+  margin: 0.6rem 0 2.25rem;
 }
 
 .socialGrid {
@@ -472,6 +330,30 @@
 
 .socialTile:hover .socialImg {
   transform: scale(1.06);
+}
+
+.socialBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+}
+
+.socialFollow {
+  display: inline-block;
+  margin-top: 2.25rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(90deg, #f6002b, #b900b4, #5a00a8);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.socialFollow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(185, 0, 180, 0.28);
 }
 
 .featuredTitle {
@@ -565,10 +447,6 @@
   }
   .origin {
     padding: 1.5rem 1.25rem 4rem;
-  }
-  .lineSparkling,
-  .lineStillContent {
-    padding: 2.75rem 1.25rem;
   }
   .featured,
   .wholesaleBanner {

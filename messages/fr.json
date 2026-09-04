@@ -1,6 +1,7 @@
 {
   "nav": {
     "shop": "Boutique",
+    "about": "À propos",
     "stockists": "Points de vente",
     "wholesale": "Grossiste",
     "contact": "Contact",
@@ -30,12 +31,14 @@
     "legacyStat4Label": "À Maurice depuis",
     "linesSparklingKicker": "Eaux gazeuses aromatisées",
     "linesSparklingTitle": "Vraie saveur, une seule eau minérale",
-    "linesSparklingBody": "Gazéifiée à la mise en bouteille, en verre consigné. Chaque parfum part de la même eau d'Uludağ.",
+    "linesSparklingBody": "Gazéifiée à la mise en bouteille, en verre consigné. Chaque parfum part de la même eau d'Uludağ, porteuse du caractère de la nature à chaque gorgée.",
     "ctaSeeSparkling": "Voir toute la gamme pétillante",
     "linesStillKicker": "Eau de source naturelle",
     "linesStillTitle": "Plate, depuis la source",
-    "linesStillBody": "Filtrée en plusieurs étapes et mise en bouteille sans contact humain à Bursa et Kütahya.",
+    "linesStillBody": "Filtrée en plusieurs étapes et mise en bouteille sans contact humain à Bursa et Kütahya. Faible en sodium, avec un pH proche du neutre, pour un goût léger et raffiné.",
     "ctaSeeStill": "Voir la gamme plate",
+    "showcasePrev": "Saveur précédente",
+    "showcaseNext": "Saveur suivante",
     "from": "à partir de {price}",
     "originHeading": "D'Uludağ à votre table",
     "origin1Title": "Une seule goutte depuis le sommet",
@@ -135,10 +138,36 @@
     "cashOnDelivery": "Espèces à la livraison",
     "deliveryTo": "Livraison à"
   },
+  "about": {
+    "heroKicker": "Notre histoire",
+    "heroTitle": "Cinquante ans depuis une seule source.",
+    "heroSubtitle": "Une entreprise familiale depuis les années 1960, sur les tables mauriciennes depuis mars 2021.",
+    "qualityKicker": "Une haute technologie",
+    "qualityTitle": "Mise en bouteille sans contact humain, en haute qualité",
+    "qualityBody": "Puisée à Uludağ, notre eau est mise en bouteille sans contact humain dans nos installations de production à la pointe de la technologie à Bursa et Kütahya, avec des machines entièrement automatisées. Une filtration en plusieurs étapes et des tests de santé rigoureux lui donnent un goût léger et raffiné, faible en sodium et adapté aux régimes pauvres en sel.",
+    "paramsHeading": "Mesurée à la source",
+    "paramsNote": "La même source alimente les gammes Plate et Gazeuse.",
+    "paramAluminumLabel": "Aluminium",
+    "paramAluminumValue": "Non détecté",
+    "paramIronLabel": "Fer",
+    "paramIronValue": "Non détecté",
+    "paramManganeseLabel": "Manganèse",
+    "paramManganeseValue": "Non détecté",
+    "paramColiformLabel": "Bactéries coliformes",
+    "paramColiformValue": "0 sur 250 mL",
+    "mauritiusKicker": "Depuis mars 2021",
+    "mauritiusTitle": "D'une première commande à une place sur les tables de l'île.",
+    "mauritiusBody": "Nous avons commencé avec l'eau minérale gazeuse Sultan, faisant nos premiers pas sur le marché mauricien avec détermination. À chaque nouveau partenariat, la confiance grandissait : restaurants, supermarchés, petites boutiques et grossistes ont rejoint cette aventure. La bouteille de 0,25L, parfaitement adaptée au mode de vie mauricien, est vite devenue un favori pour les rassemblements et les événements.",
+    "galleryHeading": "Sur l'île, en toute liberté",
+    "ctaTitle": "Goûtez la différence",
+    "ctaBody": "Découvrez la gamme, ou ouvrez un compte grossiste pour votre restaurant, votre commerce ou votre événement."
+  },
   "wholesale": {
     "kicker": "Pour détaillants et restaurateurs",
     "title": "Comptes grossiste",
-    "subtitle": "Indiquez-nous votre volume estimé et nous vous proposerons un tarif grossiste et une livraison adaptés."
+    "subtitle": "Indiquez-nous votre volume estimé et nous vous proposerons un tarif grossiste et une livraison adaptés.",
+    "talkPrefix": "Vous préférez appeler ? Composez le",
+    "talkOr": "ou écrivez à"
   },
   "contact": {
     "title": "Contactez-nous",

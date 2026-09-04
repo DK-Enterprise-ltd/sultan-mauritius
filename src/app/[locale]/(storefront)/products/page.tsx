@@ -1,9 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { prisma } from "@/lib/prisma";
+import { getActiveProducts } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import ProductCard from "@/components/ProductCard/ProductCard";
+import Reveal from "@/components/Reveal/Reveal";
 import styles from "./page.module.css";
 
 function formatSize(ml: number): string {
@@ -24,7 +25,7 @@ export default async function ProductsPage({
   const size = searchParams.size;
   const flavor = searchParams.flavor;
 
-  const allProducts = await prisma.product.findMany({ where: { isActive: true }, orderBy: { name: "asc" } });
+  const allProducts = await getActiveProducts();
   const inLine = allProducts.filter((p) => !type || p.type === type);
 
   let products = inLine;
@@ -123,7 +124,7 @@ export default async function ProductsPage({
       {products.length === 0 ? (
         <p className={styles.empty}>{t("empty")}</p>
       ) : (
-        <div className={styles.grid}>
+        <Reveal className={styles.grid}>
           {products.map((product, index) => (
             <ProductCard
               key={product.id}
@@ -141,7 +142,7 @@ export default async function ProductsPage({
               }}
             />
           ))}
-        </div>
+        </Reveal>
       )}
     </div>
   );

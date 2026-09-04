@@ -1,7 +1,7 @@
 "use server";
 
 import { Prisma, OrderStatus } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getViewer, isAdmin } from "@/lib/auth";
 
@@ -113,6 +113,7 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     return created;
   });
 
+  revalidateTag("products");
   return { ok: true, orderNumber: order.orderNumber };
 }
 

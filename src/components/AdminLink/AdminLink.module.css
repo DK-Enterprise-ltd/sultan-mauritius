@@ -1,0 +1,17 @@
+.link {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.link:hover {
+  color: #fff;
+}
+
+.inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.arrow {
+  display: inline-block;
+}

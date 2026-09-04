@@ -32,24 +32,23 @@
 
 .image {
   object-fit: contain;
+  /* .media's align-items:center has no effect here since `fill` takes the
+     image out of flow; object-position is what actually controls this.
+     Bottom-anchoring keeps every bottle's base on the same line regardless
+     of how much transparent padding its source photo happens to carry. */
+  object-position: bottom center;
   pointer-events: none;
   user-select: none;
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
 }
 
 .card:hover .image {
-  animation: sultan-product-spin 3.5s linear infinite;
-}
-
-@keyframes sultan-product-spin {
-  from { transform: scale(1.05) rotate(0deg); }
-  to { transform: scale(1.05) rotate(360deg); }
+  transform: scale(1.05);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card:hover .image {
-    animation: none;
-    transform: scale(1.05);
+    transform: none;
   }
 }
 

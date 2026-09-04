@@ -46,6 +46,7 @@ export default function StorefrontNav() {
   const navLinks = (
     <>
       <Link href="/products" onClick={() => setMenuOpen(false)}>{t("shop")}</Link>
+      <Link href="/about" onClick={() => setMenuOpen(false)}>{t("about")}</Link>
       <Link href="/stockists" onClick={() => setMenuOpen(false)}>{t("stockists")}</Link>
       <Link href="/wholesale" onClick={() => setMenuOpen(false)}>{t("wholesale")}</Link>
       <Link href="/contact" onClick={() => setMenuOpen(false)}>{t("contact")}</Link>
@@ -55,7 +56,7 @@ export default function StorefrontNav() {
   return (
     <header className={`${styles.nav} ${solid ? styles.solid : ""}`}>
       <Link href="/" className={styles.logo}>
-        <Image src="/uploads/logo_white.svg" alt="Sultan" width={133} height={34} className={styles.logoImg} priority />
+        <Image src="/Assets/Logo/logo_white.svg" alt="Sultan" width={133} height={34} className={styles.logoImg} priority />
       </Link>
       <nav className={styles.links}>{navLinks}</nav>
       <div className={styles.right}>
