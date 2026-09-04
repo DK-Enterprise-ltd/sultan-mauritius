@@ -1,10 +1,11 @@
 .page {
   padding: 4.5rem 3rem;
   max-width: 700px;
+  margin: 0 auto;
 }
 
 .kicker {
-  color: var(--sultan-green);
+  color: var(--sultan-teal);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -13,8 +14,8 @@
 }
 
 .title {
-  color: var(--ink);
-  font-size: 2rem;
+  color: var(--sultan-navy);
+  font-size: clamp(2rem, 4vw, 2.5rem);
   margin-bottom: 0.5rem;
 }
 
@@ -24,8 +25,10 @@
 }
 
 .items {
+  border-radius: var(--radius-card);
+  background: var(--paper-raised);
   border: 1px solid var(--line);
-  padding: 1.5rem;
+  padding: 1.5rem 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -54,7 +57,7 @@
 
 .payment h2,
 .delivery h2 {
-  color: var(--ink);
+  color: var(--sultan-navy);
   font-size: 1.1rem;
   margin-bottom: 0.6rem;
 }

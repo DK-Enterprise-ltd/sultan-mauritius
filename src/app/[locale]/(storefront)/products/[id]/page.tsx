@@ -49,7 +49,7 @@ export default async function ProductDetailPage({
   ];
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${isSparkling ? styles.sparkling : styles.still}`}>
       <Link href="/products" className={styles.back}>
         {t("back")}
       </Link>

@@ -17,12 +17,6 @@ export default async function ProductsPage({
     ? searchParams.type
     : undefined;
 
-  const TYPE_FILTERS = [
-    { label: t("filterAll"), value: undefined },
-    { label: t("filterSparkling"), value: "SPARKLING" as const },
-    { label: t("filterStill"), value: "STILL" as const },
-  ];
-
   const products = await prisma.product.findMany({
     where: { isActive: true, ...(type ? { type } : {}) },
     orderBy: { name: "asc" },
@@ -35,17 +29,28 @@ export default async function ProductsPage({
         {viewer.isB2B && <p className={styles.wholesaleNote}>{t("wholesaleNote")}</p>}
       </div>
 
-      <div className={styles.filters}>
-        {TYPE_FILTERS.map((f) => (
-          <Link
-            key={f.label}
-            href={f.value ? `/products?type=${f.value}` : "/products"}
-            className={`${styles.filter} ${type === f.value ? styles.filterActive : ""}`}
-          >
-            {f.label}
-          </Link>
-        ))}
+      <div className={styles.lanes}>
+        <Link
+          href={type === "SPARKLING" ? "/products" : "/products?type=SPARKLING"}
+          className={`${styles.lane} ${styles.laneSparkling} ${type === "SPARKLING" ? styles.laneActive : ""}`}
+        >
+          <span className={styles.laneTitle}>{t("filterSparkling")}</span>
+          <span className={styles.laneNote}>{t("laneSparklingNote")}</span>
+        </Link>
+        <Link
+          href={type === "STILL" ? "/products" : "/products?type=STILL"}
+          className={`${styles.lane} ${styles.laneStill} ${type === "STILL" ? styles.laneActive : ""}`}
+        >
+          <span className={styles.laneTitle}>{t("filterStill")}</span>
+          <span className={styles.laneNote}>{t("laneStillNote")}</span>
+        </Link>
       </div>
+
+      {type && (
+        <Link href="/products" className={styles.clearFilter}>
+          {t("filterAll")}
+        </Link>
+      )}
 
       {products.length === 0 ? (
         <p className={styles.empty}>{t("empty")}</p>

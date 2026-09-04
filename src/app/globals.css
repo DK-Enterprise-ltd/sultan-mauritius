@@ -1,10 +1,11 @@
 :root {
   /* Brand accents: used sparingly, never as large fills */
-  --sultan-navy: #16233f;
-  --sultan-sky: #3f8fae;
+  --sultan-navy: #1b2a4a;
+  --sultan-sky: #4fb8d6;
+  --sultan-teal: #1b9aae;
+  --sultan-sun: #e8963a;
   --sultan-green: #3c6e46;
-  --sultan-plum: #5c2a45;
-  --sultan-sun: #d9a441;
+  --sultan-plum: #6e1746;
 
   /* Neutral ramp */
   --neutral-50: #f7f5f1;
@@ -19,11 +20,22 @@
   --neutral-900: #16140e;
 
   /* Storefront canvas: warm paper, not clinical white */
-  --paper: #f7f4ee;
-  --paper-raised: #fffdf9;
-  --ink: #1c1a14;
-  --ink-soft: #5a5346;
-  --line: rgba(28, 26, 20, 0.14);
+  --paper: #fafaf7;
+  --paper-raised: #ffffff;
+  --ink: #14181f;
+  --ink-soft: #5a5f68;
+  --line: rgba(27, 42, 74, 0.12);
+
+  /* Line-specific washes: sparkling reads warm/peach, still reads cool/teal */
+  --wash-sparkling: #fcf1e4;
+  --wash-sparkling-deep: #f5e3cb;
+  --wash-still: #eaf6fa;
+  --wash-still-deep: #dceff6;
+
+  --radius-pill: 999px;
+  --radius-card: 20px;
+  --radius-card-sm: 14px;
+  --nav-h: 76px;
 
   --background: var(--paper);
   --foreground: var(--ink);
@@ -38,7 +50,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  font-family: "Satoshi", var(--font-body), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -58,6 +70,12 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display), var(--font-body), sans-serif;
-  letter-spacing: -0.01em;
+  font-family: "Cabinet Grotesk", var(--font-display), var(--font-body), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+::selection {
+  background: var(--sultan-sky);
+  color: #fff;
 }

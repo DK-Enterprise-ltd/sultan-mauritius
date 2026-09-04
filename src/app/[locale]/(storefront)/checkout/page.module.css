@@ -1,11 +1,12 @@
 .page {
   padding: 3.5rem 3rem;
   max-width: 1000px;
+  margin: 0 auto;
 }
 
 .title {
-  color: var(--ink);
-  font-size: 2rem;
+  color: var(--sultan-navy);
+  font-size: clamp(2rem, 4vw, 2.5rem);
   margin-bottom: 2.5rem;
 }
 
@@ -17,8 +18,8 @@
 }
 
 .sectionTitle {
-  color: var(--ink);
-  font-size: 1.1rem;
+  color: var(--sultan-navy);
+  font-size: 1.15rem;
   margin-bottom: 1rem;
 }
 
@@ -45,11 +46,18 @@
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
-  padding: 0.7rem 0.85rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--line);
-  border-radius: 2px;
+  border-radius: var(--radius-card-sm);
   color: var(--ink);
   background: var(--paper-raised);
+  transition: border-color 0.2s ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--sultan-teal);
 }
 
 .field textarea {
@@ -64,7 +72,8 @@
 }
 
 .summary {
-  background: var(--neutral-100);
+  background: var(--wash-still);
+  border-radius: var(--radius-card);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
@@ -95,7 +104,7 @@
 }
 
 .payment h3 {
-  color: var(--ink);
+  color: var(--sultan-navy);
   margin-bottom: 0.4rem;
 }
 
@@ -106,9 +115,9 @@
 
 .bankDetails {
   margin-top: 0.5rem;
-  padding: 0.85rem;
+  padding: 0.85rem 1rem;
   background: var(--paper-raised);
-  border: 1px solid var(--line);
+  border-radius: var(--radius-card-sm);
   white-space: pre-line;
 }
 

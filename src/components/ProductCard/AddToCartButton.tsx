@@ -21,7 +21,7 @@ export default function AddToCartButton(props: Props) {
   return (
     <Button
       type="button"
-      variant="primary"
+      variant="secondary"
       onClick={() => {
         addItem(props);
         setAdded(true);

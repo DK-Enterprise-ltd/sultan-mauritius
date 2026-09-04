@@ -1,5 +1,7 @@
 .page {
   padding: 3.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .header {
@@ -10,50 +12,95 @@
 }
 
 .title {
-  color: var(--ink);
-  font-size: 2rem;
+  color: var(--sultan-navy);
+  font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .wholesaleNote {
   background: var(--sultan-sun);
-  color: var(--neutral-900);
+  color: #fff;
   font-weight: 700;
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.3rem 0.75rem;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
 }
 
-.filters {
-  display: flex;
-  gap: 0.5rem;
-  margin: 2rem 0 3rem;
+.lanes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 2.25rem 0 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
 }
 
-.filter {
-  padding: 0.55rem 1.25rem;
-  border: 1px solid var(--line);
-  color: var(--ink-soft);
+.lane {
+  padding: 1.6rem 1.75rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.laneSparkling {
+  background: var(--wash-sparkling);
+  color: #8a5314;
+}
+
+.laneSparkling.laneActive {
+  background: var(--sultan-sun);
+  color: #fff;
+}
+
+.laneStill {
+  background: var(--wash-still);
+  color: #0e5c6b;
+}
+
+.laneStill.laneActive {
+  background: var(--sultan-teal);
+  color: #fff;
+}
+
+.laneTitle {
+  font-family: "Cabinet Grotesk", var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+  display: block;
+}
+
+.laneNote {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.clearFilter {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-decoration: underline;
 }
 
-.filterActive {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
+.clearFilter:hover {
+  color: var(--sultan-navy);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
+  margin-top: 2.75rem;
+}
+
+@media (max-width: 640px) {
+  .lanes {
+    grid-template-columns: 1fr;
+  }
 }
 
 .empty {
-  color: var(--neutral-500);
+  color: var(--ink-soft);
   padding: 3rem 0;
 }
 

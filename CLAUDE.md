@@ -104,13 +104,20 @@ prisma/seed.js                      plain CommonJS seed (no ts-node), run
 
 ## Brand
 
-- Palette (`src/app/globals.css`): warm paper canvas (`--paper`,
-  `--ink`), with navy `#16233f`, sky, green, plum, and sun as sparing
-  accents, not backgrounds.
-- Reference imagery pulled from the brand's own Instagram
-  (@sultan_mauritius) and Facebook (Sultan Drink Mauritius) lives in
-  `../reference/` (one level up, outside this Next.js project) and in
-  `public/images/` for what's actually used on the site.
+- Palette (`src/app/globals.css`): warm paper canvas (`--paper`, `--ink`),
+  navy `#1b2a4a`, sky `#4fb8d6`, teal `#1b9aae`, sun `#e8963a` as accents.
+  Display face Cabinet Grotesk / body face Satoshi, loaded from Fontshare
+  in `src/app/[locale]/layout.tsx`'s `<head>`, with Sora/Inter (`src/app/
+  fonts.ts`) as the offline fallback chain feeding the same CSS variables.
+- All site imagery — logo, product bottle/flavour photography, hero and
+  story shots — is the exact asset set from `../Sultan Mauritius Website
+  Design/uploads/` (the Claude Design canvas this site's look is ported
+  from), copied verbatim into `public/uploads/` under its original
+  filenames. Reference `prisma/seed.js` for which file backs which SKU.
+  Don't reorganize this into a second `public/images/` tree; it was
+  consolidated into one folder on purpose. `../reference/` (one level up,
+  outside this Next.js project) holds the wider unedited photo library
+  this set was drawn from.
 - Product catalogue PDF (repo root, one level up) is Sultan's global/Turkey
   brand catalogue. Useful for brand story and flavor range, but the local
   Mauritius SKU lineup actually sold is `prisma/seed.js`. Some catalogue

@@ -7,11 +7,20 @@ const FLAVOR_FR: Record<string, string> = {
   "Watermelon Strawberry": "Pastèque Fraise",
   "Pomegranate": "Grenade",
   "Black Mulberry & Blackcurrant": "Mûre Noire & Cassis",
+  "Lemon": "Citron",
+  "Apple": "Pomme",
+  "Mandarin": "Mandarine",
+  "Strawberry": "Fraise",
+  "Gazoz": "Gazoz",
+  "Mango & Pineapple": "Mangue & Ananas",
+  "Mojito": "Mojito",
+  "Berry & Hibiscus": "Fruits rouges & Hibiscus",
 };
 
 const NAME_FR: Record<string, string> = {
   "Sultan Sparkling": "Sultan Gazeuse",
   "Sultan Spring Water": "Sultan Eau de Source",
+  "Sultan Prime": "Sultan Prime",
 };
 
 export function localizeFlavor(flavor: string | null, locale: Locale): string | null {

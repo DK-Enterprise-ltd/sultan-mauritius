@@ -37,13 +37,24 @@ export default function CartPage() {
               {item.flavor && <p className={styles.meta}>{localizeFlavor(item.flavor, locale)}</p>}
               <p className={styles.meta}>{item.sizeMl}ml</p>
             </div>
-            <input
-              type="number"
-              min={1}
-              value={item.quantity}
-              onChange={(e) => updateQuantity(item.productId, Number(e.target.value))}
-              className={styles.qty}
-            />
+            <div className={styles.qty}>
+              <button
+                type="button"
+                className={styles.qtyBtn}
+                onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                aria-label={t("remove")}
+              >
+                −
+              </button>
+              <span className={styles.qtyValue}>{item.quantity}</span>
+              <button
+                type="button"
+                className={styles.qtyBtn}
+                onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+              >
+                +
+              </button>
+            </div>
             <span className={styles.lineTotal}>{formatMur(item.unitPrice * item.quantity)}</span>
             <button className={styles.remove} onClick={() => removeItem(item.productId)}>
               {t("remove")}

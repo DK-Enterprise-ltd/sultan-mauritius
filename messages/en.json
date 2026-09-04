@@ -4,7 +4,8 @@
     "stockists": "Stockists",
     "wholesale": "Wholesale",
     "contact": "Contact",
-    "cart": "Cart"
+    "cart": "Cart",
+    "menu": "Menu"
   },
   "home": {
     "heroKicker": "Pure. Elegant. Timeless.",
@@ -27,6 +28,22 @@
     "legacyStat3Label": "Three generations",
     "legacyStat4Value": "2021",
     "legacyStat4Label": "In Mauritius since",
+    "linesSparklingKicker": "Flavoured sparkling waters",
+    "linesSparklingTitle": "Real flavour, one mineral water",
+    "linesSparklingBody": "Carbonated at bottling, in returnable glass. Every flavour starts as the same water from Uludağ.",
+    "ctaSeeSparkling": "See all sparkling",
+    "linesStillKicker": "Natural spring water",
+    "linesStillTitle": "Still, from the source",
+    "linesStillBody": "Multi-stage filtered and bottled without human contact at Bursa and Kütahya.",
+    "ctaSeeStill": "See the still range",
+    "from": "from {price}",
+    "originHeading": "From Uludağ to your table",
+    "origin1Title": "A single drop from the peak",
+    "origin1Body": "The spring emerged in the foothills of Uludağ fifty years ago. The water filters through the purest layers of rock long before anyone touches it.",
+    "origin2Title": "Family-run since the 1960s",
+    "origin2Body": "Bottled without human contact at the family's plants in Bursa and Kütahya, now into the third generation and 42 countries.",
+    "origin3Title": "In Mauritius since March 2021",
+    "origin3Body": "Carbonated mineral water came first. Then the still range, taken up for gatherings and events across the island.",
     "featured": "Featured",
     "socialTitle": "On the island, in the wild",
     "socialCta": "Follow @sultan_mauritius"
@@ -44,6 +61,8 @@
     "filterAll": "All",
     "filterSparkling": "Sparkling",
     "filterStill": "Still",
+    "laneSparklingNote": "Glass, flavoured, carbonated at bottling",
+    "laneStillNote": "PET, natural spring water",
     "empty": "No products in this category yet."
   },
   "stockists": {
@@ -135,6 +154,10 @@
     "error": "Something went wrong. Please try again."
   },
   "footer": {
+    "tagline": "Official distributor of Sultan natural spring water and Sultan flavoured sparkling waters in Mauritius since March 2021.",
+    "shopHeading": "Shop",
+    "tradeHeading": "Trade",
+    "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
     "paymentNote": "Bank transfer & cash on delivery, no online payment"
   }

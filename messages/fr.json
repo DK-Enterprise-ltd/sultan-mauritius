@@ -4,7 +4,8 @@
     "stockists": "Points de vente",
     "wholesale": "Grossiste",
     "contact": "Contact",
-    "cart": "Panier"
+    "cart": "Panier",
+    "menu": "Menu"
   },
   "home": {
     "heroKicker": "Pure. Élégante. Intemporelle.",
@@ -27,6 +28,22 @@
     "legacyStat3Label": "Trois générations",
     "legacyStat4Value": "2021",
     "legacyStat4Label": "À Maurice depuis",
+    "linesSparklingKicker": "Eaux gazeuses aromatisées",
+    "linesSparklingTitle": "Vraie saveur, une seule eau minérale",
+    "linesSparklingBody": "Gazéifiée à la mise en bouteille, en verre consigné. Chaque parfum part de la même eau d'Uludağ.",
+    "ctaSeeSparkling": "Voir toute la gamme pétillante",
+    "linesStillKicker": "Eau de source naturelle",
+    "linesStillTitle": "Plate, depuis la source",
+    "linesStillBody": "Filtrée en plusieurs étapes et mise en bouteille sans contact humain à Bursa et Kütahya.",
+    "ctaSeeStill": "Voir la gamme plate",
+    "from": "à partir de {price}",
+    "originHeading": "D'Uludağ à votre table",
+    "origin1Title": "Une seule goutte depuis le sommet",
+    "origin1Body": "La source a jailli dans les contreforts de l'Uludağ il y a cinquante ans. L'eau filtre à travers les couches de roche les plus pures avant que quiconque ne la touche.",
+    "origin2Title": "Une entreprise familiale depuis les années 1960",
+    "origin2Body": "Mise en bouteille sans contact humain dans les usines familiales de Bursa et Kütahya, aujourd'hui à la troisième génération et dans 42 pays.",
+    "origin3Title": "À l'île Maurice depuis mars 2021",
+    "origin3Body": "L'eau minérale gazeuse est arrivée en premier. Puis la gamme plate, adoptée pour les rassemblements et événements à travers l'île.",
     "featured": "Sélection",
     "socialTitle": "Sur l'île, en toute liberté",
     "socialCta": "Suivez @sultan_mauritius"
@@ -44,6 +61,8 @@
     "filterAll": "Tout",
     "filterSparkling": "Gazeuse",
     "filterStill": "Plate",
+    "laneSparklingNote": "Verre, aromatisée, gazéifiée à la mise en bouteille",
+    "laneStillNote": "PET, eau de source naturelle",
     "empty": "Aucun produit dans cette catégorie pour l'instant."
   },
   "stockists": {
@@ -135,6 +154,10 @@
     "error": "Une erreur est survenue. Merci de réessayer."
   },
   "footer": {
+    "tagline": "Distributeur officiel de l'eau de source naturelle Sultan et des eaux gazeuses aromatisées Sultan à l'île Maurice depuis mars 2021.",
+    "shopHeading": "Boutique",
+    "tradeHeading": "Professionnels",
+    "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
     "paymentNote": "Virement bancaire et espèces à la livraison, aucun paiement en ligne"
   }

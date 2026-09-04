@@ -22,11 +22,18 @@
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
-  padding: 0.7rem 0.85rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--line);
-  border-radius: 2px;
+  border-radius: var(--radius-card-sm);
   color: var(--ink);
   background: var(--paper-raised);
+  transition: border-color 0.2s ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--sultan-teal);
 }
 
 .field textarea {

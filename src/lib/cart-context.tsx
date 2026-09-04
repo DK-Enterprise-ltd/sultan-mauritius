@@ -18,6 +18,10 @@ type CartContextValue = {
   removeItem: (productId: string) => void;
   clear: () => void;
   subtotal: number;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -26,6 +30,10 @@ const STORAGE_KEY = "sultan_cart";
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
+  const toggleCart = useCallback(() => setIsOpen((v) => !v), []);
 
   useEffect(() => {
     try {
@@ -73,7 +81,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <CartContext.Provider value={{ items, addItem, updateQuantity, removeItem, clear, subtotal }}>
+    <CartContext.Provider
+      value={{ items, addItem, updateQuantity, removeItem, clear, subtotal, isOpen, openCart, closeCart, toggleCart }}
+    >
       {children}
     </CartContext.Provider>
   );

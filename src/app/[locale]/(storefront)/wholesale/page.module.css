@@ -1,21 +1,18 @@
 .hero {
-  background: url("/images/wholesale-moody.jpg") center 30% / cover no-repeat, var(--neutral-900);
+  background: linear-gradient(200deg, rgba(27, 154, 174, 0.35) 0%, rgba(27, 42, 74, 0.88) 82%),
+    url("/uploads/wholesale-moody.jpg") center 30% / cover no-repeat;
   position: relative;
-  color: var(--paper);
-  padding: 5rem 3rem;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(20, 18, 12, 0.6);
+  color: #fff;
+  padding: 5.5rem 3rem;
 }
 
 .kicker,
 .title,
 .subtitle {
   position: relative;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .kicker {
@@ -23,13 +20,12 @@
   letter-spacing: 0.14em;
   font-weight: 700;
   font-size: 0.8rem;
-  opacity: 0.9;
+  color: var(--sultan-sky);
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0.6rem 0;
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  margin: 0.6rem auto;
 }
 
 .subtitle {
@@ -39,6 +35,8 @@
 
 .formWrap {
   padding: 3.5rem 3rem;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 @media (max-width: 640px) {

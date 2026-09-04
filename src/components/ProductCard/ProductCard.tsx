@@ -18,20 +18,8 @@ export type ProductCardData = {
   stockQuantity: number;
 };
 
-// ponytail: rotate through the brand accents for sparkling flavors so the
-// grid reads as bold color-blocking rather than one repeated hue. Cycled
-// by grid position (not a string hash) so same-named flavor variants
-// (all "Sultan Sparkling") still spread across accents deterministically.
-const SPARKLING_ACCENTS = ["sky", "plum", "green"] as const;
-
-function accentFor(product: ProductCardData, index: number): string {
-  if (product.type === "STILL") return "navy";
-  return SPARKLING_ACCENTS[index % SPARKLING_ACCENTS.length];
-}
-
 export default function ProductCard({
   product,
-  index = 0,
 }: {
   product: ProductCardData;
   index?: number;
@@ -41,10 +29,12 @@ export default function ProductCard({
   const locale = useLocale() as Locale;
   const name = localizeProductName(product.name, locale);
   const flavor = localizeFlavor(product.flavor, locale);
+  const sparkling = product.type === "SPARKLING";
 
   return (
-    <div className={styles.card}>
-      <Link href={`/products/${product.id}`} className={`${styles.media} ${styles[accentFor(product, index)]}`}>
+    <div className={`${styles.card} ${sparkling ? styles.sparkling : styles.still}`}>
+      <Link href={`/products/${product.id}`} className={styles.media}>
+        <span className={styles.lineBadge}>{sparkling ? t("sparkling") : t("still")}</span>
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
@@ -58,7 +48,6 @@ export default function ProductCard({
         )}
       </Link>
       <div className={styles.body}>
-        <p className={styles.type}>{product.type === "SPARKLING" ? t("sparkling") : t("still")}</p>
         <Link href={`/products/${product.id}`} className={styles.nameLink}>
           <h3 className={styles.name}>{name}</h3>
         </Link>
