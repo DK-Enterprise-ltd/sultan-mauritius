@@ -26,10 +26,12 @@ export type ShowcaseItem = {
 
 export default function FlavorShowcase({
   items,
+  sectionTitle,
   prevLabel,
   nextLabel,
 }: {
   items: ShowcaseItem[];
+  sectionTitle?: string;
   prevLabel: string;
   nextLabel: string;
 }) {
@@ -40,6 +42,7 @@ export default function FlavorShowcase({
 
   return (
     <section className={styles.showcase} style={{ "--accent": item.color } as React.CSSProperties}>
+      {sectionTitle && <p className={styles.sectionTitle}>{sectionTitle}</p>}
       <span key={`ghost-${item.id}`} className={styles.ghostText} aria-hidden>
         {item.name}
       </span>
@@ -52,6 +55,15 @@ export default function FlavorShowcase({
         </div>
 
         <div key={`media-${item.id}`} className={styles.mediaWrap}>
+          {/* mobile-only: desktop uses the arrows in .nav below instead */}
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            className={`${styles.navArrow} ${styles.mediaArrow} ${styles.mediaArrowLeft}`}
+            aria-label={prevLabel}
+          >
+            ←
+          </button>
           {item.imageUrl && (
             <>
               <span className={styles.platform} aria-hidden />
@@ -67,6 +79,14 @@ export default function FlavorShowcase({
               </div>
             </>
           )}
+          <button
+            type="button"
+            onClick={() => go(1)}
+            className={`${styles.navArrow} ${styles.mediaArrow} ${styles.mediaArrowRight}`}
+            aria-label={nextLabel}
+          >
+            →
+          </button>
         </div>
 
         <div key={`facts-${item.id}`} className={styles.facts}>

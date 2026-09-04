@@ -94,7 +94,7 @@ export default async function HomePage() {
         id: p.id,
         name: flavorLabel,
         subtitle: `${t("linesSparklingKicker")} · ${p.sizeMl}ml`,
-        description: t("linesSparklingBody"),
+        description: c("sparklingBody"),
         taste: (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || invented?.[isFr ? "fr" : "en"] || tDetail("tasteSparkling"),
         bestServedLabel: tDetail("bestServedHeading"),
         bestServed: (isFr ? copy?.bestServedNoteFr : copy?.bestServedNote) || tDetail("bestServedSparkling"),
@@ -116,7 +116,7 @@ export default async function HomePage() {
         id: p.id,
         name: formatLiters(p.sizeMl),
         subtitle: t("linesStillKicker"),
-        description: t("linesStillBody"),
+        description: c("stillBody"),
         taste: (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || invented?.[isFr ? "fr" : "en"] || tDetail("tasteStill"),
         bestServedLabel: tDetail("bestServedHeading"),
         bestServed: (isFr ? copy?.bestServedNoteFr : copy?.bestServedNote) || tDetail("bestServedStill"),
@@ -157,8 +157,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <FlavorShowcase items={sparklingShowcase} prevLabel={t("showcasePrev")} nextLabel={t("showcaseNext")} />
-      <FlavorShowcase items={stillShowcase} prevLabel={t("showcasePrev")} nextLabel={t("showcaseNext")} />
+      <FlavorShowcase
+        items={sparklingShowcase}
+        sectionTitle={c("sparklingTitle")}
+        prevLabel={t("showcasePrev")}
+        nextLabel={t("showcaseNext")}
+      />
+      <FlavorShowcase
+        items={stillShowcase}
+        sectionTitle={c("stillTitle")}
+        prevLabel={t("showcasePrev")}
+        nextLabel={t("showcaseNext")}
+      />
 
       <div className={styles.wave} aria-hidden>
         <svg viewBox="0 0 1440 88" preserveAspectRatio="none">
