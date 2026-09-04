@@ -1,0 +1,49 @@
+.hero {
+  background: url("/images/wholesale-moody.jpg") center 30% / cover no-repeat, var(--neutral-900);
+  position: relative;
+  color: var(--paper);
+  padding: 5rem 3rem;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 18, 12, 0.6);
+}
+
+.kicker,
+.title,
+.subtitle {
+  position: relative;
+}
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0.6rem 0;
+}
+
+.subtitle {
+  max-width: 46ch;
+  opacity: 0.92;
+}
+
+.formWrap {
+  padding: 3.5rem 3rem;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .formWrap {
+    padding: 2.5rem 1.25rem;
+  }
+}

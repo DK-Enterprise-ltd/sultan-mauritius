@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { submitInquiry } from "@/app/actions/inquiries";
 import Button from "@/components/Button/Button";
 import styles from "./InquiryForm.module.css";
 
 export default function InquiryForm({ wholesale = false }: { wholesale?: boolean }) {
+  const t = useTranslations("inquiryForm");
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -37,44 +39,44 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
   }
 
   if (status === "sent") {
-    return <p className={styles.success}>Thanks — we&apos;ll be in touch shortly.</p>;
+    return <p className={styles.success}>{t("success")}</p>;
   }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <label className={styles.field}>
-        Full name
+        {t("name")}
         <input name="name" required />
       </label>
       <label className={styles.field}>
-        Email
+        {t("email")}
         <input name="email" type="email" required />
       </label>
       <label className={styles.field}>
-        Phone
+        {t("phone")}
         <input name="phone" />
       </label>
       {wholesale && (
         <>
           <label className={styles.field}>
-            Company name
+            {t("companyName")}
             <input name="companyName" required />
           </label>
           <label className={styles.field}>
-            Estimated volume
-            <input name="estimatedVolume" placeholder="e.g. 50 cases/month" required />
+            {t("estimatedVolume")}
+            <input name="estimatedVolume" required />
           </label>
         </>
       )}
       <label className={styles.field}>
-        Message
+        {t("message")}
         <textarea name="message" required />
       </label>
 
       {error && <p className={styles.error}>{error}</p>}
 
       <Button type="submit" variant="primary" disabled={submitting}>
-        {submitting ? "Sending…" : "Send"}
+        {submitting ? t("submitting") : t("submit")}
       </Button>
     </form>
   );

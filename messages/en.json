@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "shop": "Shop",
+    "stockists": "Stockists",
+    "wholesale": "Wholesale",
+    "contact": "Contact",
+    "cart": "Cart"
+  },
+  "home": {
+    "heroKicker": "Pure. Elegant. Timeless.",
+    "heroTitle": "Refined hydration, bottled for everyday royalty.",
+    "heroSubtitle": "Sparkling flavoured mineral water in glass, and still spring water for every day, sourced from Uludağ and on Mauritian tables since 2021.",
+    "ctaShop": "Shop the range",
+    "ctaWholesale": "Wholesale enquiries",
+    "sparklingTitle": "Sparkling, with real character",
+    "sparklingBody": "Watermelon strawberry, pomegranate, black mulberry & blackcurrant: bold flavour in returnable glass, no artificial aftertaste.",
+    "stillTitle": "Still, from the source",
+    "stillBody": "Spring water bottled at source in Uludağ, filtered through generations of family care before it reaches your glass.",
+    "legacyKicker": "Since the 1960s",
+    "legacyTitle": "Three generations, one spring.",
+    "legacyBody": "Sultan began in the foothills of Uludağ over fifty years ago, a family business carried forward by trust, generation after generation. In March 2021, that legacy reached Mauritius: from a first order of sparkling mineral water to a place at restaurant tables, supermarket shelves, and family gatherings across the island.",
+    "legacyStat1Value": "1960s",
+    "legacyStat1Label": "Family business since",
+    "legacyStat2Value": "Uludağ",
+    "legacyStat2Label": "Sourced from Turkey",
+    "legacyStat3Value": "Family-owned",
+    "legacyStat3Label": "Three generations",
+    "legacyStat4Value": "2021",
+    "legacyStat4Label": "In Mauritius since",
+    "featured": "Featured",
+    "socialTitle": "On the island, in the wild",
+    "socialCta": "Follow @sultan_mauritius"
+  },
+  "product": {
+    "sparkling": "Sparkling",
+    "still": "Still",
+    "outOfStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "added": "Added"
+  },
+  "products": {
+    "title": "Shop",
+    "wholesaleNote": "Wholesale pricing applied",
+    "filterAll": "All",
+    "filterSparkling": "Sparkling",
+    "filterStill": "Still",
+    "empty": "No products in this category yet."
+  },
+  "stockists": {
+    "title": "Where to buy",
+    "intro": "Sultan is stocked at supermarkets, restaurants, and mini shops across the island.",
+    "empty": "The stockist list is being put together. Check back soon, or ask us directly on the contact page."
+  },
+  "productDetail": {
+    "back": "Back to shop",
+    "tasteHeading": "Taste",
+    "tasteStill": "A light, refined taste, low in sodium and suitable for sodium-restricted diets. Multi-stage filtered and tested at the source in Uludağ.",
+    "tasteSparkling": "The same low-sodium spring water, naturally carbonated and finished with real fruit flavour, no artificial aftertaste.",
+    "bestServedHeading": "Best served",
+    "bestServedStill": "Chilled, at your next gathering.",
+    "bestServedSparkling": "Chilled, poured over ice, at your next gathering.",
+    "specHeading": "Details",
+    "specSize": "Size",
+    "specType": "Type",
+    "specSourced": "Sourced from Uludağ, Turkey",
+    "specBottled": "Bottled without human contact in Bursa & Kütahya",
+    "waterQualityHeading": "Water quality",
+    "waterQualityNote": "Measured at the source; the same spring feeds both the Still and Sparkling lines.",
+    "sodiumLabel": "Sodium",
+    "sodiumValue": "2.80 mg/L",
+    "phLabel": "pH",
+    "phValue": "7.24",
+    "sulfateLabel": "Sulfate",
+    "sulfateValue": "5.68 mg/L",
+    "chlorideLabel": "Chloride",
+    "chlorideValue": "0.74 mg/L"
+  },
+  "cart": {
+    "title": "Your cart",
+    "emptyTitle": "Your cart is empty",
+    "browse": "Browse products",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "checkout": "Proceed to checkout"
+  },
+  "checkout": {
+    "title": "Order review",
+    "emptyNotice": "Your cart is empty. Add products before checking out.",
+    "deliveryDetails": "Delivery details",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "companyName": "Company name (wholesale only)",
+    "deliveryAddress": "Delivery address",
+    "deliveryZone": "Delivery zone / region",
+    "orderNotes": "Order notes",
+    "placeOrder": "Place order",
+    "placingOrder": "Placing order…",
+    "orderSummary": "Order summary",
+    "total": "Total",
+    "payment": "Payment",
+    "paymentNote": "No online payment: settle by bank transfer or cash on delivery.",
+    "bankDetails": "Bank transfer: Sultan Mauritius Ltd · MCB · Account 000123456789\nPlease use your order number as payment reference."
+  },
+  "order": {
+    "orderNumber": "Order #{number}",
+    "thankYou": "Thank you, {name}.",
+    "subtitle": "We've received your order and it's awaiting confirmation.",
+    "total": "Total",
+    "paymentInstructions": "Payment instructions",
+    "paymentIntro": "No online payment is taken. Please settle by:",
+    "bankTransfer": "Bank transfer: Sultan Mauritius Ltd · MCB · Account 000123456789, reference order #{number}",
+    "cashOnDelivery": "Cash on delivery",
+    "deliveryTo": "Delivery to"
+  },
+  "wholesale": {
+    "kicker": "For retailers & restaurants",
+    "title": "Wholesale accounts",
+    "subtitle": "Tell us your estimated volume and we'll set you up with wholesale pricing and delivery."
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Questions about an order, a product, or anything else: send us a message."
+  },
+  "inquiryForm": {
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "companyName": "Company name",
+    "estimatedVolume": "Estimated volume (e.g. 50 cases/month)",
+    "message": "Message",
+    "submit": "Send",
+    "submitting": "Sending…",
+    "success": "Thanks, we've received your message and will be in touch shortly.",
+    "error": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "copyright": "© {year} Sultan Mauritius",
+    "paymentNote": "Bank transfer & cash on delivery, no online payment"
+  }
+}

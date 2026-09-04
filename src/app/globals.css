@@ -1,25 +1,32 @@
 :root {
-  /* Brand */
-  --sultan-navy: #152a4e;
-  --sultan-sky: #4cc3ea;
-  --sultan-green: #3e9b4f;
-  --sultan-plum: #5c2a56;
-  --sultan-sun: #f4c430;
+  /* Brand accents: used sparingly, never as large fills */
+  --sultan-navy: #16233f;
+  --sultan-sky: #3f8fae;
+  --sultan-green: #3c6e46;
+  --sultan-plum: #5c2a45;
+  --sultan-sun: #d9a441;
 
   /* Neutral ramp */
-  --neutral-50: #f8f9fa;
-  --neutral-100: #eef0f2;
-  --neutral-200: #dde1e6;
-  --neutral-300: #c3c9d1;
-  --neutral-400: #9aa3af;
-  --neutral-500: #707a87;
-  --neutral-600: #4f5964;
-  --neutral-700: #363e47;
-  --neutral-800: #23282e;
-  --neutral-900: #14171b;
+  --neutral-50: #f7f5f1;
+  --neutral-100: #efece5;
+  --neutral-200: #e2ded4;
+  --neutral-300: #c9c3b4;
+  --neutral-400: #a49c88;
+  --neutral-500: #7d7565;
+  --neutral-600: #5a5346;
+  --neutral-700: #3c3730;
+  --neutral-800: #262319;
+  --neutral-900: #16140e;
 
-  --background: #ffffff;
-  --foreground: var(--neutral-900);
+  /* Storefront canvas: warm paper, not clinical white */
+  --paper: #f7f4ee;
+  --paper-raised: #fffdf9;
+  --ink: #1c1a14;
+  --ink-soft: #5a5346;
+  --line: rgba(28, 26, 20, 0.14);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 html,
@@ -52,4 +59,5 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display), var(--font-body), sans-serif;
+  letter-spacing: -0.01em;
 }

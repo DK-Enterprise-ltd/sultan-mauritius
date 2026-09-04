@@ -1,0 +1,21 @@
+.page {
+  padding: 4.5rem 3rem;
+  max-width: 600px;
+}
+
+.title {
+  color: var(--ink);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--ink-soft);
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 2.5rem 1.25rem;
+  }
+}

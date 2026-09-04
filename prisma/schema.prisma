@@ -217,3 +217,52 @@ model User {
   role         UserRole @default(STAFF)
   createdAt    DateTime @default(now())
 }
+
+// ---------------------------------------------------------------------------
+// CMS content — synced one-way from Sanity Studio via /api/sanity/* webhooks
+// (src/app/api/sanity/). Sanity is the authoring surface (for the business,
+// non-technical edits); these tables are what the site actually renders from,
+// so a Sanity outage never breaks a page load. Don't hand-edit rows here,
+// edit in Studio and let the webhook sync them.
+// ---------------------------------------------------------------------------
+
+model Stockist {
+  id        String   @id @default(cuid())
+  sanityId  String   @unique // Sanity document _id (draft prefix stripped)
+  name      String
+  region    String
+  town      String
+  address   String?
+  phone     String?
+  mapUrl    String?
+  isActive  Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+
+  @@index([region])
+}
+
+model ProductCopy {
+  id       String @id @default(cuid())
+  sanityId String @unique // Sanity document _id (draft prefix stripped)
+  sku      String @unique // soft link to Product.sku, same pattern as catalog-i18n.ts — no FK, so Studio content isn't blocked on seed order
+
+  tasteNote        String?
+  tasteNoteFr      String?
+  bestServedNote   String?
+  bestServedNoteFr String?
+  specNote         String?
+  specNoteFr       String?
+
+  updatedAt DateTime @updatedAt
+}
+
+// Singleton — one row per named block of page copy (currently just "home").
+// ponytail: a JSON blob instead of typed columns per field, since this table
+// only mirrors whatever Sanity's homeContent schema has this week and is read
+// wholesale, never queried per-field. Split into columns if a field ever
+// needs its own index or non-null constraint.
+model SiteContent {
+  key       String   @id // e.g. "home"
+  data      Json
+  updatedAt DateTime @updatedAt
+}

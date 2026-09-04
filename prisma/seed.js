@@ -10,8 +10,8 @@ async function main() {
   const products = await Promise.all(
     [
       { sku: "SUL-SPK-WMS-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Watermelon Strawberry", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 240, lowStockThreshold: 40 },
-      { sku: "SUL-SPK-PSN-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Passionfruit", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 18, lowStockThreshold: 40 },
-      { sku: "SUL-SPK-LEM-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Lemon Ginger", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 96, lowStockThreshold: 40 },
+      { sku: "SUL-SPK-POM-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Pomegranate", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 18, lowStockThreshold: 40 },
+      { sku: "SUL-SPK-BMC-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Black Mulberry & Blackcurrant", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 96, lowStockThreshold: 40 },
       { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, retailPrice: "20.00", wholesalePrice: "14.00", stockQuantity: 500, lowStockThreshold: 100 },
       { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, retailPrice: "35.00", wholesalePrice: "24.00", stockQuantity: 12, lowStockThreshold: 50 },
     ].map((p) => prisma.product.upsert({ where: { sku: p.sku }, update: {}, create: p }))
@@ -46,7 +46,7 @@ async function main() {
     },
   });
 
-  const [watermelon, , lemon, still500] = products;
+  const [watermelon, , blackMulberry, still500] = products;
 
   const order1 = await prisma.order.create({
     data: {
@@ -76,7 +76,7 @@ async function main() {
       total: "3200.00",
       items: {
         create: [
-          { productId: lemon.id, quantity: 60, unitPriceAtOrder: "32.00", lineTotal: "1920.00" },
+          { productId: blackMulberry.id, quantity: 60, unitPriceAtOrder: "32.00", lineTotal: "1920.00" },
           { productId: still500.id, quantity: 20, unitPriceAtOrder: "14.00", lineTotal: "280.00" },
         ],
       },

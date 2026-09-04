@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useCart } from "@/lib/cart-context";
 import Button from "@/components/Button/Button";
 
@@ -15,6 +16,7 @@ type Props = {
 export default function AddToCartButton(props: Props) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const t = useTranslations("product");
 
   return (
     <Button
@@ -26,7 +28,7 @@ export default function AddToCartButton(props: Props) {
         setTimeout(() => setAdded(false), 1200);
       }}
     >
-      {added ? "Added ✓" : "Add to cart"}
+      {added ? `${t("added")} ✓` : t("addToCart")}
     </Button>
   );
 }

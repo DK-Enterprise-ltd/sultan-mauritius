@@ -1,0 +1,64 @@
+.page {
+  padding: 3.5rem 3rem;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  color: var(--ink);
+  font-size: 2rem;
+}
+
+.wholesaleNote {
+  background: var(--sultan-sun);
+  color: var(--neutral-900);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.75rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin: 2rem 0 3rem;
+}
+
+.filter {
+  padding: 0.55rem 1.25rem;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filterActive {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty {
+  color: var(--neutral-500);
+  padding: 3rem 0;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 2rem 1.25rem;
+  }
+}

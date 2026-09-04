@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "shop": "Boutique",
+    "stockists": "Points de vente",
+    "wholesale": "Grossiste",
+    "contact": "Contact",
+    "cart": "Panier"
+  },
+  "home": {
+    "heroKicker": "Pure. Élégante. Intemporelle.",
+    "heroTitle": "Une hydratation raffinée, en bouteille pour votre quotidien.",
+    "heroSubtitle": "Eau minérale gazeuse aromatisée en verre, et eau de source plate pour chaque jour, puisée à Uludağ et sur les tables mauriciennes depuis 2021.",
+    "ctaShop": "Découvrir la gamme",
+    "ctaWholesale": "Demande grossiste",
+    "sparklingTitle": "Gazeuse, avec du caractère",
+    "sparklingBody": "Pastèque-fraise, grenade, mûre noire & cassis : une saveur affirmée en verre consigné, sans arrière-goût artificiel.",
+    "stillTitle": "Plate, depuis la source",
+    "stillBody": "Eau de source mise en bouteille à Uludağ, filtrée par des générations de savoir-faire familial avant d'arriver dans votre verre.",
+    "legacyKicker": "Depuis les années 1960",
+    "legacyTitle": "Trois générations, une seule source.",
+    "legacyBody": "Sultan est né au pied du mont Uludağ il y a plus de cinquante ans, une entreprise familiale portée par la confiance, de génération en génération. En mars 2021, cet héritage a rejoint l'île Maurice : d'une première commande d'eau minérale gazeuse à une place sur les tables des restaurants, les rayons des supermarchés et les réunions de famille à travers l'île.",
+    "legacyStat1Value": "Années 1960",
+    "legacyStat1Label": "Entreprise familiale depuis",
+    "legacyStat2Value": "Uludağ",
+    "legacyStat2Label": "Puisée en Turquie",
+    "legacyStat3Value": "Familiale",
+    "legacyStat3Label": "Trois générations",
+    "legacyStat4Value": "2021",
+    "legacyStat4Label": "À Maurice depuis",
+    "featured": "Sélection",
+    "socialTitle": "Sur l'île, en toute liberté",
+    "socialCta": "Suivez @sultan_mauritius"
+  },
+  "product": {
+    "sparkling": "Gazeuse",
+    "still": "Plate",
+    "outOfStock": "Rupture de stock",
+    "addToCart": "Ajouter au panier",
+    "added": "Ajouté"
+  },
+  "products": {
+    "title": "Boutique",
+    "wholesaleNote": "Tarifs grossiste appliqués",
+    "filterAll": "Tout",
+    "filterSparkling": "Gazeuse",
+    "filterStill": "Plate",
+    "empty": "Aucun produit dans cette catégorie pour l'instant."
+  },
+  "stockists": {
+    "title": "Où acheter",
+    "intro": "Sultan est disponible dans les supermarchés, restaurants et petites boutiques à travers l'île.",
+    "empty": "La liste des points de vente est en cours de préparation. Revenez bientôt, ou contactez-nous directement via la page contact."
+  },
+  "productDetail": {
+    "back": "Retour à la boutique",
+    "tasteHeading": "Goût",
+    "tasteStill": "Un goût léger et raffiné, faible en sodium et adapté aux régimes pauvres en sel. Filtrée en plusieurs étapes et testée à la source à Uludağ.",
+    "tasteSparkling": "La même eau de source faible en sodium, naturellement gazéifiée et relevée d'un vrai goût de fruit, sans arrière-goût artificiel.",
+    "bestServedHeading": "Se déguste",
+    "bestServedStill": "Bien fraîche, lors de vos prochains rassemblements.",
+    "bestServedSparkling": "Bien fraîche, servie sur glace, lors de vos prochains rassemblements.",
+    "specHeading": "Détails",
+    "specSize": "Format",
+    "specType": "Type",
+    "specSourced": "Puisée à Uludağ, en Turquie",
+    "specBottled": "Mise en bouteille sans contact humain à Bursa et Kütahya",
+    "waterQualityHeading": "Qualité de l'eau",
+    "waterQualityNote": "Mesurée à la source ; la même source alimente les gammes Plate et Gazeuse.",
+    "sodiumLabel": "Sodium",
+    "sodiumValue": "2,80 mg/L",
+    "phLabel": "pH",
+    "phValue": "7,24",
+    "sulfateLabel": "Sulfate",
+    "sulfateValue": "5,68 mg/L",
+    "chlorideLabel": "Chlorure",
+    "chlorideValue": "0,74 mg/L"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "emptyTitle": "Votre panier est vide",
+    "browse": "Voir les produits",
+    "remove": "Retirer",
+    "subtotal": "Sous-total",
+    "checkout": "Passer à la commande"
+  },
+  "checkout": {
+    "title": "Récapitulatif de commande",
+    "emptyNotice": "Votre panier est vide. Ajoutez des produits avant de commander.",
+    "deliveryDetails": "Coordonnées de livraison",
+    "fullName": "Nom complet",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "companyName": "Nom de l'entreprise (grossiste uniquement)",
+    "deliveryAddress": "Adresse de livraison",
+    "deliveryZone": "Zone / région de livraison",
+    "orderNotes": "Remarques sur la commande",
+    "placeOrder": "Valider la commande",
+    "placingOrder": "Validation en cours…",
+    "orderSummary": "Résumé de la commande",
+    "total": "Total",
+    "payment": "Paiement",
+    "paymentNote": "Aucun paiement en ligne : règlement par virement bancaire ou en espèces à la livraison.",
+    "bankDetails": "Virement bancaire : Sultan Mauritius Ltd · MCB · Compte 000123456789\nVeuillez indiquer votre numéro de commande en référence."
+  },
+  "order": {
+    "orderNumber": "Commande n° {number}",
+    "thankYou": "Merci, {name}.",
+    "subtitle": "Nous avons bien reçu votre commande, en attente de confirmation.",
+    "total": "Total",
+    "paymentInstructions": "Instructions de paiement",
+    "paymentIntro": "Aucun paiement en ligne n'est requis. Merci de régler par :",
+    "bankTransfer": "Virement bancaire : Sultan Mauritius Ltd · MCB · Compte 000123456789, référence commande n° {number}",
+    "cashOnDelivery": "Espèces à la livraison",
+    "deliveryTo": "Livraison à"
+  },
+  "wholesale": {
+    "kicker": "Pour détaillants et restaurateurs",
+    "title": "Comptes grossiste",
+    "subtitle": "Indiquez-nous votre volume estimé et nous vous proposerons un tarif grossiste et une livraison adaptés."
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question sur une commande, un produit, ou autre chose : écrivez-nous."
+  },
+  "inquiryForm": {
+    "name": "Nom complet",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "companyName": "Nom de l'entreprise",
+    "estimatedVolume": "Volume estimé (ex. 50 caisses/mois)",
+    "message": "Message",
+    "submit": "Envoyer",
+    "submitting": "Envoi en cours…",
+    "success": "Merci, votre message a bien été reçu. Nous vous répondrons rapidement.",
+    "error": "Une erreur est survenue. Merci de réessayer."
+  },
+  "footer": {
+    "copyright": "© {year} Sultan Mauritius",
+    "paymentNote": "Virement bancaire et espèces à la livraison, aucun paiement en ligne"
+  }
+}

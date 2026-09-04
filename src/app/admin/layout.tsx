@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
+import { sora, inter } from "../fonts";
+import "../globals.css";
 import styles from "./layout.module.css";
+
+export const metadata: Metadata = {
+  title: "Sultan Admin",
+};
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
@@ -18,18 +25,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className={styles.shell}>
-      <aside className={styles.sidebar}>
-        <p className={styles.brand}>Sultan Admin</p>
-        <nav className={styles.nav}>
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className={styles.navLink}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
-      <main className={styles.content}>{children}</main>
-    </div>
+    <html lang="en">
+      <body className={`${sora.variable} ${inter.variable}`}>
+        <div className={styles.shell}>
+          <aside className={styles.sidebar}>
+            <p className={styles.brand}>Sultan Admin</p>
+            <nav className={styles.nav}>
+              {NAV_ITEMS.map((item) => (
+                <Link key={item.href} href={item.href} className={styles.navLink}>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </aside>
+          <main className={styles.content}>{children}</main>
+        </div>
+      </body>
+    </html>
   );
 }
