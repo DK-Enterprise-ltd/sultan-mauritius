@@ -18,17 +18,26 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const reveal = () => el.classList.add(styles.visible);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.classList.add(styles.visible);
+          reveal();
           observer.disconnect();
         }
       },
       { threshold: 0.15 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    // Safety net: real content should never stay invisible-but-clickable
+    // forever just because the observer didn't fire (browser extension
+    // interference, an already-in-view element on some mobile browsers,
+    // etc.). Force it visible after a bit regardless.
+    const timeout = setTimeout(reveal, 1200);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (
