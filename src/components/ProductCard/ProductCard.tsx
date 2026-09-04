@@ -5,6 +5,7 @@ import styles from "./ProductCard.module.css";
 import AddToCartButton from "./AddToCartButton";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
+import { caseSizeFor } from "@/lib/case-size";
 import type { Locale } from "@/i18n/routing";
 
 export type ProductCardData = {
@@ -20,9 +21,11 @@ export type ProductCardData = {
 
 export default function ProductCard({
   product,
+  isB2B,
 }: {
   product: ProductCardData;
   index?: number;
+  isB2B?: boolean;
 }) {
   const outOfStock = product.stockQuantity <= 0;
   const t = useTranslations("product");
@@ -40,6 +43,7 @@ export default function ProductCard({
             src={product.imageUrl}
             alt={name}
             fill
+            draggable={false}
             sizes="(max-width: 640px) 100vw, 320px"
             className={styles.image}
           />
@@ -63,6 +67,8 @@ export default function ProductCard({
               flavor={product.flavor}
               sizeMl={product.sizeMl}
               unitPrice={product.displayPrice}
+              isB2B={isB2B}
+              caseSize={caseSizeFor(product.sizeMl)}
             />
           )}
         </div>

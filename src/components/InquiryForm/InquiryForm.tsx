@@ -18,6 +18,14 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
     setStatus("idle");
 
     const form = new FormData(e.currentTarget);
+    const sparklingCases = Number(form.get("sparklingCases") || 0);
+    const stillCases = Number(form.get("stillCases") || 0);
+    const caseLine =
+      wholesale && (sparklingCases > 0 || stillCases > 0)
+        ? t("caseSummary", { sparkling: sparklingCases, still: stillCases })
+        : "";
+    const message = [caseLine, String(form.get("message") || "")].filter(Boolean).join("\n\n");
+
     const result = await submitInquiry({
       type: wholesale ? "WHOLESALE" : "GENERAL",
       name: String(form.get("name") || ""),
@@ -25,7 +33,7 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
       phone: String(form.get("phone") || "") || undefined,
       companyName: String(form.get("companyName") || "") || undefined,
       estimatedVolume: String(form.get("estimatedVolume") || "") || undefined,
-      message: String(form.get("message") || ""),
+      message,
     });
 
     setSubmitting(false);
@@ -66,6 +74,16 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
             {t("estimatedVolume")}
             <input name="estimatedVolume" required />
           </label>
+          <div className={styles.caseRow}>
+            <label className={styles.field}>
+              {t("sparklingCases")}
+              <input name="sparklingCases" type="number" min={0} step={1} defaultValue={0} />
+            </label>
+            <label className={styles.field}>
+              {t("stillCases")}
+              <input name="stillCases" type="number" min={0} step={1} defaultValue={0} />
+            </label>
+          </div>
         </>
       )}
       <label className={styles.field}>

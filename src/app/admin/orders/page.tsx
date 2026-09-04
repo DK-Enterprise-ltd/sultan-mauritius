@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
-import Badge from "@/components/Badge/Badge";
 import styles from "../page.module.css";
 import filterStyles from "./page.module.css";
+import StatusSelect from "./StatusSelect";
 
 export const dynamic = "force-dynamic";
 
@@ -65,7 +65,7 @@ export default async function AdminOrdersPage({
                 <td>{order.customer.name}</td>
                 <td>{order.channel}</td>
                 <td>
-                  <Badge status={order.status} />
+                  <StatusSelect orderId={order.id} status={order.status} />
                 </td>
                 <td>{formatMur(order.total)}</td>
                 <td>{order.createdAt.toLocaleDateString("en-MU")}</td>

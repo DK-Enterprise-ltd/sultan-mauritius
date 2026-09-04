@@ -53,6 +53,7 @@
     "still": "Still",
     "outOfStock": "Out of stock",
     "addToCart": "Add to cart",
+    "addCase": "Add case of {count}",
     "added": "Added"
   },
   "products": {
@@ -63,7 +64,9 @@
     "filterStill": "Still",
     "laneSparklingNote": "Glass, flavoured, carbonated at bottling",
     "laneStillNote": "PET, natural spring water",
-    "empty": "No products in this category yet."
+    "empty": "No products in this category yet.",
+    "resultOne": "product",
+    "resultMany": "products"
   },
   "stockists": {
     "title": "Where to buy",
@@ -147,6 +150,9 @@
     "phone": "Phone",
     "companyName": "Company name",
     "estimatedVolume": "Estimated volume (e.g. 50 cases/month)",
+    "sparklingCases": "Sparkling, cases of 24",
+    "stillCases": "Still, cases of 24",
+    "caseSummary": "Sparkling: {sparkling} case(s) of 24. Still: {still} case(s) of 24.",
     "message": "Message",
     "submit": "Send",
     "submitting": "Sending…",

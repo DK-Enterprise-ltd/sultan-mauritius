@@ -25,13 +25,14 @@ function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerGrid}>
         <div className={styles.footerBrand}>
-          <Image src="/uploads/logo_white.svg" alt="Sultan" width={140} height={32} className={styles.footerLogo} />
+          <Image src="/uploads/logo_white.svg" alt="Sultan" width={141} height={36} className={styles.footerLogo} />
           <p className={styles.tagline}>{t("tagline")}</p>
         </div>
         <div className={styles.footerCol}>
           <span className={styles.colHeading}>{t("shopHeading")}</span>
           <Link href="/products?type=SPARKLING">{tProduct("sparkling")}</Link>
           <Link href="/products?type=STILL">{tProduct("still")}</Link>
+          <Link href="/products?type=STILL">Sultan Prime</Link>
         </div>
         <div className={styles.footerCol}>
           <span className={styles.colHeading}>{t("tradeHeading")}</span>

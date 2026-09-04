@@ -1,5 +1,4 @@
 .card {
-  border-radius: var(--radius-card);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -13,10 +12,12 @@
 
 .sparkling {
   background: var(--wash-sparkling);
+  border-radius: 14px;
 }
 
 .still {
   background: var(--wash-still);
+  border-radius: 26px;
 }
 
 .media {
@@ -31,11 +32,25 @@
 
 .image {
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
   transition: transform 0.5s ease;
 }
 
 .card:hover .image {
-  transform: scale(1.05);
+  animation: sultan-product-spin 3.5s linear infinite;
+}
+
+@keyframes sultan-product-spin {
+  from { transform: scale(1.05) rotate(0deg); }
+  to { transform: scale(1.05) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover .image {
+    animation: none;
+    transform: scale(1.05);
+  }
 }
 
 .lineBadge {

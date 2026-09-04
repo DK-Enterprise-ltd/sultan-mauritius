@@ -53,6 +53,7 @@
     "still": "Plate",
     "outOfStock": "Rupture de stock",
     "addToCart": "Ajouter au panier",
+    "addCase": "Ajouter un carton de {count}",
     "added": "Ajouté"
   },
   "products": {
@@ -63,7 +64,9 @@
     "filterStill": "Plate",
     "laneSparklingNote": "Verre, aromatisée, gazéifiée à la mise en bouteille",
     "laneStillNote": "PET, eau de source naturelle",
-    "empty": "Aucun produit dans cette catégorie pour l'instant."
+    "empty": "Aucun produit dans cette catégorie pour l'instant.",
+    "resultOne": "produit",
+    "resultMany": "produits"
   },
   "stockists": {
     "title": "Où acheter",
@@ -147,6 +150,9 @@
     "phone": "Téléphone",
     "companyName": "Nom de l'entreprise",
     "estimatedVolume": "Volume estimé (ex. 50 caisses/mois)",
+    "sparklingCases": "Pétillante, caisses de 24",
+    "stillCases": "Plate, caisses de 24",
+    "caseSummary": "Pétillante : {sparkling} caisse(s) de 24. Plate : {still} caisse(s) de 24.",
     "message": "Message",
     "submit": "Envoyer",
     "submitting": "Envoi en cours…",

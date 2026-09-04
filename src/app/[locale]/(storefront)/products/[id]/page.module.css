@@ -1,7 +1,17 @@
 .page {
-  padding: 3.5rem 3rem;
-  max-width: 1200px;
+  padding: 3.5rem 2.5rem 6.875rem;
+  max-width: 1400px;
   margin: 0 auto;
+  min-height: 100vh;
+  transition: background-color 0.5s ease;
+}
+
+.page.sparkling {
+  background: var(--wash-sparkling);
+}
+
+.page.still {
+  background: var(--wash-still);
 }
 
 .back {
@@ -19,36 +29,52 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3.5rem;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 4.5rem;
+  align-items: start;
 }
 
 .media {
   position: relative;
   aspect-ratio: 4 / 5;
-  border-radius: var(--radius-card);
+  border-radius: 24px;
   overflow: hidden;
   padding: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.5s ease;
 }
 
 .sparkling .media {
-  background: var(--wash-sparkling);
+  background: var(--wash-sparkling-deep);
 }
 
 .still .media {
-  background: var(--wash-still);
+  background: var(--wash-still-deep);
 }
 
 .image {
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
   transition: transform 0.5s ease;
 }
 
 .media:hover .image {
-  transform: scale(1.04);
+  animation: sultan-product-spin 4s linear infinite;
+}
+
+@keyframes sultan-product-spin {
+  from { transform: scale(1.04) rotate(0deg); }
+  to { transform: scale(1.04) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media:hover .image {
+    animation: none;
+    transform: scale(1.04);
+  }
 }
 
 .mediaLabel {

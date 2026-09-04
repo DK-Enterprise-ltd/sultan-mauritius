@@ -1,8 +1,9 @@
 "use server";
 
-import { Prisma } from "@prisma/client";
+import { Prisma, OrderStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getViewer } from "@/lib/auth";
+import { getViewer, isAdmin } from "@/lib/auth";
 
 type OrderInput = {
   items: { productId: string; quantity: number }[];
@@ -113,4 +114,16 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
   });
 
   return { ok: true, orderNumber: order.orderNumber };
+}
+
+/** Admin-only: moves an order to the next stage of fulfilment.
+ * TODO(real-auth): gated by isAdmin() only, same stub as the rest of the
+ * admin surface — see src/lib/auth.ts. */
+export async function updateOrderStatus(orderId: string, status: OrderStatus) {
+  if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
+
+  await prisma.order.update({ where: { id: orderId }, data: { status } });
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
+  return { ok: true as const };
 }

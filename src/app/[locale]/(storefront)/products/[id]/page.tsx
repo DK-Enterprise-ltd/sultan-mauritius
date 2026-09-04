@@ -9,6 +9,7 @@ import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
 import type { Locale } from "@/i18n/routing";
 import AddToCartButton from "@/components/ProductCard/AddToCartButton";
+import { caseSizeFor } from "@/lib/case-size";
 import styles from "./page.module.css";
 
 export default async function ProductDetailPage({
@@ -57,7 +58,14 @@ export default async function ProductDetailPage({
       <div className={styles.layout}>
         <div className={styles.media}>
           {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={name} fill sizes="(max-width: 860px) 100vw, 480px" className={styles.image} />
+            <Image
+              src={product.imageUrl}
+              alt={name}
+              fill
+              draggable={false}
+              sizes="(max-width: 860px) 100vw, 480px"
+              className={styles.image}
+            />
           ) : (
             <span className={styles.mediaLabel}>{product.sizeMl}ml</span>
           )}
@@ -78,6 +86,8 @@ export default async function ProductDetailPage({
                 flavor={product.flavor}
                 sizeMl={product.sizeMl}
                 unitPrice={price}
+                isB2B={viewer.isB2B}
+                caseSize={caseSizeFor(product.sizeMl)}
               />
             )}
           </div>

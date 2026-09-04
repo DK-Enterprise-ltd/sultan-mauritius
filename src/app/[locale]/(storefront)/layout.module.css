@@ -5,7 +5,7 @@
 .footer {
   background: var(--sultan-navy);
   color: rgba(255, 255, 255, 0.75);
-  padding: 4.5rem 3rem 2.75rem;
+  padding: 4.5rem 2.5rem 2.75rem;
 }
 
 .footerGrid {
@@ -23,12 +23,12 @@
 }
 
 .footerLogo {
-  height: 32px;
+  height: 36px;
   width: auto;
 }
 
 .tagline {
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
   max-width: 34ch;
 }
@@ -36,8 +36,12 @@
 .footerCol {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  font-size: 0.9rem;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+}
+
+.footerCol a {
+  color: var(--sultan-teal);
 }
 
 .footerCol a:hover,
@@ -47,24 +51,24 @@
 
 .colHeading {
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
 .social {
-  color: var(--sultan-sky);
+  color: #9be3f5;
 }
 
 .footerBottom {
   max-width: 1400px;
   margin: 3.25rem auto 0;
-  padding-top: 1.4rem;
+  padding-top: 1.375rem;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.55);
 }
 

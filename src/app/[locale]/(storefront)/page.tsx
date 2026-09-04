@@ -67,13 +67,13 @@ export default async function HomePage() {
     <>
       <section className={styles.hero}>
         <div className={styles.heroImageWrap}>
-          <Image src="/uploads/breadcrumb-banner.jpg" alt="" fill priority className={styles.heroImage} />
+          <Image src="/uploads/ig-28.jpg" alt="" fill priority className={styles.heroImage} />
         </div>
         <div className={styles.heroScrim} />
         <span className={styles.heroRing} aria-hidden />
         <span className={`${styles.heroRing} ${styles.heroRing2}`} aria-hidden />
         <div className={styles.heroContent}>
-          <p className={styles.heroKicker}>{c("heroKicker")}</p>
+          <span className={styles.heroDot} aria-hidden />
           <h1 className={styles.heroTitle}>{c("heroTitle")}</h1>
           <p className={styles.heroSubtitle}>{c("heroSubtitle")}</p>
           <div className={styles.heroActions}>
@@ -187,6 +187,7 @@ export default async function HomePage() {
               <ProductCard
                 key={product.id}
                 index={index}
+                isB2B={viewer.isB2B}
                 product={{
                   id: product.id,
                   name: product.name,

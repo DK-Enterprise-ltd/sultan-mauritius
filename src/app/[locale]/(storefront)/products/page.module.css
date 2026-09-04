@@ -1,5 +1,5 @@
 .page {
-  padding: 3.5rem 3rem;
+  padding: 3.5rem 2.5rem 6.875rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -30,8 +30,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  margin: 2.25rem 0 0;
-  border-radius: var(--radius-card);
+  margin: 2.75rem 0 0;
+  border-radius: 18px;
   overflow: hidden;
 }
 
@@ -88,9 +88,61 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.625rem;
+  margin-top: 2.5rem;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 1.75rem 0 0;
+}
+
+.chipRow + .chipRow {
+  margin-top: 0.875rem;
+}
+
+.chipLabel {
+  font-size: 0.875rem;
+  color: #7a7f88;
+  margin-right: 0.375rem;
+}
+
+.chipSpacer {
+  flex: 1;
+}
+
+.resultCount {
+  font-size: 0.875rem;
+  color: #7a7f88;
+}
+
+.chip {
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.5625rem 1.0625rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(27, 42, 74, 0.2);
+  background: transparent;
+  color: #3e434c;
+}
+
+.chipActiveSparkling {
+  border-color: var(--sultan-sun);
+  background: var(--sultan-sun);
+  color: #fff;
+}
+
+.chipActiveStill {
+  border-color: var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: #fff;
 }
 
 @media (max-width: 640px) {
