@@ -72,6 +72,19 @@
   background: var(--sultan-teal);
 }
 
+.packBadge {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 1;
+  border-radius: var(--radius-pill);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.88);
+}
+
 .mediaLabel {
   font-weight: 700;
   font-size: 1.5rem;

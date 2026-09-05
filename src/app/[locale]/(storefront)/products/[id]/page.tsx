@@ -72,7 +72,11 @@ export default async function ProductDetailPage({
         </div>
 
         <div className={styles.info}>
-          <p className={styles.type}>{isSparkling ? tProduct("sparkling") : tProduct("still")}</p>
+          <p className={styles.type}>
+            {isSparkling ? tProduct("sparkling") : tProduct("still")}
+            {product.packCount === 24 && ` · ${tProduct("caseLabel", { count: 24 })}`}
+            {product.packCount > 1 && product.packCount !== 24 && ` · ${tProduct("packLabel", { count: product.packCount })}`}
+          </p>
           <h1 className={styles.name}>{name}</h1>
           {flavor && <p className={styles.flavor}>{flavor}</p>}
           <div className={styles.priceRow}>
@@ -87,7 +91,7 @@ export default async function ProductDetailPage({
                 sizeMl={product.sizeMl}
                 unitPrice={price}
                 isB2B={viewer.isB2B}
-                caseSize={caseSizeFor(product.sizeMl)}
+                caseSize={product.packCount === 1 ? caseSizeFor(product.sizeMl) : undefined}
               />
             )}
           </div>

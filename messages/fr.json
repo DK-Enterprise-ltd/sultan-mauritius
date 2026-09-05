@@ -57,7 +57,9 @@
     "outOfStock": "Rupture de stock",
     "addToCart": "Ajouter au panier",
     "addCase": "Ajouter un carton de {count}",
-    "added": "Ajouté"
+    "added": "Ajouté",
+    "packLabel": "Pack de {count}",
+    "caseLabel": "Carton de {count}"
   },
   "products": {
     "title": "Boutique",

@@ -57,7 +57,9 @@
     "outOfStock": "Out of stock",
     "addToCart": "Add to cart",
     "addCase": "Add case of {count}",
-    "added": "Added"
+    "added": "Added",
+    "packLabel": "{count}-Pack",
+    "caseLabel": "Case of {count}"
   },
   "products": {
     "title": "Shop",

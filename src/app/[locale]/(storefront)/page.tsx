@@ -77,7 +77,9 @@ export default async function HomePage() {
   const bySku = new Map(allProducts.map((p) => [p.sku, p]));
   const featured = FEATURED_SKUS.map((sku) => bySku.get(sku)).filter((p): p is NonNullable<typeof p> => !!p);
 
-  const sparklingFlavors = allProducts.filter((p) => p.type === "SPARKLING" && p.flavor);
+  // packCount === 1 only: the showcase is one taste card per flavor, not
+  // a full catalog listing, so the 6-pack/24-case SKUs are excluded here.
+  const sparklingFlavors = allProducts.filter((p) => p.type === "SPARKLING" && p.flavor && p.packCount === 1);
   const coreStillProducts = allProducts
     .filter((p) => p.type === "STILL" && p.name !== "Sultan Prime")
     .sort((a, b) => a.sizeMl - b.sizeMl);
@@ -248,6 +250,7 @@ export default async function HomePage() {
                     type: product.type,
                     flavor: product.flavor,
                     sizeMl: product.sizeMl,
+                    packCount: product.packCount,
                     imageUrl: product.imageUrl,
                     displayPrice: resolvePrice(product, viewer),
                     stockQuantity: product.stockQuantity,

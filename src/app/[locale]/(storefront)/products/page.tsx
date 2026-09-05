@@ -136,6 +136,7 @@ export default async function ProductsPage({
                   type: product.type,
                   flavor: product.flavor,
                   sizeMl: product.sizeMl,
+                  packCount: product.packCount,
                   imageUrl: product.imageUrl,
                   displayPrice: resolvePrice(product, viewer),
                   stockQuantity: product.stockQuantity,

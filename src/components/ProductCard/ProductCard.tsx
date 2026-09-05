@@ -14,6 +14,7 @@ export type ProductCardData = {
   type: "STILL" | "SPARKLING";
   flavor: string | null;
   sizeMl: number;
+  packCount: number; // 1 = single bottle, 6/24 = a pre-packed multi-buy product
   imageUrl: string | null;
   displayPrice: number; // already resolved retail/wholesale by the caller
   stockQuantity: number;
@@ -33,11 +34,18 @@ export default function ProductCard({
   const name = localizeProductName(product.name, locale);
   const flavor = localizeFlavor(product.flavor, locale);
   const sparkling = product.type === "SPARKLING";
+  const packLabel =
+    product.packCount === 24
+      ? t("caseLabel", { count: 24 })
+      : product.packCount > 1
+        ? t("packLabel", { count: product.packCount })
+        : null;
 
   return (
     <div className={`${styles.card} ${sparkling ? styles.sparkling : styles.still}`}>
       <Link href={`/products/${product.id}`} className={styles.media}>
         <span className={styles.lineBadge}>{sparkling ? t("sparkling") : t("still")}</span>
+        {packLabel && <span className={styles.packBadge}>{packLabel}</span>}
         {product.imageUrl ? (
           <Image
             src={product.imageUrl}
@@ -68,7 +76,7 @@ export default function ProductCard({
               sizeMl={product.sizeMl}
               unitPrice={product.displayPrice}
               isB2B={isB2B}
-              caseSize={caseSizeFor(product.sizeMl)}
+              caseSize={product.packCount === 1 ? caseSizeFor(product.sizeMl) : undefined}
             />
           )}
         </div>

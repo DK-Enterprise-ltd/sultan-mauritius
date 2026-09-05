@@ -73,6 +73,7 @@ model Product {
   type              ProductType
   flavor            String? // e.g. "Watermelon Strawberry" — sparkling line only
   sizeMl            Int
+  packCount         Int      @default(1) // bottles per unit sold: 1 = single, 6/24 = pre-packed multi-buy
   retailPrice       Decimal  @db.Decimal(10, 2) // B2C unit price, MUR
   wholesalePrice    Decimal? @db.Decimal(10, 2) // B2B unit price, MUR — null falls back to retail
   stockQuantity     Int      @default(0)
