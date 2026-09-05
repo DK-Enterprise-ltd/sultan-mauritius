@@ -4,11 +4,17 @@ E-commerce site for Sultan Mauritius, local distributor of Sultan mineral
 water (sourced from Uludağ, Turkey; family business since the 1960s, in
 Mauritius since March 2021). Two product lines:
 
-- **Sparkling**: flavored mineral water in glass bottles (330ml locally;
-  the global catalogue also runs 0.20L PET in ~11 flavors).
-- **Still**: plain spring water in PET bottles (500ml, 1.5L; 0.25L is
-  called out in the catalogue as the format Mauritians favor for
-  gatherings/events).
+- **Sparkling**: flavored mineral water in 200ml glass bottles, 11
+  flavors: Lemon, Apple, Mandarin, Sade (plain/unflavored), Gazoz (mixed
+  fruit), Mango & Pineapple, C-Extra (lemon + vitamin C), Mojito (mint &
+  lemon), Black Mulberry & Blackcurrant, Berry & Hibiscus, Watermelon
+  Strawberry. Confirmed against the customer's official product photos
+  (`../reference/Customer upload/Carbonated`), which print "200ml" and
+  "6x200 ml" on the labels — an earlier version of this file said 330ml,
+  that was wrong.
+- **Still**: plain spring water in PET bottles, 250ml/500ml/1.5L plus a
+  "Prime" line at 400ml/800ml; 0.25L is called out in the catalogue as the
+  format Mauritians favor for gatherings/events.
 
 Sells both **B2C** (individuals) and **B2B** (restaurants, supermarkets,
 wholesale) with separate pricing. No online payment: bank transfer or
@@ -117,15 +123,26 @@ prisma/seed.js                      plain CommonJS seed (no ts-node), run
   Display face Cabinet Grotesk / body face Satoshi, loaded from Fontshare
   in `src/app/[locale]/layout.tsx`'s `<head>`, with Sora/Inter (`src/app/
   fonts.ts`) as the offline fallback chain feeding the same CSS variables.
-- All site imagery — logo, product bottle/flavour photography, hero and
-  story shots — is the exact asset set from `../Sultan Mauritius Website
-  Design/uploads/` (the Claude Design canvas this site's look is ported
-  from), copied verbatim into `public/uploads/` under its original
-  filenames. Reference `prisma/seed.js` for which file backs which SKU.
-  Don't reorganize this into a second `public/images/` tree; it was
-  consolidated into one folder on purpose. `../reference/` (one level up,
-  outside this Next.js project) holds the wider unedited photo library
-  this set was drawn from.
+- `public/uploads/` is the exact asset set from `../Sultan Mauritius
+  Website Design/uploads/` (the Claude Design canvas this site's look is
+  ported from) — story/lifestyle/catalogue-page shots, copied verbatim
+  under their original filenames. Don't reorganize this into a second
+  `public/images/` tree; it was consolidated into one folder on purpose.
+- `public/Assets/Products/{Sparkling,Still,Packs}` is real Sultan product
+  photography, not stock/placeholder images: sourced from `../reference/
+  Customer upload/` (the customer's official uploads — Carbonated/water
+  folders), picked and renamed per flavor/size (2026-09 pass). Reference
+  `prisma/seed.js` for which file backs which SKU. `Packs/` holds 6-pack
+  and 24-case shots (real shrink-wrap/carton photography) not tied to a
+  specific Product row; nothing currently renders them, they're there for
+  a future wholesale/case-size section.
+- `public/Assets/Lifestyle/hero-desktop-picnic.jpg` and `hero-mobile-ice.jpg`
+  (homepage hero, art-directed via `getImageProps` + `<picture>` in
+  `page.tsx`) are agency photography from `../reference/Customer upload/
+  Agency/`, not the Design canvas set.
+- `../reference/` (one level up, outside this Next.js project) holds the
+  wider unedited photo library all of the above was drawn from — treat it
+  as source material, not something the site reads from directly.
 - Product catalogue PDF (repo root, one level up) is Sultan's global/Turkey
   brand catalogue. Useful for brand story and flavor range, but the local
   Mauritius SKU lineup actually sold is `prisma/seed.js`. Some catalogue

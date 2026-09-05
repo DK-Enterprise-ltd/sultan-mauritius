@@ -9,28 +9,34 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   const products = await Promise.all(
     [
-      // Still line — matches the design canvas catalog exactly (id, price, case size).
-      { sku: "SUL-STL-250", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 250, retailPrice: "15.00", wholesalePrice: "10.50", stockQuantity: 600, lowStockThreshold: 120, imageUrl: "/Assets/Products/Still/bottle-13.png" },
-      { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/bottle-06.png" },
-      { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/bottle-04.png" },
-      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/bottle-05.png" },
-      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/bottle-07.png" },
+      // Still line — real bottle photography from the customer's official
+      // upload (../reference/Customer upload/water). 400/800ml (Prime) have
+      // no clean single-bottle shot in that set, only the 12-pack shrink
+      // photo, so that's what's used for those two.
+      { sku: "SUL-STL-250", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 250, retailPrice: "15.00", wholesalePrice: "10.50", stockQuantity: 600, lowStockThreshold: 120, imageUrl: "/Assets/Products/Still/spring-water-250ml.png" },
+      { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/spring-water-500ml.png" },
+      { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/spring-water-1500ml.png" },
+      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/prime-400ml.png" },
+      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/prime-800ml.png" },
 
-      // Sparkling line — all eleven flavours from the canvas. Kept at the
-      // real local bottle size (330ml, per CLAUDE.md) rather than the
-      // canvas's 0.20L, which is the Turkey/global catalogue format Sultan
-      // doesn't actually sell in Mauritius.
-      { sku: "SUL-SPK-LEM-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Lemon", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/lemon.png" },
-      { sku: "SUL-SPK-APP-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Apple", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/apple.png" },
-      { sku: "SUL-SPK-MAN-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mandarin", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mandarine.png" },
-      { sku: "SUL-SPK-STR-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Strawberry", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/strawberry.png" },
-      { sku: "SUL-SPK-GAZ-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Gazoz", sizeMl: 330, retailPrice: "42.00", wholesalePrice: "30.00", stockQuantity: 260, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/sultan-gazoz.png" },
-      { sku: "SUL-SPK-MAP-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mango & Pineapple", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mango-and-pineapple.png" },
-      { sku: "SUL-SPK-POM-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Pomegranate", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 18, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/pomegranate.png" },
-      { sku: "SUL-SPK-MOJ-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mojito", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 150, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mojito.png" },
-      { sku: "SUL-SPK-BMC-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Black Mulberry & Blackcurrant", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 96, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/black-mulberry-currant.png" },
-      { sku: "SUL-SPK-BER-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Berry & Hibiscus", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 150, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/berry-hibiscus.png" },
-      { sku: "SUL-SPK-WMS-330", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Watermelon Strawberry", sizeMl: 330, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 240, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/watermelon-strawberry.png" },
+      // Sparkling line — all eleven real flavours, confirmed against the
+      // customer's official bottle/pack photography (labels read 200ml,
+      // packs read "6x200 ml" and 24-count cases — not 330ml as previously
+      // assumed here; corrected). "Strawberry" and "Pomegranate" were
+      // dropped: no such Sultan flavors exist in the reference photos.
+      // "Sade" (plain, unflavored) and "C-Extra" (lemon + vitamin C) are
+      // real flavors that were missing from this lineup; added in their place.
+      { sku: "SUL-SPK-LEM-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Lemon", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/lemon.jpg" },
+      { sku: "SUL-SPK-APP-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Apple", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/apple.jpg" },
+      { sku: "SUL-SPK-MAN-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mandarin", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mandarine.jpg" },
+      { sku: "SUL-SPK-SADE-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Sade", sizeMl: 200, retailPrice: "42.00", wholesalePrice: "30.00", stockQuantity: 260, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/sade.jpg" },
+      { sku: "SUL-SPK-GAZ-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Gazoz", sizeMl: 200, retailPrice: "42.00", wholesalePrice: "30.00", stockQuantity: 260, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/gazoz.jpg" },
+      { sku: "SUL-SPK-MAP-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mango & Pineapple", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 180, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mango-and-pineapple.jpg" },
+      { sku: "SUL-SPK-CEX-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "C-Extra", sizeMl: 200, retailPrice: "48.00", wholesalePrice: "34.00", stockQuantity: 150, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/c-extra.jpg" },
+      { sku: "SUL-SPK-MOJ-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Mojito", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 150, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/mojito.png" },
+      { sku: "SUL-SPK-BMC-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Black Mulberry & Blackcurrant", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 96, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/black-mulberry-currant.jpg" },
+      { sku: "SUL-SPK-BER-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Berry & Hibiscus", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 150, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/berry-hibiscus.png" },
+      { sku: "SUL-SPK-WMS-200", name: "Sultan Sparkling", type: "SPARKLING", flavor: "Watermelon Strawberry", sizeMl: 200, retailPrice: "45.00", wholesalePrice: "32.00", stockQuantity: 240, lowStockThreshold: 40, imageUrl: "/Assets/Products/Sparkling/watermelon-strawberry.jpg" },
     ].map((p) => prisma.product.upsert({ where: { sku: p.sku }, update: { imageUrl: p.imageUrl, sizeMl: p.sizeMl, retailPrice: p.retailPrice, wholesalePrice: p.wholesalePrice, name: p.name }, create: p }))
   );
 

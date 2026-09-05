@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import styles from "./Reveal.module.css";
 
 // ponytail: IntersectionObserver + a CSS class toggle, not a library —
@@ -9,9 +9,13 @@ import styles from "./Reveal.module.css";
 export default function Reveal({
   children,
   className,
+  delay,
+  style,
 }: {
   children: ReactNode;
   className?: string;
+  delay?: number; // ms, for staggering items in a list
+  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -41,7 +45,11 @@ export default function Reveal({
   }, []);
 
   return (
-    <div ref={ref} className={[styles.reveal, className].filter(Boolean).join(" ")}>
+    <div
+      ref={ref}
+      className={[styles.reveal, className].filter(Boolean).join(" ")}
+      style={delay ? { ...style, transitionDelay: `${delay}ms` } : style}
+    >
       {children}
     </div>
   );

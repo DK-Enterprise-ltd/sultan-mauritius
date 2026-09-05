@@ -124,25 +124,26 @@ export default async function ProductsPage({
       {products.length === 0 ? (
         <p className={styles.empty}>{t("empty")}</p>
       ) : (
-        <Reveal className={styles.grid}>
+        <div className={styles.grid}>
           {products.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              index={index}
-              isB2B={viewer.isB2B}
-              product={{
-                id: product.id,
-                name: product.name,
-                type: product.type,
-                flavor: product.flavor,
-                sizeMl: product.sizeMl,
-                imageUrl: product.imageUrl,
-                displayPrice: resolvePrice(product, viewer),
-                stockQuantity: product.stockQuantity,
-              }}
-            />
+            <Reveal key={product.id} delay={(index % 8) * 60}>
+              <ProductCard
+                index={index}
+                isB2B={viewer.isB2B}
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  type: product.type,
+                  flavor: product.flavor,
+                  sizeMl: product.sizeMl,
+                  imageUrl: product.imageUrl,
+                  displayPrice: resolvePrice(product, viewer),
+                  stockQuantity: product.stockQuantity,
+                }}
+              />
+            </Reveal>
           ))}
-        </Reveal>
+        </div>
       )}
     </div>
   );

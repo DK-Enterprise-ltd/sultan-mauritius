@@ -5,14 +5,14 @@ import type { Locale } from "@/i18n/routing";
 // a couple dozen entries.
 const FLAVOR_FR: Record<string, string> = {
   "Watermelon Strawberry": "Pastèque Fraise",
-  "Pomegranate": "Grenade",
   "Black Mulberry & Blackcurrant": "Mûre Noire & Cassis",
   "Lemon": "Citron",
   "Apple": "Pomme",
   "Mandarin": "Mandarine",
-  "Strawberry": "Fraise",
+  "Sade": "Nature",
   "Gazoz": "Gazoz",
   "Mango & Pineapple": "Mangue & Ananas",
+  "C-Extra": "C-Extra",
   "Mojito": "Mojito",
   "Berry & Hibiscus": "Fruits rouges & Hibiscus",
 };

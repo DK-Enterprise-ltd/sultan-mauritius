@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getActiveProducts, getProductCopyBySku } from "@/lib/catalog";
@@ -21,21 +21,24 @@ const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scal
   Lemon: { en: "Bright and citrus-forward, with a clean, tart finish.", fr: "Vive et citronnée, avec une finale nette et acidulée.", color: "#d9c84a" },
   Apple: { en: "Crisp and lightly sweet, like biting into a fresh apple.", fr: "Croquante et légèrement sucrée, comme une pomme fraîche.", color: "#c7c25a" },
   Mandarin: { en: "Juicy and sun-ripened, with a fragrant citrus lift.", fr: "Juteuse et gorgée de soleil, avec un parfum d'agrume.", color: "#e8963a" },
-  Strawberry: { en: "Ripe and berry-sweet, rounded off with gentle fizz.", fr: "Mûre et sucrée, adoucie par de fines bulles.", color: "#b92b44" },
+  Sade: { en: "Plain sparkling mineral water: clean, mineral, no fruit added.", fr: "Eau minérale gazeuse nature : pure, minérale, sans fruit ajouté.", color: "#5c7a8a" },
   Gazoz: { en: "The original: clean, delicately sweet, and endlessly refreshing.", fr: "L'original : pur, délicatement sucré et infiniment rafraîchissant.", color: "#8fb9c2" },
   "Mango & Pineapple": { en: "Tropical and golden, sweet mango layered over tangy pineapple.", fr: "Tropicale et dorée, mangue sucrée relevée d'ananas acidulé.", color: "#e8b93a" },
-  Pomegranate: { en: "Deep and tart-sweet, with a rich ruby finish.", fr: "Profonde et acidulée, avec une riche finale rubis.", color: "#a81e33" },
+  "C-Extra": { en: "Bright lemon with a boost of vitamin C.", fr: "Citron vif avec un supplément de vitamine C.", color: "#a8c23a" },
   Mojito: { en: "Cool mint and lime, crisp enough to feel like a garden terrace.", fr: "Menthe fraîche et citron vert, aussi vive qu'une terrasse ombragée.", color: "#7fa84a" },
   "Black Mulberry & Blackcurrant": { en: "Dark, jammy fruit with a bold, wine-like depth.", fr: "Fruits noirs confiturés, avec une profondeur presque vineuse.", color: "#6e1746" },
   "Berry & Hibiscus": {
     en: "Tart mixed berries lifted by floral hibiscus notes.",
     fr: "Baies acidulées relevées de notes florales d'hibiscus.",
     color: "#c93b4e",
-    // ponytail: this bottle's source photo has far more transparent padding
-    // around it than the others (~48% content fill vs. ~98% for a typical
-    // one), so it renders small even in the normalized square media box.
-    // Manual correction until the source asset gets a tighter crop.
-    scale: 1.9,
+    // ponytail: no single-bottle shot of this flavor exists in the
+    // reference photos, only the 6-pack shrink mockup, which is landscape
+    // (1.48:1) instead of portrait like every other bottle photo here. The
+    // showcase box is height-bound under object-fit: contain, so a
+    // landscape source renders shorter than the rest; scale compensates
+    // partway without overflowing the box. Swap for a real single-bottle
+    // photo when one exists and drop this.
+    scale: 1.25,
   },
   "Watermelon Strawberry": { en: "Juicy summer watermelon rounded out by sweet strawberry.", fr: "Pastèque juteuse d'été, adoucie par la fraise.", color: "#e2607a" },
 };
@@ -47,14 +50,14 @@ const STILL_TASTE: Record<number, { en: string; fr: string }> = {
 };
 
 // Curated selection, matching the design canvas's featured picks 1:1
-// (st-025, sp-mango, st-prime-040, sp-pom, st-15, sp-mojito).
+// (st-025, sp-mango, st-prime-040, sp-c-extra, st-15, sp-mojito).
 const FEATURED_SKUS = [
   "SUL-STL-250",
-  "SUL-SPK-MAP-330",
+  "SUL-SPK-MAP-200",
   "SUL-STL-PRIME-400",
-  "SUL-SPK-POM-330",
+  "SUL-SPK-CEX-200",
   "SUL-STL-1500",
-  "SUL-SPK-MOJ-330",
+  "SUL-SPK-MOJ-200",
 ];
 
 export default async function HomePage() {
@@ -129,11 +132,28 @@ export default async function HomePage() {
     })
   );
 
+  // Art-directed hero: a portrait shot crops badly into a full-bleed 100vh
+  // band on a wide screen and vice versa, so mobile and desktop each get a
+  // different source image via a native <picture>, not just a smaller crop
+  // of the same one. Both are agency photography (../reference/Customer
+  // upload/Agency), swapped in for the old ig-28.jpg Instagram grab.
+  const heroCommon = { alt: "", width: 1600, height: 1600, priority: true, sizes: "100vw" } as const;
+  const {
+    props: { srcSet: heroMobileSrcSet },
+  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-mobile-ice.jpg" });
+  const {
+    props: { srcSet: heroDesktopSrcSet, ...heroDesktopRest },
+  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-desktop-picnic.jpg" });
+
   return (
     <>
       <section className={styles.hero}>
         <div className={styles.heroImageWrap}>
-          <Image src="/Assets/Lifestyle/ig-28.jpg" alt="" fill priority className={styles.heroImage} />
+          <picture>
+            <source media="(max-width: 640px)" srcSet={heroMobileSrcSet} />
+            <source media="(min-width: 641px)" srcSet={heroDesktopSrcSet} />
+            <img {...heroDesktopRest} className={styles.heroImage} />
+          </picture>
         </div>
         <div className={styles.heroScrim} />
         <span className={styles.heroRing} aria-hidden />
@@ -200,14 +220,14 @@ export default async function HomePage() {
           <h2 className={styles.originHeading}>{t("originHeading")}</h2>
           <div className={styles.originGrid}>
             {ORIGIN_STEPS.map((step, i) => (
-              <div key={step.img} className={styles.originStep}>
+              <Reveal key={step.img} delay={i * 100} className={styles.originStep}>
                 <Image src={step.img} alt="" width={400} height={210} className={styles.originImg} />
                 <div className={`${styles.originConnector} ${i === ORIGIN_STEPS.length - 1 ? styles.originConnectorLast : ""}`}>
                   <span className={styles.originDot} />
                   <h3 className={styles.originTitle}>{t(step.titleKey)}</h3>
                   <p className={styles.originBody}>{t(step.bodyKey)}</p>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -218,21 +238,22 @@ export default async function HomePage() {
           <h2 className={styles.featuredTitle}>{t("featured")}</h2>
           <div className={styles.grid}>
             {featured.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                index={index}
-                isB2B={viewer.isB2B}
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  type: product.type,
-                  flavor: product.flavor,
-                  sizeMl: product.sizeMl,
-                  imageUrl: product.imageUrl,
-                  displayPrice: resolvePrice(product, viewer),
-                  stockQuantity: product.stockQuantity,
-                }}
-              />
+              <Reveal key={product.id} delay={(index % 6) * 70}>
+                <ProductCard
+                  index={index}
+                  isB2B={viewer.isB2B}
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    type: product.type,
+                    flavor: product.flavor,
+                    sizeMl: product.sizeMl,
+                    imageUrl: product.imageUrl,
+                    displayPrice: resolvePrice(product, viewer),
+                    stockQuantity: product.stockQuantity,
+                  }}
+                />
+              </Reveal>
             ))}
           </div>
         </section>
@@ -260,8 +281,13 @@ export default async function HomePage() {
             </div>
             <h2 className={styles.socialTitle}>{c("socialTitle")}</h2>
             <div className={styles.socialGrid}>
-              {SOCIAL_IMAGES.map((img) => (
-                <div key={img.src} className={styles.socialTile} style={{ flexBasis: img.width }}>
+              {SOCIAL_IMAGES.map((img, i) => (
+                <Reveal
+                  key={img.src}
+                  delay={(i % 6) * 60}
+                  className={styles.socialTile}
+                  style={{ flexBasis: img.width }}
+                >
                   <Image src={img.src} alt="" fill sizes="(max-width: 640px) 60vw, 420px" className={styles.socialImg} />
                   <svg className={styles.socialBadge} width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path
@@ -272,7 +298,7 @@ export default async function HomePage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </div>
+                </Reveal>
               ))}
             </div>
             <a
