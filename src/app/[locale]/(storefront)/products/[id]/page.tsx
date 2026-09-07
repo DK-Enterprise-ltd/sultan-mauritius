@@ -9,7 +9,6 @@ import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
 import type { Locale } from "@/i18n/routing";
 import AddToCartButton from "@/components/ProductCard/AddToCartButton";
-import { caseSizeFor } from "@/lib/case-size";
 import styles from "./page.module.css";
 
 export default async function ProductDetailPage({
@@ -99,8 +98,6 @@ export default async function ProductDetailPage({
                 flavor={product.flavor}
                 sizeMl={product.sizeMl}
                 unitPrice={price}
-                isB2B={viewer.isB2B}
-                caseSize={product.packCount === 1 ? caseSizeFor(product.sizeMl) : undefined}
               />
             )}
           </div>

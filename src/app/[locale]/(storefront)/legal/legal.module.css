@@ -1,0 +1,157 @@
+.page {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4.5rem 3rem 6rem;
+}
+
+.sidebar {
+  flex: 0 0 230px;
+  position: sticky;
+  top: calc(var(--nav-h) + 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebarHeading {
+  font-weight: 600;
+  color: var(--sultan-navy);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.sidebarNav a {
+  color: var(--ink-soft);
+}
+
+.sidebarNav a:hover {
+  color: var(--sultan-teal);
+}
+
+.article {
+  flex: 1;
+  min-width: 0;
+}
+
+.article :global(h1) {
+  color: var(--sultan-navy);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin-bottom: 0.25rem;
+}
+
+.updated {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  margin-bottom: 2.25rem;
+}
+
+.article :global(h2) {
+  color: var(--sultan-navy);
+  font-size: 1.25rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.article :global(h3) {
+  color: var(--ink);
+  font-size: 1.05rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article :global(p) {
+  color: var(--ink);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  max-width: 68ch;
+}
+
+.article :global(ul),
+.article :global(ol) {
+  margin: 0 0 1rem 1.25rem;
+  line-height: 1.7;
+  max-width: 68ch;
+}
+
+.article :global(li) {
+  margin-bottom: 0.4rem;
+}
+
+.article :global(a) {
+  color: var(--sultan-teal);
+}
+
+.article :global(strong) {
+  color: var(--sultan-navy);
+}
+
+.placeholder {
+  background: #fdf1d6;
+  color: #8a5a00;
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.indexGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.indexCard {
+  display: block;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card-sm);
+  background: var(--paper-raised);
+}
+
+.indexCard:hover {
+  border-color: var(--sultan-teal);
+}
+
+.indexCardTitle {
+  display: block;
+  color: var(--sultan-navy);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.indexCardDesc {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 860px) {
+  .page {
+    flex-direction: column;
+    padding: 2.5rem 1.25rem 3.5rem;
+    gap: 2rem;
+  }
+  .sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+  }
+  .sidebarHeading {
+    width: 100%;
+  }
+}

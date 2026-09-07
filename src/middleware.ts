@@ -14,7 +14,10 @@ const GENERAL = { limit: 120, windowMs: 60_000 };
 const SENSITIVE = { limit: 10, windowMs: 60_000 };
 
 function isSensitive(pathname: string, method: string, isServerAction: boolean): boolean {
-  return method === "POST" && (pathname.startsWith("/api/") || pathname === "/admin" || isServerAction);
+  return (
+    method === "POST" &&
+    (pathname.startsWith("/api/") || pathname === "/admin" || pathname.startsWith("/studio") || isServerAction)
+  );
 }
 
 export default function middleware(req: NextRequest) {
@@ -35,7 +38,7 @@ export default function middleware(req: NextRequest) {
     });
   }
 
-  if (pathname.startsWith("/api/") || pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/api/") || pathname.startsWith("/admin") || pathname.startsWith("/studio")) {
     return NextResponse.next();
   }
   return intlMiddleware(req);

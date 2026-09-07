@@ -11,27 +11,25 @@ type Props = {
   flavor: string | null;
   sizeMl: number;
   unitPrice: number;
-  isB2B?: boolean;
-  caseSize?: number;
+  quantity?: number;
 };
 
-export default function AddToCartButton({ isB2B, caseSize, ...item }: Props) {
+export default function AddToCartButton({ quantity = 1, ...item }: Props) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
   const t = useTranslations("product");
-  const bulk = isB2B && caseSize && caseSize > 1;
 
   return (
     <Button
       type="button"
       variant="secondary"
       onClick={() => {
-        addItem(item, bulk ? caseSize : 1);
+        addItem(item, quantity);
         setAdded(true);
         setTimeout(() => setAdded(false), 1200);
       }}
     >
-      {added ? `${t("added")} ✓` : bulk ? t("addCase", { count: caseSize }) : t("addToCart")}
+      {added ? `${t("added")} ✓` : t("addToCart")}
     </Button>
   );
 }

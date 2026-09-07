@@ -159,14 +159,39 @@ intact (price/stock stay Prisma-only, Sanity never touches them).
 
 ```
 ../studio/                          standalone Sanity Studio (its own app,
-                                     sibling to this folder). Run: cd ../studio
-                                     && npm run dev (localhost:3333)
+                                     sibling to this folder, its own git repo).
+                                     Run: cd ../studio && npm run dev
+                                     (localhost:3333). Source of truth for the
+                                     schema.
+src/app/studio/[[...tool]]/         Studio embedded in this Next.js app too
+                                     (deployed with the site, at /studio) via
+                                     next-sanity's NextStudio — same project/
+                                     dataset as ../studio. src/sanity/ holds
+                                     its config + a COPY of the schema (see
+                                     the ponytail comment in
+                                     src/sanity/schemaTypes/index.ts): Vercel
+                                     only builds this repo, not the sibling
+                                     ../studio folder, so the schema can't be
+                                     imported across the two — keep both in
+                                     sync by hand when the content model
+                                     changes. sanity.config.ts is marked
+                                     'use client': without it, Next bundles
+                                     the Studio's import chain under React
+                                     Server Component conditions at build
+                                     time and the build fails with
+                                     "createContext is not a function".
 ../studio/schemaTypes/              stockist, productCopy (by SKU), homeContent
                                      (singleton, id "homeContent")
-src/app/api/sanity/*/route.ts       one webhook route per document type;
-                                     verifies SANITY_WEBHOOK_SECRET via
-                                     next-sanity/webhook, then upserts into
-                                     Postgres (src/lib/sanity-sync.ts)
+src/app/api/sanity/webhook/route.ts single combined webhook (this project's
+                                     plan caps webhooks at 2); dispatches by
+                                     `_type` to syncStockist/syncProductCopy/
+                                     syncHomeContent (src/lib/sanity-sync.ts)
+                                     after verifying SANITY_WEBHOOK_SECRET via
+                                     next-sanity/webhook. The older per-type
+                                     routes (src/app/api/sanity/{stockist,
+                                     product-copy,home-content}/route.ts)
+                                     still work but are unused while on that
+                                     plan.
 prisma/schema.prisma                Stockist, ProductCopy, SiteContent models
                                      (see the "CMS content" section) — the
                                      tables pages actually query
@@ -179,22 +204,34 @@ scripts/sanity-backfill.js          one-off: re-pull all Sanity content into
                                      Postgres by hand (webhook down/missed events)
 ```
 
-**Sanity project:** `ftdxoig2` / dataset `production`. Credentials live in
-`.env.local` (`SANITY_API_KEY`, `SANITY_PROJECT_ID`, `SANITY_DATASET`,
-`SANITY_WEBHOOK_SECRET`).
+**Sanity project:** `ftdxoig2` ("Sultan Mauritius", DK Enterprise org) /
+dataset `production`. Credentials live in `.env.local` (`SANITY_API_KEY`,
+`SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_WEBHOOK_SECRET`, plus
+`NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` for the
+embedded Studio, which runs in the browser). There was a second, unrelated
+Sanity project (`w7su6qgi`, "Sultan Mauritius CMS") briefly set up under a
+different org — `.env.local` pointed at it for a while, with its own working
+webhook + CORS. That was never the project `../studio` or CLAUDE.md used, so
+it's abandoned now; `ftdxoig2` is the one project going forward. If a
+Sanity-related MCP tool ever reports "project not found" or an authorization
+error for `ftdxoig2`, that's expected unless it's authenticated as an
+account with access to the DK Enterprise org.
 
 **Webhook setup (manual, one-time, needs a public URL):** in Sanity Manage
-(`npx sanity manage` from `../studio`) → API → Webhooks, create one webhook
-per document type, each POSTing to the matching route below, with the same
-`SANITY_WEBHOOK_SECRET` value as `.env.local`:
+(`npx sanity manage` from `../studio`, or sanity.io/manage) → `ftdxoig2` →
+API → Webhooks, create one webhook:
 
-| Filter | URL | Projection |
-|---|---|---|
-| `_type == "stockist"` | `/api/sanity/stockist` | `{_id, name, region, town, address, phone, mapUrl, isActive}` |
-| `_type == "productCopy"` | `/api/sanity/product-copy` | `{_id, sku, tasteNote, tasteNoteFr, bestServedNote, bestServedNoteFr, specNote, specNoteFr}` |
-| `_type == "homeContent"` | `/api/sanity/home-content` | `{...}` |
+| Name | Filter | URL | HTTP method |
+|---|---|---|---|
+| Content sync | `_type in ["stockist", "productCopy", "homeContent"]` | `/api/sanity/webhook` | POST |
 
-Until these are created (or while developing against `localhost`, which
+No projection (send the whole document). Use the same secret as
+`SANITY_WEBHOOK_SECRET` in `.env.local`. Also add the deployed site's origin
+(`https://sultan-mauritius.vercel.app`) under API → CORS origins, with
+credentials not required, so the embedded `/studio` route and the app's own
+requests are allowed.
+
+Until the webhook is created (or while developing against `localhost`, which
 Sanity can't reach), edits made in Studio don't reach the site — run
 `node scripts/sanity-backfill.js` after editing to sync by hand.
 

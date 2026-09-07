@@ -56,10 +56,15 @@
     "still": "Still",
     "outOfStock": "Out of stock",
     "addToCart": "Add to cart",
-    "addCase": "Add case of {count}",
     "added": "Added",
     "packLabel": "{count}-Pack",
-    "caseLabel": "Case of {count}"
+    "caseLabel": "Case of {count}",
+    "single": "Single bottle",
+    "select": "Select",
+    "chooseOption": "Choose an option",
+    "quantity": "Quantity",
+    "viewDetails": "View full details",
+    "close": "Close"
   },
   "products": {
     "title": "Shop",
@@ -133,10 +138,13 @@
   },
   "order": {
     "orderNumber": "Order #{number}",
+    "placedTitle": "Order placed!",
     "thankYou": "Thank you, {name}.",
     "subtitle": "We've received your order and it's awaiting confirmation.",
+    "emailNotice": "Your order has been placed successfully. Please await confirmation — we'll email the payment details to {email} once it's confirmed.",
     "total": "Total",
     "paymentInstructions": "Payment instructions",
+    "paymentPending": "We'll email these to you once your order is confirmed.",
     "paymentIntro": "No online payment is taken. Please settle by:",
     "bankTransfer": "Bank transfer: Sultan Mauritius Ltd · MCB · Account 000123456789, reference order #{number}",
     "cashOnDelivery": "Cash on delivery",

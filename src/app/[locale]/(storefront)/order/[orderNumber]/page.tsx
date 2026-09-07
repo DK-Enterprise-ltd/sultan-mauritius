@@ -21,9 +21,14 @@ export default async function OrderConfirmationPage({
 
   return (
     <div className={styles.page}>
+      <div className={styles.successBadge} aria-hidden>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
       <p className={styles.kicker}>{t("orderNumber", { number: order.orderNumber })}</p>
-      <h1 className={styles.title}>{t("thankYou", { name: order.customer.name.split(" ")[0] })}</h1>
-      <p className={styles.subtitle}>{t("subtitle")}</p>
+      <h1 className={styles.title}>{t("placedTitle")}</h1>
+      <p className={styles.subtitle}>{t("emailNotice", { email: order.customer.email })}</p>
 
       <div className={styles.items}>
         {order.items.map((item) => (
@@ -42,11 +47,17 @@ export default async function OrderConfirmationPage({
 
       <div className={styles.payment}>
         <h2>{t("paymentInstructions")}</h2>
-        <p>{t("paymentIntro")}</p>
-        <ul>
-          <li>{t("bankTransfer", { number: order.orderNumber })}</li>
-          <li>{t("cashOnDelivery")}</li>
-        </ul>
+        {order.status === "PENDING" ? (
+          <p>{t("paymentPending")}</p>
+        ) : (
+          <>
+            <p>{t("paymentIntro")}</p>
+            <ul>
+              <li>{t("bankTransfer", { number: order.orderNumber })}</li>
+              <li>{t("cashOnDelivery")}</li>
+            </ul>
+          </>
+        )}
       </div>
 
       <div className={styles.delivery}>

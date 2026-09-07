@@ -1,7 +1,7 @@
 import Image, { getImageProps } from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getActiveProducts, getProductCopyBySku } from "@/lib/catalog";
+import { getActiveProducts, getProductCopyBySku, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { getSiteContent, pick } from "@/lib/site-content";
@@ -239,25 +239,29 @@ export default async function HomePage() {
         <section className={styles.featured}>
           <h2 className={styles.featuredTitle}>{t("featured")}</h2>
           <div className={styles.grid}>
-            {featured.map((product, index) => (
-              <Reveal key={product.id} delay={(index % 6) * 70}>
-                <ProductCard
-                  index={index}
-                  isB2B={viewer.isB2B}
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    type: product.type,
-                    flavor: product.flavor,
-                    sizeMl: product.sizeMl,
-                    packCount: product.packCount,
-                    imageUrl: product.imageUrl,
-                    displayPrice: resolvePrice(product, viewer),
-                    stockQuantity: product.stockQuantity,
-                  }}
-                />
-              </Reveal>
-            ))}
+            {featured.map((product, index) => {
+              const variants = productVariants(product, allProducts, viewer);
+
+              return (
+                <Reveal key={product.id} delay={(index % 6) * 70}>
+                  <ProductCard
+                    index={index}
+                    variants={variants}
+                    product={{
+                      id: product.id,
+                      name: product.name,
+                      type: product.type,
+                      flavor: product.flavor,
+                      sizeMl: product.sizeMl,
+                      packCount: product.packCount,
+                      imageUrl: product.imageUrl,
+                      displayPrice: resolvePrice(product, viewer),
+                      stockQuantity: product.stockQuantity,
+                    }}
+                  />
+                </Reveal>
+              );
+            })}
           </div>
         </section>
       </Reveal>

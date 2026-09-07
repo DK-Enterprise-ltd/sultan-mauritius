@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import Badge from "@/components/Badge/Badge";
@@ -30,7 +31,11 @@ export default async function AdminInvoicesPage() {
           <tbody>
             {invoices.map((inv) => (
               <tr key={inv.id}>
-                <td>{inv.invoiceNumber}</td>
+                <td>
+                  <Link href={`/admin/invoices/${inv.id}`} className={styles.rowLink}>
+                    {inv.invoiceNumber}
+                  </Link>
+                </td>
                 <td>#{inv.order.orderNumber}</td>
                 <td>{inv.order.customer.name}</td>
                 <td>

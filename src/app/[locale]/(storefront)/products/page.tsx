@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getActiveProducts } from "@/lib/catalog";
+import { getActiveProducts, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import ProductCard from "@/components/ProductCard/ProductCard";
@@ -128,25 +128,29 @@ export default async function ProductsPage({
         <p className={styles.empty}>{t("empty")}</p>
       ) : (
         <div className={styles.grid}>
-          {products.map((product, index) => (
-            <Reveal key={product.id} delay={(index % 8) * 60}>
-              <ProductCard
-                index={index}
-                isB2B={viewer.isB2B}
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  type: product.type,
-                  flavor: product.flavor,
-                  sizeMl: product.sizeMl,
-                  packCount: product.packCount,
-                  imageUrl: product.imageUrl,
-                  displayPrice: resolvePrice(product, viewer),
-                  stockQuantity: product.stockQuantity,
-                }}
-              />
-            </Reveal>
-          ))}
+          {products.map((product, index) => {
+            const variants = productVariants(product, allProducts, viewer);
+
+            return (
+              <Reveal key={product.id} delay={(index % 8) * 60}>
+                <ProductCard
+                  index={index}
+                  variants={variants}
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    type: product.type,
+                    flavor: product.flavor,
+                    sizeMl: product.sizeMl,
+                    packCount: product.packCount,
+                    imageUrl: product.imageUrl,
+                    displayPrice: resolvePrice(product, viewer),
+                    stockQuantity: product.stockQuantity,
+                  }}
+                />
+              </Reveal>
+            );
+          })}
         </div>
       )}
     </div>

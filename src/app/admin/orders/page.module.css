@@ -21,17 +21,85 @@
   color: white;
 }
 
-.statusSelect {
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 0.35rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid var(--neutral-200);
-  background: white;
-  color: var(--neutral-700);
+.statusCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.statusSelect:disabled {
-  opacity: 0.6;
+.statusBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.statusPENDING {
+  background: var(--neutral-100);
+  color: var(--neutral-600);
+}
+
+.statusCONFIRMED {
+  background: #e3f4f8;
+  color: var(--sultan-teal);
+}
+
+.statusPAID {
+  background: #e7f3ea;
+  color: var(--sultan-green);
+}
+
+.statusOUT_FOR_DELIVERY {
+  background: #fdf1e2;
+  color: var(--sultan-sun);
+}
+
+.statusFULFILLED {
+  background: #e3f4f8;
+  color: var(--sultan-navy);
+}
+
+.statusCANCELLED {
+  background: #fbe7ee;
+  color: var(--sultan-plum);
+}
+
+.advanceButton {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--sultan-teal);
+  background: white;
+  color: var(--sultan-teal);
+  cursor: pointer;
+}
+
+.advanceButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.cancelButton {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--neutral-500);
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  color: var(--sultan-plum);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: default;
 }

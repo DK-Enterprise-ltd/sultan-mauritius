@@ -132,6 +132,18 @@
   cursor: default;
 }
 
+@media print {
+  .sidebar {
+    display: none;
+  }
+  .shell {
+    display: block;
+  }
+  .content {
+    padding: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .shell {
     grid-template-columns: 1fr;

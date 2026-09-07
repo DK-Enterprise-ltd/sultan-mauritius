@@ -62,18 +62,12 @@
 }
 
 .media:hover .image {
-  animation: sultan-product-spin 4s linear infinite;
-}
-
-@keyframes sultan-product-spin {
-  from { transform: scale(1.04) rotate(0deg); }
-  to { transform: scale(1.04) rotate(360deg); }
+  transform: scale(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .media:hover .image {
-    animation: none;
-    transform: scale(1.04);
+    transform: none;
   }
 }
 

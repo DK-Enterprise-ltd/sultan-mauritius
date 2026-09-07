@@ -12,6 +12,8 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "@sanity/icons": "^3.8.0",
+    "@sanity/vision": "^3.99.0",
     "dotenv": "^17.4.2",
     "framer-motion": "^13.2.0",
     "next": "14.2.35",
@@ -21,7 +23,10 @@
     "prisma": "^7.9.1",
     "react": "^18",
     "react-dom": "^18",
-    "resend": "^6.26.0"
+    "resend": "^6.26.0",
+    "sanity": "^3.99.0",
+    "sharp": "^0.35.4",
+    "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@types/node": "^20",

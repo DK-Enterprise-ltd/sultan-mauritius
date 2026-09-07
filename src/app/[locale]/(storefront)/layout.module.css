@@ -79,6 +79,20 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.legalLinks a {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.legalLinks a:hover {
+  color: #fff;
+}
+
 @media (max-width: 860px) {
   .footerGrid {
     grid-template-columns: 1fr 1fr;

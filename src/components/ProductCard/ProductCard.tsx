@@ -1,11 +1,9 @@
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import styles from "./ProductCard.module.css";
-import AddToCartButton from "./AddToCartButton";
+import ProductPicker, { type Variant } from "./ProductPicker";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
-import { caseSizeFor } from "@/lib/case-size";
 import type { Locale } from "@/i18n/routing";
 
 export type ProductCardData = {
@@ -22,13 +20,12 @@ export type ProductCardData = {
 
 export default function ProductCard({
   product,
-  isB2B,
+  variants,
 }: {
   product: ProductCardData;
   index?: number;
-  isB2B?: boolean;
+  variants: Variant[];
 }) {
-  const outOfStock = product.stockQuantity <= 0;
   const t = useTranslations("product");
   const locale = useLocale() as Locale;
   const name = localizeProductName(product.name, locale);
@@ -40,47 +37,40 @@ export default function ProductCard({
       : product.packCount > 1
         ? t("packLabel", { count: product.packCount })
         : null;
+  const allOutOfStock = variants.every((v) => v.stockQuantity <= 0);
 
   return (
     <div className={`${styles.card} ${sparkling ? styles.sparkling : styles.still}`}>
-      <Link href={`/products/${product.id}`} className={styles.media}>
-        <span className={styles.lineBadge}>{sparkling ? t("sparkling") : t("still")}</span>
-        {packLabel && <span className={styles.packBadge}>{packLabel}</span>}
-        {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={name}
-            fill
-            draggable={false}
-            sizes="(max-width: 640px) 100vw, 320px"
-            className={styles.image}
-          />
-        ) : (
-          <span className={styles.mediaLabel}>{product.sizeMl}ml</span>
-        )}
-      </Link>
-      <div className={styles.body}>
-        <Link href={`/products/${product.id}`} className={styles.nameLink}>
-          <h3 className={styles.name}>{name}</h3>
-        </Link>
-        {flavor && <p className={styles.flavor}>{flavor}</p>}
-        <div className={styles.footer}>
-          <span className={styles.price}>{formatMur(product.displayPrice)}</span>
-          {outOfStock ? (
-            <span className={styles.outOfStock}>{t("outOfStock")}</span>
-          ) : (
-            <AddToCartButton
-              productId={product.id}
-              name={product.name}
-              flavor={product.flavor}
-              sizeMl={product.sizeMl}
-              unitPrice={product.displayPrice}
-              isB2B={isB2B}
-              caseSize={product.packCount === 1 ? caseSizeFor(product.sizeMl) : undefined}
+      <ProductPicker displayName={name} flavor={flavor} imageUrl={product.imageUrl} variants={variants}>
+        <div className={styles.media}>
+          <span className={styles.lineBadge}>{sparkling ? t("sparkling") : t("still")}</span>
+          {packLabel && <span className={styles.packBadge}>{packLabel}</span>}
+          {product.imageUrl ? (
+            <Image
+              src={product.imageUrl}
+              alt={name}
+              fill
+              draggable={false}
+              sizes="(max-width: 640px) 100vw, 320px"
+              className={styles.image}
             />
+          ) : (
+            <span className={styles.mediaLabel}>{product.sizeMl}ml</span>
           )}
         </div>
-      </div>
+        <div className={styles.body}>
+          <h3 className={styles.name}>{name}</h3>
+          {flavor && <p className={styles.flavor}>{flavor}</p>}
+          <div className={styles.footer}>
+            <span className={styles.price}>{formatMur(product.displayPrice)}</span>
+            {allOutOfStock ? (
+              <span className={styles.outOfStock}>{t("outOfStock")}</span>
+            ) : (
+              <span className={styles.selectHint}>{t("select")}</span>
+            )}
+          </div>
+        </div>
+      </ProductPicker>
     </div>
   );
 }

@@ -56,10 +56,15 @@
     "still": "Plate",
     "outOfStock": "Rupture de stock",
     "addToCart": "Ajouter au panier",
-    "addCase": "Ajouter un carton de {count}",
     "added": "Ajouté",
     "packLabel": "Pack de {count}",
-    "caseLabel": "Carton de {count}"
+    "caseLabel": "Carton de {count}",
+    "single": "Bouteille seule",
+    "select": "Choisir",
+    "chooseOption": "Choisir une option",
+    "quantity": "Quantité",
+    "viewDetails": "Voir tous les détails",
+    "close": "Fermer"
   },
   "products": {
     "title": "Boutique",
@@ -133,10 +138,13 @@
   },
   "order": {
     "orderNumber": "Commande n° {number}",
+    "placedTitle": "Commande passée !",
     "thankYou": "Merci, {name}.",
     "subtitle": "Nous avons bien reçu votre commande, en attente de confirmation.",
+    "emailNotice": "Votre commande a bien été enregistrée. Merci de patienter le temps de la confirmation : nous vous enverrons les détails de paiement à {email} une fois la commande confirmée.",
     "total": "Total",
     "paymentInstructions": "Instructions de paiement",
+    "paymentPending": "Nous vous les enverrons par e-mail dès que votre commande sera confirmée.",
     "paymentIntro": "Aucun paiement en ligne n'est requis. Merci de régler par :",
     "bankTransfer": "Virement bancaire : Sultan Mauritius Ltd · MCB · Compte 000123456789, référence commande n° {number}",
     "cashOnDelivery": "Espèces à la livraison",

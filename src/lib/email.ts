@@ -10,9 +10,20 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "Sultan Mauritius <onboarding@resend.dev>";
 
 const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNumber: number) => string }>> = {
+  PENDING: {
+    subject: "We've received your order",
+    body: (n) =>
+      `We've received order #${n} and it's awaiting confirmation.\n\n` +
+      `Please await confirmation, after which we'll email you the payment details.`,
+  },
   CONFIRMED: {
-    subject: "Your order is confirmed",
-    body: (n) => `We've confirmed order #${n} and are getting it ready.`,
+    subject: "Your order is confirmed: payment details",
+    body: (n) =>
+      `We've confirmed order #${n} and are getting it ready.\n\n` +
+      `To complete your purchase, please pay by bank transfer or MCB Juice, using order #${n} as your payment reference:\n` +
+      `- Bank transfer: Sultan Mauritius Ltd, MCB, Account 000123456789\n` +
+      `- MCB Juice: see the Payment Instructions page on our website for the merchant number and steps\n` +
+      `- Cash on delivery may also be available in your area`,
   },
   PAID: {
     subject: "Payment received",

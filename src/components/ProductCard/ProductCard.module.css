@@ -99,11 +99,6 @@
   flex: 1;
 }
 
-.nameLink {
-  color: inherit;
-  text-decoration: none;
-}
-
 .name {
   font-size: 1.2rem;
   line-height: 1.15;
@@ -137,4 +132,18 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.selectHint {
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--sultan-navy);
+  color: var(--sultan-navy);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.card:hover .selectHint {
+  background: var(--sultan-navy);
+  color: #fff;
 }

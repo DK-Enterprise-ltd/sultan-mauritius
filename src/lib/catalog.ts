@@ -1,6 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { Prisma, type Product } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { resolvePrice } from "@/lib/pricing";
+import type { Viewer } from "@/lib/auth";
 
 // ponytail: storefront pages were hitting the remote Neon DB fresh on every
 // request (getViewer()'s cookies() call already forces dynamic rendering),
@@ -37,6 +39,25 @@ const cachedProductById = unstable_cache(
 export async function getProductById(id: string) {
   const product = await cachedProductById(id);
   return product ? rehydrate(product) : null;
+}
+
+// Single bottle plus its pre-packed multi-buys (6-pack, 24-case) are
+// separate Product rows sharing type/flavor/size; group them here so a
+// card's variant picker can offer pack sizes without a second query.
+export function productVariants(product: Product, allProducts: Product[], viewer: Viewer) {
+  return allProducts
+    .filter((p) => p.type === product.type && p.flavor === product.flavor && p.sizeMl === product.sizeMl)
+    .sort((a, b) => a.packCount - b.packCount)
+    .map((v) => ({
+      id: v.id,
+      name: v.name,
+      flavor: v.flavor,
+      sizeMl: v.sizeMl,
+      packCount: v.packCount,
+      imageUrl: v.imageUrl,
+      displayPrice: resolvePrice(v, viewer),
+      stockQuantity: v.stockQuantity,
+    }));
 }
 
 export const getProductCopyBySku = unstable_cache(

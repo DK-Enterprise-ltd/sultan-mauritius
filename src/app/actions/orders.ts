@@ -115,6 +115,14 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
   });
 
   revalidateTag("products");
+
+  await sendOrderStatusEmail({
+    orderNumber: order.orderNumber,
+    status: "PENDING",
+    total: order.total,
+    customer: { name: input.customer.name, email: input.customer.email },
+  });
+
   return { ok: true, orderNumber: order.orderNumber };
 }
 
