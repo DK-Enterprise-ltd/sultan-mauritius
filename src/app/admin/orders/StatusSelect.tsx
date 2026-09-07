@@ -5,7 +5,7 @@ import { updateOrderStatus } from "@/app/actions/orders";
 import type { OrderStatus } from "@prisma/client";
 import styles from "./page.module.css";
 
-const STATUSES: OrderStatus[] = ["PENDING", "CONFIRMED", "PAID", "FULFILLED", "CANCELLED"];
+const STATUSES: OrderStatus[] = ["PENDING", "CONFIRMED", "PAID", "OUT_FOR_DELIVERY", "FULFILLED", "CANCELLED"];
 
 export default function StatusSelect({ orderId, status }: { orderId: string; status: OrderStatus }) {
   const [pending, startTransition] = useTransition();

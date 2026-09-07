@@ -36,6 +36,7 @@ enum OrderStatus {
   PENDING // submitted, awaiting admin confirmation
   CONFIRMED // admin confirmed availability, awaiting payment
   PAID // payment received, stock will be/has been deducted
+  OUT_FOR_DELIVERY // handed to delivery, en route
   FULFILLED // delivered / picked up
   CANCELLED
 }

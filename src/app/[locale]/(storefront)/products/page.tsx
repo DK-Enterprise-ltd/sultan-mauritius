@@ -26,7 +26,10 @@ export default async function ProductsPage({
   const flavor = searchParams.flavor;
 
   const allProducts = await getActiveProducts();
-  const inLine = allProducts.filter((p) => !type || p.type === type);
+  // Packs (packCount > 1) are multi-buy options on a bottle's own page, not
+  // separate listings here. See the pack selector on the product detail page.
+  const singles = allProducts.filter((p) => p.packCount === 1);
+  const inLine = singles.filter((p) => !type || p.type === type);
 
   let products = inLine;
   if (size) products = products.filter((p) => formatSize(p.sizeMl) === size);

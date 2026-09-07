@@ -4,6 +4,7 @@ import { Prisma, OrderStatus } from "@prisma/client";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getViewer, isAdmin } from "@/lib/auth";
+import { sendOrderStatusEmail } from "@/lib/email";
 
 type OrderInput = {
   items: { productId: string; quantity: number }[];
@@ -123,8 +124,14 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
 export async function updateOrderStatus(orderId: string, status: OrderStatus) {
   if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
 
-  await prisma.order.update({ where: { id: orderId }, data: { status } });
+  const order = await prisma.order.update({
+    where: { id: orderId },
+    data: { status },
+    include: { customer: true },
+  });
   revalidatePath("/admin/orders");
   revalidatePath("/admin");
+
+  await sendOrderStatusEmail(order);
   return { ok: true as const };
 }

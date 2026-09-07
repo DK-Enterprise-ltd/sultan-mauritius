@@ -7,6 +7,7 @@ const STATUS_CLASS: Record<Status, string> = {
   PENDING: styles.pending,
   CONFIRMED: styles.confirmed,
   PAID: styles.paid,
+  OUT_FOR_DELIVERY: styles.outForDelivery,
   FULFILLED: styles.fulfilled,
   CANCELLED: styles.cancelled,
   DRAFT: styles.pending,

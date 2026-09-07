@@ -137,6 +137,45 @@
   letter-spacing: 0.04em;
 }
 
+.packRow {
+  margin-bottom: 1.75rem;
+}
+
+.chipLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--neutral-500);
+  margin-bottom: 0.5rem;
+}
+
+.packOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.packOption {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(27, 42, 74, 0.2);
+  color: #3e434c;
+}
+
+.sparkling .packOptionActive {
+  border-color: var(--sultan-sun);
+  background: var(--sultan-sun);
+  color: #fff;
+}
+
+.still .packOptionActive {
+  border-color: var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: #fff;
+}
+
 .block {
   padding: 1.5rem 0;
   border-top: 1px solid var(--line);

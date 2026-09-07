@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getProductById, getProductCopyBySku } from "@/lib/catalog";
+import { getActiveProducts, getProductById, getProductCopyBySku } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { formatMur } from "@/lib/format";
@@ -29,6 +29,15 @@ export default async function ProductDetailPage({
   const price = resolvePrice(product, viewer);
   const outOfStock = product.stockQuantity <= 0;
   const isSparkling = product.type === "SPARKLING";
+
+  // Single bottle and its pre-packed multi-buys (6-pack, 24-case) are
+  // separate Product rows sharing type/flavor/size; group them here as
+  // variants of one page instead of listing packs as their own shop entries.
+  const variants = (await getActiveProducts())
+    .filter((p) => p.type === product.type && p.flavor === product.flavor && p.sizeMl === product.sizeMl)
+    .sort((a, b) => a.packCount - b.packCount);
+  const variantLabel = (packCount: number) =>
+    packCount === 1 ? t("packSingle") : packCount === 24 ? tProduct("caseLabel", { count: 24 }) : tProduct("packLabel", { count: packCount });
 
   // Sanity-edited copy (by SKU) wins when present; the type-level static
   // copy below is the fallback — see the ponytail note on ProductCopy in
@@ -95,6 +104,25 @@ export default async function ProductDetailPage({
               />
             )}
           </div>
+
+          {variants.length > 1 && (
+            <div className={styles.packRow}>
+              <span className={styles.chipLabel}>{t("packHeading")}</span>
+              <div className={styles.packOptions}>
+                {variants.map((v) =>
+                  v.id === product.id ? (
+                    <span key={v.id} className={`${styles.packOption} ${styles.packOptionActive}`}>
+                      {variantLabel(v.packCount)}
+                    </span>
+                  ) : (
+                    <Link key={v.id} href={`/products/${v.id}`} className={styles.packOption}>
+                      {variantLabel(v.packCount)}
+                    </Link>
+                  )
+                )}
+              </div>
+            </div>
+          )}
 
           <section className={styles.block}>
             <h2 className={styles.blockHeading}>{t("tasteHeading")}</h2>

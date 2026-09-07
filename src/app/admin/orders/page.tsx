@@ -7,7 +7,7 @@ import StatusSelect from "./StatusSelect";
 
 export const dynamic = "force-dynamic";
 
-const STATUSES = ["PENDING", "CONFIRMED", "PAID", "FULFILLED", "CANCELLED"] as const;
+const STATUSES = ["PENDING", "CONFIRMED", "PAID", "OUT_FOR_DELIVERY", "FULFILLED", "CANCELLED"] as const;
 
 export default async function AdminOrdersPage({
   searchParams,
