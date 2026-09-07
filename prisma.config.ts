@@ -15,6 +15,6 @@ export default defineConfig({
     seed: "node prisma/seed.js",
   },
   datasource: {
-    url: env("DIRECT_URL"),
+    url: env("DATABASE_URL_UNPOOLED"),
   },
 });

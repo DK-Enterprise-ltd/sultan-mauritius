@@ -39,3 +39,4 @@ next-env.d.ts
 # lives here anymore — every used image was sorted into public/Assets/;
 # this is just the unsorted leftover library, kept locally, not tracked.
 public/uploads/
+.neon
