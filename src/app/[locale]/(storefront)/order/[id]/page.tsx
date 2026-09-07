@@ -1,8 +1,13 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import styles from "./page.module.css";
+
+// Private, customer-specific: never indexed, regardless of the URL being
+// unguessable.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function OrderConfirmationPage({
   params,

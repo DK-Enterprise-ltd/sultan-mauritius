@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Sultan Mauritius",
+  description: "How Sultan Mauritius handles consumer and corporate data.",
+};
 
 export default function PrivacyPolicyPage() {
   return (

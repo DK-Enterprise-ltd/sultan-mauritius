@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Payment Instructions | Sultan Mauritius",
+  description: "MCB Juice and bank transfer payment instructions, step by step.",
+};
 
 export default function PaymentInstructionsPage() {
   return (

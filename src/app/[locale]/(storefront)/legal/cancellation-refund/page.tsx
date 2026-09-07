@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Cancellation & Refund Policy | Sultan Mauritius",
+  description: "Consumer cooling-off and business cancellation terms for Sultan Mauritius orders.",
+};
 
 export default function CancellationRefundPage() {
   return (

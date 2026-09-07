@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getActiveProducts, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Reveal from "@/components/Reveal/Reveal";
 import styles from "./page.module.css";
@@ -10,6 +13,16 @@ import styles from "./page.module.css";
 function formatSize(ml: number): string {
   const liters = ml / 1000;
   return liters >= 1 ? `${liters}L` : `${liters.toFixed(2)}L`;
+}
+
+export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: "meta" });
+  return pageMetadata({
+    locale: params.locale as Locale,
+    path: "/products",
+    title: t("productsTitle"),
+    description: t("productsDescription"),
+  });
 }
 
 export default async function ProductsPage({

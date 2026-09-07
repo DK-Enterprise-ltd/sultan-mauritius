@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Copyright Notice | Sultan Mauritius",
+  description: "Ownership of Sultan Mauritius site content and trademarks.",
+};
 
 export default function CopyrightPage() {
   return (

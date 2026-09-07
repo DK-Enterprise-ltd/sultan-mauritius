@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions — Business | Sultan Mauritius",
+  description: "Bulk orders, credit terms, and wholesale liability for Sultan Mauritius business customers.",
+};
 
 export default function TermsBusinessPage() {
   return (

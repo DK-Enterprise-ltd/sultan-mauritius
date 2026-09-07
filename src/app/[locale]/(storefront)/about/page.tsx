@@ -1,9 +1,22 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { pageMetadata } from "@/lib/seo";
+import type { Locale } from "@/i18n/routing";
 import Button from "@/components/Button/Button";
 import Reveal from "@/components/Reveal/Reveal";
 import styles from "./page.module.css";
+
+export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: "meta" });
+  return pageMetadata({
+    locale: params.locale as Locale,
+    path: "/about",
+    title: t("aboutTitle"),
+    description: t("aboutDescription"),
+  });
+}
 
 export default async function AboutPage() {
   const t = await getTranslations("about");

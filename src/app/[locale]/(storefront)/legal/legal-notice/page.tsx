@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Legal Notice / Imprint | Sultan Mauritius",
+  description: "Sultan Mauritius company registration and regulatory details.",
+};
 
 export default function LegalNoticePage() {
   return (

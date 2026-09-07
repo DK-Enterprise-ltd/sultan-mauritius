@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Cookie Policy | Sultan Mauritius",
+  description: "What cookies the Sultan Mauritius site uses and why.",
+};
 
 export default function CookiePolicyPage() {
   return (

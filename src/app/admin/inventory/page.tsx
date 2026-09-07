@@ -37,7 +37,7 @@ export default async function AdminInventoryPage() {
                 <tr key={p.id} className={low ? rowStyles.lowRow : undefined}>
                   <td>
                     {p.imageUrl ? (
-                      <img src={p.imageUrl} alt="" className={rowStyles.thumb} />
+                      <img src={p.imageUrl} alt={p.name} className={rowStyles.thumb} />
                     ) : (
                       <span className={rowStyles.thumbPlaceholder} aria-hidden />
                     )}

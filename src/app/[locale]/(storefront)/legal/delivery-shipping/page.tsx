@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Delivery & Shipping Policy | Sultan Mauritius",
+  description: "Residential delivery and bulk freight terms for Sultan Mauritius orders.",
+};
 
 export default function DeliveryShippingPage() {
   return (

@@ -9,6 +9,7 @@ import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
   title: "Sultan Admin",
+  robots: { index: false, follow: false },
 };
 
 const NAV_ITEMS = [

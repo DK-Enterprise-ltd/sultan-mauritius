@@ -207,5 +207,28 @@
     "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
     "paymentNote": "Virement bancaire et espèces à la livraison, aucun paiement en ligne"
+  },
+  "meta": {
+    "homeTitle": "Sultan Mauritius : Pure. Élégante. Intemporelle.",
+    "homeDescription": "Eau minérale gazeuse aromatisée en verre, et eau de source plate pour chaque jour, puisée à Uludağ, en Turquie, et sur les tables mauriciennes depuis 2021.",
+    "productsTitle": "Eau minérale gazeuse et plate",
+    "productsDescription": "Découvrez l'eau minérale gazeuse aromatisée et l'eau de source plate de Sultan, puisées à Uludağ, en Turquie. Tarifs particuliers et grossiste, livraison dans toute l'île Maurice.",
+    "aboutTitle": "Notre histoire",
+    "aboutDescription": "Une entreprise familiale depuis les années 1960, sur les tables mauriciennes depuis mars 2021. Mise en bouteille sans contact humain à la source, à Uludağ, en Turquie.",
+    "wholesaleTitle": "Comptes grossiste",
+    "wholesaleDescription": "Indiquez-nous votre volume estimé et nous vous proposerons un tarif grossiste et une livraison adaptés à votre restaurant, commerce ou événement.",
+    "contactTitle": "Contactez-nous",
+    "contactDescription": "Une question sur une commande, un produit, ou autre chose : écrivez-nous.",
+    "stockistsTitle": "Où acheter",
+    "stockistsDescription": "Retrouvez l'eau minérale Sultan dans les supermarchés, restaurants et petites boutiques à travers l'île Maurice.",
+    "productTitle": "{name}",
+    "cartTitle": "Votre panier",
+    "checkoutTitle": "Récapitulatif de commande"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "La page que vous cherchez n'existe pas, ou a peut-être été déplacée.",
+    "cta": "Voir la boutique",
+    "ctaHome": "Retour à l'accueil"
   }
 }

@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions — Individuals | Sultan Mauritius",
+  description: "Rules for personal, non-business orders from Sultan Mauritius.",
+};
 
 export default function TermsConsumerPage() {
   return (

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -7,9 +8,32 @@ import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 import AddToCartButton from "@/components/ProductCard/AddToCartButton";
 import styles from "./page.module.css";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string; locale: string };
+}): Promise<Metadata> {
+  const locale = params.locale as Locale;
+  const product = await getProductById(params.id);
+  if (!product) return {};
+
+  const name = localizeProductName(product.name, locale);
+  const flavor = localizeFlavor(product.flavor, locale);
+  const title = flavor ? `${name}, ${flavor}` : name;
+
+  return pageMetadata({
+    locale,
+    path: `/products/${params.id}`,
+    title,
+    description: `${title}, ${product.sizeMl}ml. Sultan mineral water, sourced from Uludağ, Turkey, delivered across Mauritius.`,
+    image: product.imageUrl ? { url: `${SITE_URL}${product.imageUrl}`, width: 1200, height: 1200 } : undefined,
+  });
+}
 
 export default async function ProductDetailPage({
   params,
@@ -57,8 +81,29 @@ export default async function ProductDetailPage({
     { label: t("chlorideLabel"), value: t("chlorideValue") },
   ];
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    description: flavor ? `${name}, ${flavor}, ${product.sizeMl}ml` : `${name}, ${product.sizeMl}ml`,
+    image: product.imageUrl ? `${SITE_URL}${product.imageUrl}` : undefined,
+    sku: product.sku,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "MUR",
+      price: price.toString(),
+      availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      url: `${SITE_URL}/${locale}/products/${product.id}`,
+    },
+  };
+
   return (
     <div className={`${styles.page} ${isSparkling ? styles.sparkling : styles.still}`}>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <Link href="/products" className={styles.back}>
         {t("back")}
       </Link>

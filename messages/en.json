@@ -207,5 +207,28 @@
     "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
     "paymentNote": "Bank transfer & cash on delivery, no online payment"
+  },
+  "meta": {
+    "homeTitle": "Sultan Mauritius: Pure. Elegant. Timeless.",
+    "homeDescription": "Sparkling flavoured mineral water in glass, and still spring water for every day, sourced from Uludağ, Turkey, and on Mauritian tables since 2021.",
+    "productsTitle": "Shop Sparkling & Still Mineral Water",
+    "productsDescription": "Browse Sultan's sparkling flavoured mineral water and still spring water, sourced from Uludağ, Turkey. B2C and wholesale pricing, delivery across Mauritius.",
+    "aboutTitle": "Our Story",
+    "aboutDescription": "A family business since the 1960s, on Mauritian tables since March 2021. Bottled without human contact at the source in Uludağ, Turkey.",
+    "wholesaleTitle": "Wholesale Accounts",
+    "wholesaleDescription": "Tell us your estimated volume and we'll set you up with wholesale pricing and delivery for your restaurant, shop, or event.",
+    "contactTitle": "Contact Us",
+    "contactDescription": "Questions about an order, a product, or anything else: send us a message.",
+    "stockistsTitle": "Where to Buy",
+    "stockistsDescription": "Find Sultan mineral water at supermarkets, restaurants, and mini shops across Mauritius.",
+    "productTitle": "{name}",
+    "cartTitle": "Your Cart",
+    "checkoutTitle": "Order Review"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you're looking for doesn't exist, or may have moved.",
+    "cta": "Back to shop",
+    "ctaHome": "Go home"
   }
 }
