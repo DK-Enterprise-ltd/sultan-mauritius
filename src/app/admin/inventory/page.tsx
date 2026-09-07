@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import styles from "../page.module.css";
 import rowStyles from "./page.module.css";
+import StockAdjuster from "./StockAdjuster";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export default async function AdminInventoryPage() {
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>Image</th>
               <th>SKU</th>
               <th>Name</th>
               <th>Type</th>
@@ -30,10 +32,19 @@ export default async function AdminInventoryPage() {
               const low = p.stockQuantity <= p.lowStockThreshold;
               return (
                 <tr key={p.id} className={low ? rowStyles.lowRow : undefined}>
+                  <td>
+                    {p.imageUrl ? (
+                      <img src={p.imageUrl} alt="" className={rowStyles.thumb} />
+                    ) : (
+                      <span className={rowStyles.thumbPlaceholder} aria-hidden />
+                    )}
+                  </td>
                   <td>{p.sku}</td>
                   <td>{p.name}</td>
                   <td>{p.type}</td>
-                  <td className={low ? rowStyles.lowValue : undefined}>{p.stockQuantity}</td>
+                  <td className={low ? rowStyles.lowValue : undefined}>
+                    <StockAdjuster productId={p.id} quantity={p.stockQuantity} />
+                  </td>
                   <td>{p.lowStockThreshold}</td>
                   <td>{formatMur(p.retailPrice)}</td>
                   <td>
@@ -50,7 +61,7 @@ export default async function AdminInventoryPage() {
             })}
             {products.length === 0 && (
               <tr>
-                <td colSpan={7} className={styles.empty}>No products yet.</td>
+                <td colSpan={8} className={styles.empty}>No products yet.</td>
               </tr>
             )}
           </tbody>

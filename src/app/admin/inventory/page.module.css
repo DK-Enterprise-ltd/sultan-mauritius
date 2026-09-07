@@ -22,3 +22,69 @@
   color: var(--neutral-400);
   font-size: 0.8rem;
 }
+
+.thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  background: var(--neutral-50);
+}
+
+.thumbPlaceholder {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px dashed var(--neutral-200);
+  background: var(--neutral-50);
+}
+
+.adjuster {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.qty {
+  font-weight: 700;
+  min-width: 2ch;
+}
+
+.qtyInput {
+  width: 4.5rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.adjustButton {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  background: white;
+  color: var(--neutral-700);
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.adjustButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.adjustButton:hover:not(:disabled) {
+  background: var(--neutral-100);
+}
+
+.adjustError {
+  flex-basis: 100%;
+  color: #b45309;
+  font-size: 0.75rem;
+}
