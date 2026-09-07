@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
+  // AdminLayout only renders {children} when authed, but that alone doesn't
+  // stop this page's own queries from running — check again here so no
+  // order/customer data is ever fetched for an unauthenticated request.
+  if (!isAdmin()) return null;
+
   const [pendingOrders, lowStockProducts, unhandledInquiries, recentOrders] = await Promise.all([
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.product.findMany({

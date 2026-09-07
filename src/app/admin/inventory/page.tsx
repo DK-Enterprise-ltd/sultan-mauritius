@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { isAdmin } from "@/lib/auth";
 import styles from "../page.module.css";
 import rowStyles from "./page.module.css";
 import StockAdjuster from "./StockAdjuster";
@@ -7,6 +8,8 @@ import StockAdjuster from "./StockAdjuster";
 export const dynamic = "force-dynamic";
 
 export default async function AdminInventoryPage() {
+  if (!isAdmin()) return null;
+
   const products = await prisma.product.findMany({ orderBy: { name: "asc" } });
 
   return (

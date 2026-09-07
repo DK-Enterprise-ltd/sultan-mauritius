@@ -41,7 +41,7 @@ export default function CheckoutPage() {
       return;
     }
     clear();
-    router.push(`/order/${result.orderNumber}`);
+    router.push(`/order/${result.id}`);
   }
 
   if (items.length === 0) {

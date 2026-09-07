@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
 import styles from "../page.module.css";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminInvoicesPage() {
+  if (!isAdmin()) return null;
+
   const invoices = await prisma.invoice.findMany({
     orderBy: { createdAt: "desc" },
     include: { order: { include: { customer: true } } },

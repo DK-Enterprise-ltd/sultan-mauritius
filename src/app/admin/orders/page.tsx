@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { isAdmin } from "@/lib/auth";
 import styles from "../page.module.css";
 import filterStyles from "./page.module.css";
 import StatusSelect from "./StatusSelect";
@@ -14,6 +15,8 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: { status?: string };
 }) {
+  if (!isAdmin()) return null;
+
   const status = STATUSES.includes(searchParams.status as (typeof STATUSES)[number])
     ? (searchParams.status as (typeof STATUSES)[number])
     : undefined;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
 import PrintButton from "./PrintButton";
 import styles from "./page.module.css";
@@ -9,6 +10,8 @@ import styles from "./page.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function AdminInvoiceDetailPage({ params }: { params: { id: string } }) {
+  if (!isAdmin()) return null;
+
   const invoice = await prisma.invoice.findUnique({
     where: { id: params.id },
     include: {

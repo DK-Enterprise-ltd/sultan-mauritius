@@ -34,6 +34,7 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
       companyName: String(form.get("companyName") || "") || undefined,
       estimatedVolume: String(form.get("estimatedVolume") || "") || undefined,
       message,
+      website: String(form.get("website") || "") || undefined,
     });
 
     setSubmitting(false);
@@ -52,6 +53,14 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
 
   return (
     <form className={`${styles.form} ${wholesale ? styles.formCard : ""}`} onSubmit={handleSubmit}>
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className={styles.honeypot}
+      />
       {wholesale && (
         <label className={styles.field}>
           {t("companyName")}

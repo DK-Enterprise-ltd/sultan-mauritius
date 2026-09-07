@@ -5,6 +5,9 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getViewer, isAdmin } from "@/lib/auth";
 import { sendOrderStatusEmail } from "@/lib/email";
+import { cleanStr, isValidEmail } from "@/lib/validate";
+
+const MAX_QUANTITY_PER_LINE = 500;
 
 type OrderInput = {
   items: { productId: string; quantity: number }[];
@@ -19,15 +22,35 @@ type OrderInput = {
   notes?: string;
 };
 
-type OrderResult = { ok: true; orderNumber: number } | { ok: false; error: string };
+type OrderResult = { ok: true; orderNumber: number; id: string } | { ok: false; error: string };
 
 /** Creates a PENDING order from a client-side cart. Prices are re-resolved
  * server-side from the current Product rows — never trust client-supplied
- * prices for a money path. */
+ * prices for a money path. Quantities and customer fields are untrusted
+ * client input too: validate before they touch stock or the DB. */
 export async function createOrder(input: OrderInput): Promise<OrderResult> {
   if (input.items.length === 0) {
     return { ok: false, error: "Your cart is empty." };
   }
+  for (const item of input.items) {
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > MAX_QUANTITY_PER_LINE) {
+      return { ok: false, error: "One of the quantities in your cart is invalid." };
+    }
+  }
+
+  const customer = {
+    name: cleanStr(input.customer.name, 200),
+    email: cleanStr(input.customer.email, 254).toLowerCase(),
+    phone: cleanStr(input.customer.phone, 40),
+    companyName: input.customer.companyName ? cleanStr(input.customer.companyName, 200) : undefined,
+    deliveryAddress: cleanStr(input.customer.deliveryAddress, 500),
+    deliveryZone: input.customer.deliveryZone ? cleanStr(input.customer.deliveryZone, 100) : undefined,
+  };
+  const notes = input.notes ? cleanStr(input.notes, 1000) : undefined;
+  if (!customer.name || !isValidEmail(customer.email) || !customer.phone || !customer.deliveryAddress) {
+    return { ok: false, error: "Please fill in your name, a valid email, phone, and delivery address." };
+  }
+  input = { items: input.items, customer, notes };
 
   const viewer = getViewer();
   const productIds = input.items.map((i) => i.productId);
@@ -123,7 +146,7 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     customer: { name: input.customer.name, email: input.customer.email },
   });
 
-  return { ok: true, orderNumber: order.orderNumber };
+  return { ok: true, orderNumber: order.orderNumber, id: order.id };
 }
 
 /** Admin-only: moves an order to the next stage of fulfilment.

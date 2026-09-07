@@ -7,14 +7,14 @@ import styles from "./page.module.css";
 export default async function OrderConfirmationPage({
   params,
 }: {
-  params: { orderNumber: string };
+  params: { id: string };
 }) {
-  const orderNumber = Number(params.orderNumber);
-  if (Number.isNaN(orderNumber)) notFound();
-
+  // Looked up by the order's cuid, not its sequential orderNumber: the
+  // numeric order number is guessable/enumerable and would let anyone page
+  // through other customers' names, addresses, and order contents.
   const t = await getTranslations("order");
   const order = await prisma.order.findUnique({
-    where: { orderNumber },
+    where: { id: params.id },
     include: { items: { include: { product: true } }, customer: true },
   });
   if (!order) notFound();
