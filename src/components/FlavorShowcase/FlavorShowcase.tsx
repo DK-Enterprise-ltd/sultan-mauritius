@@ -55,7 +55,6 @@ export default function FlavorShowcase({
         </div>
 
         <div key={`media-${item.id}`} className={styles.mediaWrap}>
-          {/* mobile-only: desktop uses the arrows in .nav below instead */}
           <button
             type="button"
             onClick={() => go(-1)}
@@ -113,9 +112,6 @@ export default function FlavorShowcase({
       </div>
 
       <div className={styles.nav}>
-        <button type="button" onClick={() => go(-1)} className={styles.navArrow} aria-label={prevLabel}>
-          ←
-        </button>
         <div className={styles.dots}>
           {items.map((it, i) => (
             <button
@@ -129,9 +125,6 @@ export default function FlavorShowcase({
           ))}
         </div>
         <span className={styles.navLabel}>{item.name}</span>
-        <button type="button" onClick={() => go(1)} className={styles.navArrow} aria-label={nextLabel}>
-          →
-        </button>
       </div>
     </section>
   );

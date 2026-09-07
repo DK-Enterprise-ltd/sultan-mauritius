@@ -98,7 +98,20 @@
 }
 
 .mediaArrow {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: calc(50% - 20px);
+  z-index: 2;
+}
+
+.mediaArrowLeft {
+  left: -20px;
+}
+
+.mediaArrowRight {
+  right: -20px;
 }
 
 .platform {
@@ -319,22 +332,5 @@
   }
   .floatWrap {
     height: 220px;
-  }
-  .nav .navArrow {
-    display: none;
-  }
-  .mediaArrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: calc(50% - 20px);
-    z-index: 2;
-  }
-  .mediaArrowLeft {
-    left: -20px;
-  }
-  .mediaArrowRight {
-    right: -20px;
   }
 }

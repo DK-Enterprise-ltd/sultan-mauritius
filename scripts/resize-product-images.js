@@ -29,10 +29,16 @@ async function main() {
     if ((meta.width ?? 0) <= MAX_DIMENSION && (meta.height ?? 0) <= MAX_DIMENSION) {
       continue;
     }
-    const buffer = await image
-      .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: "inside", withoutEnlargement: true })
-      .png({ compressionLevel: 9 })
-      .toBuffer();
+    const resized = image.resize({
+      width: MAX_DIMENSION,
+      height: MAX_DIMENSION,
+      fit: "inside",
+      withoutEnlargement: true,
+    });
+    const buffer = await (meta.format === "png"
+      ? resized.png({ compressionLevel: 9 })
+      : resized.jpeg({ quality: 85 })
+    ).toBuffer();
     await fs.promises.writeFile(file, buffer);
     const sizeAfter = buffer.length;
     before += sizeBefore;
