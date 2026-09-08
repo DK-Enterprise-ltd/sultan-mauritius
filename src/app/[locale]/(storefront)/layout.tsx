@@ -4,6 +4,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { Link } from "@/i18n/navigation";
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
+import PageTransition from "@/components/PageTransition/PageTransition";
 import styles from "./layout.module.css";
 
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
@@ -11,7 +12,9 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
     <CartProvider>
       <div className={styles.shell}>
         <StorefrontNav />
-        <main className={styles.main}>{children}</main>
+        <main className={styles.main}>
+          <PageTransition>{children}</PageTransition>
+        </main>
         <Footer />
       </div>
       <CartDrawer />

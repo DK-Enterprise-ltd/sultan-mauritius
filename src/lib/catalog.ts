@@ -26,14 +26,26 @@ function rehydrate(product: Product): Product {
 // catalogue's own imageUrl when set, so the business can swap a product
 // photo without a code deploy. Applied at the read boundary here rather
 // than in every page, so ProductCard/admin/cart all see it the same way.
+// Cached like everything else here — this used to run a fresh query on
+// every single product-listing render, which was a real chunk of the
+// page-load slowness.
+const cachedCopyImages = unstable_cache(
+  async () => {
+    const copies = await prisma.productCopy.findMany({
+      where: { imageUrl: { not: null } },
+      select: { sku: true, imageUrl: true },
+    });
+    return copies as { sku: string; imageUrl: string }[];
+  },
+  ["product-copy-images"],
+  { revalidate: 60, tags: ["product-copy"] }
+);
+
 async function withCopyImage(products: Product[]): Promise<Product[]> {
   if (products.length === 0) return products;
-  const copies = await prisma.productCopy.findMany({
-    where: { sku: { in: products.map((p) => p.sku) }, imageUrl: { not: null } },
-    select: { sku: true, imageUrl: true },
-  });
+  const copies = await cachedCopyImages();
   if (copies.length === 0) return products;
-  const imageBySku = new Map(copies.map((c) => [c.sku, c.imageUrl as string]));
+  const imageBySku = new Map(copies.map((c) => [c.sku, c.imageUrl]));
   return products.map((p) => (imageBySku.has(p.sku) ? { ...p, imageUrl: imageBySku.get(p.sku)! } : p));
 }
 

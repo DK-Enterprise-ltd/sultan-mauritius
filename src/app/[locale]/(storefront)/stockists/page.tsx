@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal/Reveal";
@@ -8,6 +9,19 @@ import type { Locale } from "@/i18n/routing";
 import styles from "./page.module.css";
 
 const REGION_ORDER = ["North", "Centre", "West", "East", "South"];
+
+// Was an uncached query on every page load; the list only changes when a
+// stockist is added/edited in Studio, so cache it like the rest of the
+// CMS-synced content (catalog.ts, site-content.ts).
+const getActiveStockists = unstable_cache(
+  async () =>
+    prisma.stockist.findMany({
+      where: { isActive: true },
+      orderBy: [{ region: "asc" }, { town: "asc" }, { name: "asc" }],
+    }),
+  ["active-stockists"],
+  { revalidate: 60, tags: ["stockist"] }
+);
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   const t = await getTranslations({ locale: params.locale, namespace: "meta" });
@@ -24,10 +38,7 @@ export default async function StockistsPage() {
   const locale = await getLocale();
   const content = await getSiteContent("stockists");
   const c = (key: string) => pick(content, key, locale, t(key));
-  const stockists = await prisma.stockist.findMany({
-    where: { isActive: true },
-    orderBy: [{ region: "asc" }, { town: "asc" }, { name: "asc" }],
-  });
+  const stockists = await getActiveStockists();
 
   const byRegion = new Map<string, typeof stockists>();
   for (const s of stockists) {
