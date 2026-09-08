@@ -1,6 +1,5 @@
 .transition {
   transition: opacity 0.2s ease, transform 0.2s ease;
-  animation: pt-enter 0.4s ease both;
 }
 
 .exit {
@@ -8,21 +7,9 @@
   transform: translateY(-12px);
 }
 
-@keyframes pt-enter {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .transition {
     transition: none;
-    animation: none;
   }
   .exit {
     opacity: 1;
