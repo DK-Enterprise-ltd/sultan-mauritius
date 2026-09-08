@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getActiveProducts, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import Reveal from "@/components/Reveal/Reveal";
@@ -14,6 +15,17 @@ function formatSize(ml: number): string {
   const liters = ml / 1000;
   return liters >= 1 ? `${liters}L` : `${liters.toFixed(2)}L`;
 }
+
+// ponytail: curated by hand, same picks as the homepage's "Featured" strip,
+// until there's real Mauritian sales data to rank bestsellers by. Swap for
+// a DB-backed "isFeaturedMU" flag if the business wants to change this
+// list themselves without a deploy.
+const FAVORITE_SKUS = [
+  "SUL-STL-250",
+  "SUL-SPK-MAP-200",
+  "SUL-STL-PRIME-400",
+  "SUL-SPK-CEX-200",
+];
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   const t = await getTranslations({ locale: params.locale, namespace: "meta" });
@@ -31,6 +43,9 @@ export default async function ProductsPage({
   searchParams: { type?: string; size?: string; flavor?: string };
 }) {
   const t = await getTranslations("products");
+  const locale = await getLocale();
+  const content = await getSiteContent("products");
+  const c = (key: string) => pick(content, key, locale, t(key));
   const viewer = getViewer();
   const type = searchParams.type === "SPARKLING" || searchParams.type === "STILL"
     ? searchParams.type
@@ -39,14 +54,27 @@ export default async function ProductsPage({
   const flavor = searchParams.flavor;
 
   const allProducts = await getActiveProducts();
-  // Packs (packCount > 1) are multi-buy options on a bottle's own page, not
-  // separate listings here. See the pack selector on the product detail page.
+  // Units and Packs are the same catalogue split into two sections on this
+  // page (see the Units/Packs jump nav below), not two separate routes.
   const singles = allProducts.filter((p) => p.packCount === 1);
   const inLine = singles.filter((p) => !type || p.type === type);
 
   let products = inLine;
   if (size) products = products.filter((p) => formatSize(p.sizeMl) === size);
   if (flavor) products = products.filter((p) => p.flavor === flavor);
+
+  const packs = allProducts.filter((p) => p.packCount > 1 && (!type || p.type === type));
+
+  // Studio-set favoriteSkus (productsContent) wins over the developer
+  // default when the business has picked their own list.
+  const contentFavoriteSkus = content?.favoriteSkus;
+  const favoriteSkus =
+    Array.isArray(contentFavoriteSkus) && contentFavoriteSkus.length > 0
+      ? (contentFavoriteSkus as string[])
+      : FAVORITE_SKUS;
+  const favorites = favoriteSkus
+    .map((sku) => allProducts.find((p) => p.sku === sku))
+    .filter((p): p is NonNullable<typeof p> => !!p);
 
   const sizeOptions = Array.from(new Set(inLine.map((p) => formatSize(p.sizeMl)))).sort(
     (a, b) => parseFloat(a) - parseFloat(b)
@@ -66,11 +94,52 @@ export default async function ProductsPage({
     return `/products${qs ? `?${qs}` : ""}`;
   };
 
+  const renderCard = (product: (typeof allProducts)[number], index: number) => {
+    const variants = productVariants(product, allProducts, viewer);
+    return (
+      <Reveal key={product.id} delay={(index % 8) * 60}>
+        <ProductCard
+          index={index}
+          variants={variants}
+          product={{
+            id: product.id,
+            name: product.name,
+            type: product.type,
+            flavor: product.flavor,
+            sizeMl: product.sizeMl,
+            packCount: product.packCount,
+            imageUrl: product.imageUrl,
+            displayPrice: resolvePrice(product, viewer),
+            stockQuantity: product.stockQuantity,
+          }}
+        />
+      </Reveal>
+    );
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className={styles.title}>{t("title")}</h1>
-        {viewer.isB2B && <p className={styles.wholesaleNote}>{t("wholesaleNote")}</p>}
+        <h1 className={styles.title}>{c("title")}</h1>
+        {viewer.isB2B && <p className={styles.wholesaleNote}>{c("wholesaleNote")}</p>}
+      </div>
+
+      {favorites.length > 0 && (
+        <Reveal>
+          <section className={styles.favorites}>
+            <h2 className={styles.favoritesTitle}>{c("favoritesTitle")}</h2>
+            <div className={styles.grid}>{favorites.map((p, i) => renderCard(p, i))}</div>
+          </section>
+        </Reveal>
+      )}
+
+      <div className={styles.jumpNav}>
+        <a href="#units" className={styles.jumpBtn}>
+          {c("unitsLabel")}
+        </a>
+        <a href="#packs" className={styles.jumpBtn}>
+          {c("packsLabel")}
+        </a>
       </div>
 
       <div className={styles.lanes}>
@@ -137,35 +206,23 @@ export default async function ProductsPage({
         </Link>
       )}
 
-      {products.length === 0 ? (
-        <p className={styles.empty}>{t("empty")}</p>
-      ) : (
-        <div className={styles.grid}>
-          {products.map((product, index) => {
-            const variants = productVariants(product, allProducts, viewer);
+      <section id="units" className={styles.section}>
+        <h2 className={styles.sectionTitle}>{c("unitsSectionTitle")}</h2>
+        {products.length === 0 ? (
+          <p className={styles.empty}>{c("empty")}</p>
+        ) : (
+          <div className={styles.grid}>{products.map((product, index) => renderCard(product, index))}</div>
+        )}
+      </section>
 
-            return (
-              <Reveal key={product.id} delay={(index % 8) * 60}>
-                <ProductCard
-                  index={index}
-                  variants={variants}
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    type: product.type,
-                    flavor: product.flavor,
-                    sizeMl: product.sizeMl,
-                    packCount: product.packCount,
-                    imageUrl: product.imageUrl,
-                    displayPrice: resolvePrice(product, viewer),
-                    stockQuantity: product.stockQuantity,
-                  }}
-                />
-              </Reveal>
-            );
-          })}
-        </div>
-      )}
+      <section id="packs" className={styles.section}>
+        <h2 className={styles.sectionTitle}>{c("packsSectionTitle")}</h2>
+        {packs.length === 0 ? (
+          <p className={styles.empty}>{c("empty")}</p>
+        ) : (
+          <div className={styles.grid}>{packs.map((product, index) => renderCard(product, index))}</div>
+        )}
+      </section>
     </div>
   );
 }

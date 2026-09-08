@@ -180,26 +180,64 @@ src/app/studio/[[...tool]]/         Studio embedded in this Next.js app too
                                      Server Component conditions at build
                                      time and the build fails with
                                      "createContext is not a function".
-../studio/schemaTypes/              stockist, productCopy (by SKU), homeContent
-                                     (singleton, id "homeContent")
+../studio/schemaTypes/              stockist, productCopy (by SKU, incl. an
+                                     optional photo override per SKU), and
+                                     six page-copy singletons: homeContent,
+                                     aboutContent, productsContent,
+                                     wholesaleContent, stockistsContent,
+                                     contactContent. Each singleton covers
+                                     that page's marketing copy (kickers,
+                                     titles, bodies, CTA labels) — not every
+                                     UI string (button microcopy, filter chip
+                                     labels, lab-measured water parameter
+                                     values stay code-only). productsContent
+                                     also carries `favoriteSkus`, the SKU
+                                     list for the Shop page's "Mauritian
+                                     Favorites" strip.
 src/app/api/sanity/webhook/route.ts single combined webhook (this project's
                                      plan caps webhooks at 2); dispatches by
-                                     `_type` to syncStockist/syncProductCopy/
-                                     syncHomeContent (src/lib/sanity-sync.ts)
-                                     after verifying SANITY_WEBHOOK_SECRET via
+                                     `_type`: stockist/productCopy go to
+                                     syncStockist/syncProductCopy, all six
+                                     page-copy singletons go through the one
+                                     generic syncSiteContent(key, doc) (see
+                                     SITE_CONTENT_KEY_BY_TYPE in the route for
+                                     the _type -> SiteContent.key map), all in
+                                     src/lib/sanity-sync.ts, after verifying
+                                     SANITY_WEBHOOK_SECRET via
                                      next-sanity/webhook. The older per-type
                                      routes (src/app/api/sanity/{stockist,
                                      product-copy,home-content}/route.ts)
                                      still work but are unused while on that
                                      plan.
-prisma/schema.prisma                Stockist, ProductCopy, SiteContent models
-                                     (see the "CMS content" section) — the
-                                     tables pages actually query
+prisma/schema.prisma                Stockist, ProductCopy (with imageUrl),
+                                     SiteContent models (see the "CMS
+                                     content" section) — the tables pages
+                                     actually query
 src/lib/site-content.ts             pick(): Sanity-synced copy wins, falls
                                      back to messages/*.json if a field was
-                                     never authored in Studio
+                                     never authored in Studio. Every
+                                     storefront page (home, about, products,
+                                     wholesale, stockists, contact) fetches
+                                     its own getSiteContent(key) and wraps it
+                                     in a local c() = (k) => pick(...) helper
+                                     — see page.tsx for the pattern.
+src/lib/catalog.ts                  withCopyImage(): a Studio-set
+                                     productCopy.imageUrl (by sku) overrides
+                                     Product.imageUrl at the getActiveProducts
+                                     / getProductById read boundary, so a
+                                     photo swap in Studio doesn't need a
+                                     deploy. Price/stock still never flow
+                                     through Sanity — only the photo.
 scripts/sanity-seed-content.js      one-off: pushed the site's existing copy
-                                     into Sanity as starting content (already run)
+                                     into Sanity as starting content.
+                                     seedHomeContent/seedProductCopy already
+                                     ran — re-running them would overwrite
+                                     any edits already made in Studio with
+                                     the messages.json snapshot, so don't.
+                                     seedAboutContent/seedWholesaleContent/
+                                     seedContactContent/seedStockistsContent/
+                                     seedProductsContent are new and safe to
+                                     run once, before those documents exist.
 scripts/sanity-backfill.js          one-off: re-pull all Sanity content into
                                      Postgres by hand (webhook down/missed events)
 ```
@@ -223,7 +261,12 @@ API → Webhooks, create one webhook:
 
 | Name | Filter | URL | HTTP method |
 |---|---|---|---|
-| Content sync | `_type in ["stockist", "productCopy", "homeContent"]` | `/api/sanity/webhook` | POST |
+| Content sync | `_type in ["stockist", "productCopy", "homeContent", "aboutContent", "productsContent", "wholesaleContent", "stockistsContent", "contactContent"]` | `/api/sanity/webhook` | POST |
+
+If the webhook was created before the five page-copy singletons existed
+(aboutContent/productsContent/wholesaleContent/stockistsContent/
+contactContent), its filter needs updating in Sanity Manage to the list
+above, or edits to those pages in Studio won't reach the site.
 
 No projection (send the whole document). Use the same secret as
 `SANITY_WEBHOOK_SECRET` in `.env.local`. Also add the deployed site's origin

@@ -20,11 +20,11 @@
     "stillBody": "Eau de source mise en bouteille à Uludağ, en Turquie, filtrée par des générations de savoir-faire familial avant d'arriver dans votre verre.",
     "legacyKicker": "Depuis les années 1960",
     "legacyTitle": "Trois générations, une seule source.",
-    "legacyBody": "Sultan est né au pied du mont Uludağ, en Turquie, il y a plus de cinquante ans, une entreprise familiale portée par la confiance, de génération en génération. En mars 2021, cet héritage a rejoint l'île Maurice : d'une première commande d'eau minérale gazeuse à une place sur les tables des restaurants, les rayons des supermarchés et les réunions de famille à travers l'île.",
+    "legacyBody": "Sultan est né au pied du mont Uludağ, en Turquie, il y a plus de cinquante ans, une entreprise familiale portée par la confiance, de génération en génération. En mars 2021, cet héritage a rejoint Maurice : d'une première commande d'eau minérale gazeuse à une place sur les tables des restaurants, les rayons des supermarchés et les réunions de famille à travers Maurice.",
     "legacyStat1Value": "Années 1960",
     "legacyStat1Label": "Entreprise familiale depuis",
-    "legacyStat2Value": "Uludağ",
-    "legacyStat2Label": "Puisée en Turquie",
+    "legacyStat2Value": "Turquie",
+    "legacyStat2Label": "Puisée à Uludağ",
     "legacyStat3Value": "Familiale",
     "legacyStat3Label": "Trois générations",
     "legacyStat4Value": "2021",
@@ -46,7 +46,7 @@
     "origin2Title": "Une entreprise familiale depuis les années 1960",
     "origin2Body": "Mise en bouteille sans contact humain dans les usines familiales de Bursa et Kütahya, aujourd'hui à la troisième génération et dans 42 pays.",
     "origin3Title": "À l'île Maurice depuis mars 2021",
-    "origin3Body": "L'eau minérale gazeuse est arrivée en premier. Puis la gamme plate, adoptée pour les rassemblements et événements à travers l'île.",
+    "origin3Body": "L'eau minérale gazeuse est arrivée en premier. Puis la gamme plate, adoptée pour les rassemblements et événements à travers Maurice.",
     "featured": "Sélection",
     "socialTitle": "Sur l'île, en toute liberté",
     "socialCta": "Suivez @sultan_mauritius"
@@ -76,11 +76,16 @@
     "laneStillNote": "PET, eau de source naturelle",
     "empty": "Aucun produit dans cette catégorie pour l'instant.",
     "resultOne": "produit",
-    "resultMany": "produits"
+    "resultMany": "produits",
+    "favoritesTitle": "Favoris mauriciens",
+    "unitsLabel": "À l'unité",
+    "packsLabel": "Packs",
+    "unitsSectionTitle": "À l'unité",
+    "packsSectionTitle": "Packs"
   },
   "stockists": {
     "title": "Où acheter",
-    "intro": "Sultan est disponible dans les supermarchés, restaurants et petites boutiques à travers l'île.",
+    "intro": "Sultan est disponible dans les supermarchés, restaurants et petites boutiques à travers Maurice.",
     "empty": "La liste des points de vente est en cours de préparation. Revenez bientôt, ou contactez-nous directement via la page contact."
   },
   "productDetail": {
@@ -168,8 +173,8 @@
     "paramColiformLabel": "Bactéries coliformes",
     "paramColiformValue": "0 sur 250 mL",
     "mauritiusKicker": "Depuis mars 2021",
-    "mauritiusTitle": "D'une première commande à une place sur les tables de l'île.",
-    "mauritiusBody": "Nous avons commencé avec l'eau minérale gazeuse Sultan, faisant nos premiers pas sur le marché mauricien avec détermination. À chaque nouveau partenariat, la confiance grandissait : restaurants, supermarchés, petites boutiques et grossistes ont rejoint cette aventure. La bouteille de 0,25L, parfaitement adaptée au mode de vie mauricien, est vite devenue un favori pour les rassemblements et les événements.",
+    "mauritiusTitle": "D'une première commande à une place sur les tables de Maurice.",
+    "mauritiusBody": "Nous avons commencé avec l'eau minérale gazeuse Sultan, faisant nos premiers pas sur le marché mauricien avec détermination. À chaque nouveau partenariat, la confiance grandissait : restaurants, supermarchés, petites boutiques et grossistes ont rejoint cette aventure. Derrière chaque livraison, une équipe 100% mauricienne, qui manipule chaque bouteille en verre avec soin pour qu'elle arrive telle qu'elle est sortie de l'usine. Ce n'est pas qu'une importation : c'est un pont entre le savoir-faire turc et la vie mauricienne, porté par les gens qui l'apportent jusqu'ici. La bouteille de 0,25L, parfaitement adaptée au mode de vie mauricien, est vite devenue un favori pour les rassemblements et les événements.",
     "galleryHeading": "Sur l'île, en toute liberté",
     "ctaTitle": "Goûtez la différence",
     "ctaBody": "Découvrez la gamme, ou ouvrez un compte grossiste pour votre restaurant, votre commerce ou votre événement."

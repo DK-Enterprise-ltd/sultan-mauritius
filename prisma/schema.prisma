@@ -254,6 +254,7 @@ model ProductCopy {
   bestServedNoteFr String?
   specNote         String?
   specNoteFr       String?
+  imageUrl         String? // Sanity CDN URL; overrides Product.imageUrl for this sku when set, see catalog.ts
 
   updatedAt DateTime @updatedAt
 }

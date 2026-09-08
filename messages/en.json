@@ -20,11 +20,11 @@
     "stillBody": "Spring water bottled at source in Uludağ, Turkey, filtered through generations of family care before it reaches your glass.",
     "legacyKicker": "Since the 1960s",
     "legacyTitle": "Three generations, one spring.",
-    "legacyBody": "Sultan began in the foothills of Uludağ, Turkey, over fifty years ago, a family business carried forward by trust, generation after generation. In March 2021, that legacy reached Mauritius: from a first order of sparkling mineral water to a place at restaurant tables, supermarket shelves, and family gatherings across the island.",
+    "legacyBody": "Sultan began in the foothills of Uludağ, Turkey, over fifty years ago, a family business carried forward by trust, generation after generation. In March 2021, that legacy reached Mauritius: from a first order of sparkling mineral water to a place at restaurant tables, supermarket shelves, and family gatherings across Mauritius.",
     "legacyStat1Value": "1960s",
     "legacyStat1Label": "Family business since",
-    "legacyStat2Value": "Uludağ",
-    "legacyStat2Label": "Sourced from Turkey",
+    "legacyStat2Value": "Turkey",
+    "legacyStat2Label": "Sourced from Uludağ",
     "legacyStat3Value": "Family-owned",
     "legacyStat3Label": "Three generations",
     "legacyStat4Value": "2021",
@@ -46,7 +46,7 @@
     "origin2Title": "Family-run since the 1960s",
     "origin2Body": "Bottled without human contact at the family's plants in Bursa and Kütahya, now into the third generation and 42 countries.",
     "origin3Title": "In Mauritius since March 2021",
-    "origin3Body": "Carbonated mineral water came first. Then the still range, taken up for gatherings and events across the island.",
+    "origin3Body": "Carbonated mineral water came first. Then the still range, taken up for gatherings and events across Mauritius.",
     "featured": "Featured",
     "socialTitle": "On the island, in the wild",
     "socialCta": "Follow @sultan_mauritius"
@@ -76,11 +76,16 @@
     "laneStillNote": "PET, natural spring water",
     "empty": "No products in this category yet.",
     "resultOne": "product",
-    "resultMany": "products"
+    "resultMany": "products",
+    "favoritesTitle": "Mauritian Favorites",
+    "unitsLabel": "Units",
+    "packsLabel": "Packs",
+    "unitsSectionTitle": "Units",
+    "packsSectionTitle": "Packs"
   },
   "stockists": {
     "title": "Where to buy",
-    "intro": "Sultan is stocked at supermarkets, restaurants, and mini shops across the island.",
+    "intro": "Sultan is stocked at supermarkets, restaurants, and mini shops across Mauritius.",
     "empty": "The stockist list is being put together. Check back soon, or ask us directly on the contact page."
   },
   "productDetail": {
@@ -168,8 +173,8 @@
     "paramColiformLabel": "Coliform bacteria",
     "paramColiformValue": "0 in 250 mL",
     "mauritiusKicker": "Since March 2021",
-    "mauritiusTitle": "From a first order to a place on the island's tables.",
-    "mauritiusBody": "We began with Sultan's carbonated mineral water, taking our first steps into the Mauritian market with determination. With every new partnership, trust grew: restaurants, supermarkets, mini shops and wholesale stores became part of the journey. The 0.25L bottle, perfectly aligned with the Mauritian way of life, quickly became a favourite for gatherings and events.",
+    "mauritiusTitle": "From a first order to a place on Mauritius's tables.",
+    "mauritiusBody": "We began with Sultan's carbonated mineral water, taking our first steps into the Mauritian market with determination. With every new partnership, trust grew: restaurants, supermarkets, mini shops and wholesale stores became part of the journey. Behind every delivery is a 100% Mauritian team, handling each glass bottle with care so it reaches you the way it left the plant. It's not just an import: it's a bridge between Turkish craft and Mauritian life, built by the people who carry it here. The 0.25L bottle, perfectly aligned with the Mauritian way of life, quickly became a favourite for gatherings and events.",
     "galleryHeading": "On the island, in the wild",
     "ctaTitle": "Taste the difference",
     "ctaBody": "Browse the range, or set up a wholesale account for your restaurant, shop, or event."

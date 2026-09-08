@@ -23,6 +23,13 @@ export const productCopy = defineType({
     defineField({name: 'bestServedNoteFr', type: 'string', title: 'Best served (French)'}),
     defineField({name: 'specNote', type: 'text', title: 'Extra spec note (English)'}),
     defineField({name: 'specNoteFr', type: 'text', title: 'Extra spec note (French)'}),
+    defineField({
+      name: 'image',
+      type: 'image',
+      title: 'Product photo',
+      description: 'Overrides the developer-set catalogue photo for this SKU when set.',
+      options: {hotspot: true},
+    }),
   ],
   preview: {
     select: {title: 'sku', subtitle: 'tasteNote'},

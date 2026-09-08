@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import InquiryForm from "@/components/InquiryForm/InquiryForm";
 import Reveal from "@/components/Reveal/Reveal";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
 import styles from "./page.module.css";
 
@@ -18,10 +19,13 @@ export async function generateMetadata({ params }: { params: { locale: string } 
 
 export default async function ContactPage() {
   const t = await getTranslations("contact");
+  const locale = await getLocale();
+  const content = await getSiteContent("contact");
+  const c = (key: string) => pick(content, key, locale, t(key));
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>{t("title")}</h1>
-      <p className={styles.subtitle}>{t("subtitle")}</p>
+      <h1 className={styles.title}>{c("title")}</h1>
+      <p className={styles.subtitle}>{c("subtitle")}</p>
       <Reveal>
         <InquiryForm />
       </Reveal>

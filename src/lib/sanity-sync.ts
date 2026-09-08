@@ -57,6 +57,25 @@ export async function syncStockist(doc: StockistDoc) {
   });
 }
 
+// A Sanity `image` field's value on the webhook payload — an asset
+// reference, not a URL. See sanityImageUrl() below for the conversion.
+type SanityImageValue = { asset?: { _ref?: string } } | undefined;
+
+const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID;
+const SANITY_DATASET = process.env.SANITY_DATASET || "production";
+
+// Sanity's asset _ref is "image-<id>-<width>x<height>-<format>"; the CDN
+// URL is a fixed transform of that, no API call needed. See
+// https://www.sanity.io/docs/image-urls for the format.
+export function sanityImageUrl(image: SanityImageValue): string | undefined {
+  const ref = image?.asset?._ref;
+  if (!ref || !SANITY_PROJECT_ID) return undefined;
+  const match = /^image-([a-f0-9]+)-(\d+x\d+)-(\w+)$/.exec(ref);
+  if (!match) return undefined;
+  const [, id, dims, format] = match;
+  return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dims}.${format}`;
+}
+
 export type ProductCopyDoc = {
   _id: string;
   sku?: string;
@@ -66,6 +85,7 @@ export type ProductCopyDoc = {
   bestServedNoteFr?: string;
   specNote?: string;
   specNoteFr?: string;
+  image?: SanityImageValue;
 };
 
 export async function syncProductCopy(doc: ProductCopyDoc) {
@@ -84,6 +104,7 @@ export async function syncProductCopy(doc: ProductCopyDoc) {
     bestServedNoteFr: doc.bestServedNoteFr,
     specNote: doc.specNote,
     specNoteFr: doc.specNoteFr,
+    imageUrl: sanityImageUrl(doc.image),
   };
 
   await prisma.productCopy.upsert({
@@ -93,18 +114,24 @@ export async function syncProductCopy(doc: ProductCopyDoc) {
   });
 }
 
-export type HomeContentDoc = { _id: string } & Record<string, unknown>;
+export type SiteContentDoc = { _id: string; _type: string } & Record<string, unknown>;
 
 const SANITY_META_KEYS = ["_id", "_type", "_rev", "_createdAt", "_updatedAt"];
 
-export async function syncHomeContent(doc: HomeContentDoc) {
+// Every page-copy singleton (home, about, wholesale, stockists, contact,
+// products) syncs through here, keyed by its own SiteContent row — see
+// SITE_CONTENT_KEY_BY_TYPE in the webhook route for the _type -> key map.
+// Generic because Sanity is the whole document already; there's nothing
+// left to validate or reshape per page, unlike stockist/productCopy which
+// map onto real Prisma columns.
+export async function syncSiteContent(key: string, doc: SiteContentDoc) {
   const fields = Object.fromEntries(
-    Object.entries(doc).filter(([key]) => !SANITY_META_KEYS.includes(key))
+    Object.entries(doc).filter(([k]) => !SANITY_META_KEYS.includes(k))
   ) as Prisma.InputJsonObject;
 
   await prisma.siteContent.upsert({
-    where: { key: "home" },
-    create: { key: "home", data: fields },
+    where: { key },
+    create: { key, data: fields },
     update: { data: fields },
   });
 }

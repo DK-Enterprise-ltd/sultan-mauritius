@@ -5,5 +5,30 @@
 import {stockist} from './stockist'
 import {productCopy} from './productCopy'
 import {homeContent} from './homeContent'
+import {aboutContent} from './aboutContent'
+import {wholesaleContent} from './wholesaleContent'
+import {contactContent} from './contactContent'
+import {stockistsContent} from './stockistsContent'
+import {productsContent} from './productsContent'
 
-export const schemaTypes = [stockist, productCopy, homeContent]
+export const schemaTypes = [
+  stockist,
+  productCopy,
+  homeContent,
+  aboutContent,
+  wholesaleContent,
+  contactContent,
+  stockistsContent,
+  productsContent,
+]
+
+// Singleton document types: Structure (structure.ts) pins each to one
+// fixed document id and hides the "create new" option for it.
+export const SINGLETON_TYPES = [
+  'homeContent',
+  'aboutContent',
+  'wholesaleContent',
+  'contactContent',
+  'stockistsContent',
+  'productsContent',
+]

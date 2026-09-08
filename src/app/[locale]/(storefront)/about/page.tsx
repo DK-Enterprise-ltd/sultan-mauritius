@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
 import Button from "@/components/Button/Button";
 import Reveal from "@/components/Reveal/Reveal";
@@ -22,12 +23,19 @@ export default async function AboutPage() {
   const t = await getTranslations("about");
   const tHome = await getTranslations("home");
   const tp = await getTranslations("productDetail");
+  const locale = await getLocale();
+  const [content, homeContent] = await Promise.all([getSiteContent("about"), getSiteContent("home")]);
+  // Sanity-edited copy wins when present; messages.json is the fallback
+  // for a field nobody's touched in Studio yet (see src/lib/site-content.ts).
+  const c = (key: string) => pick(content, key, locale, t(key));
+  // Legacy section is homeContent (shared with the homepage), not aboutContent.
+  const cHome = (key: string) => pick(homeContent, key, locale, tHome(key));
 
   const stats = [
-    { value: tHome("legacyStat1Value"), label: tHome("legacyStat1Label") },
-    { value: tHome("legacyStat2Value"), label: tHome("legacyStat2Label") },
-    { value: tHome("legacyStat3Value"), label: tHome("legacyStat3Label") },
-    { value: tHome("legacyStat4Value"), label: tHome("legacyStat4Label") },
+    { value: cHome("legacyStat1Value"), label: cHome("legacyStat1Label") },
+    { value: cHome("legacyStat2Value"), label: cHome("legacyStat2Label") },
+    { value: cHome("legacyStat3Value"), label: cHome("legacyStat3Label") },
+    { value: cHome("legacyStat4Value"), label: cHome("legacyStat4Label") },
   ];
 
   const params = [
@@ -48,16 +56,16 @@ export default async function AboutPage() {
           <Image src="/Assets/Origin/dolum-tesisi.jpg" alt="" fill priority className={styles.heroImage} />
         </div>
         <div className={styles.heroContent}>
-          <p className={styles.kicker}>{t("heroKicker")}</p>
-          <h1 className={styles.heroTitle}>{t("heroTitle")}</h1>
-          <p className={styles.heroSubtitle}>{t("heroSubtitle")}</p>
+          <p className={styles.kicker}>{c("heroKicker")}</p>
+          <h1 className={styles.heroTitle}>{c("heroTitle")}</h1>
+          <p className={styles.heroSubtitle}>{c("heroSubtitle")}</p>
         </div>
       </section>
 
       <Reveal>
         <section className={styles.legacy}>
-          <h2 className={styles.legacyTitle}>{tHome("legacyTitle")}</h2>
-          <p className={styles.legacyBody}>{tHome("legacyBody")}</p>
+          <h2 className={styles.legacyTitle}>{cHome("legacyTitle")}</h2>
+          <p className={styles.legacyBody}>{cHome("legacyBody")}</p>
           <div className={styles.statGrid}>
             {stats.map((s) => (
               <div key={s.label} className={styles.stat}>
@@ -72,9 +80,9 @@ export default async function AboutPage() {
       <Reveal>
         <section className={styles.quality}>
           <div className={styles.qualityText}>
-            <p className={styles.kickerLight}>{t("qualityKicker")}</p>
-            <h2 className={styles.qualityTitle}>{t("qualityTitle")}</h2>
-            <p className={styles.qualityBody}>{t("qualityBody")}</p>
+            <p className={styles.kickerLight}>{c("qualityKicker")}</p>
+            <h2 className={styles.qualityTitle}>{c("qualityTitle")}</h2>
+            <p className={styles.qualityBody}>{c("qualityBody")}</p>
           </div>
           <div className={styles.facilityGrid}>
             <Image src="/Assets/Origin/lacin-facility.jpg" alt="" width={400} height={300} className={styles.facilityImg} />
@@ -86,8 +94,8 @@ export default async function AboutPage() {
 
       <Reveal>
         <section className={styles.params}>
-          <h2 className={styles.paramsHeading}>{t("paramsHeading")}</h2>
-          <p className={styles.paramsNote}>{t("paramsNote")}</p>
+          <h2 className={styles.paramsHeading}>{c("paramsHeading")}</h2>
+          <p className={styles.paramsNote}>{c("paramsNote")}</p>
           <div className={styles.paramGrid}>
             {params.map((p) => (
               <div key={p.label} className={styles.paramTile}>
@@ -105,16 +113,16 @@ export default async function AboutPage() {
             <Image src="/Assets/Lifestyle/home-04.jpg" alt="" fill className={styles.mauritiusImage} />
           </div>
           <div className={styles.mauritiusText}>
-            <p className={styles.kicker}>{t("mauritiusKicker")}</p>
-            <h2 className={styles.mauritiusTitle}>{t("mauritiusTitle")}</h2>
-            <p className={styles.mauritiusBody}>{t("mauritiusBody")}</p>
+            <p className={styles.kicker}>{c("mauritiusKicker")}</p>
+            <h2 className={styles.mauritiusTitle}>{c("mauritiusTitle")}</h2>
+            <p className={styles.mauritiusBody}>{c("mauritiusBody")}</p>
           </div>
         </section>
       </Reveal>
 
       <Reveal>
         <section className={styles.gallery}>
-          <h2 className={styles.galleryHeading}>{t("galleryHeading")}</h2>
+          <h2 className={styles.galleryHeading}>{c("galleryHeading")}</h2>
           <div className={styles.galleryGrid}>
             {GALLERY_IMAGES.map((img) => (
               <div key={img.src} className={styles.galleryTile} style={{ flexBasis: img.width }}>
@@ -129,18 +137,18 @@ export default async function AboutPage() {
         <section className={styles.cta}>
           <div className={styles.ctaInner}>
             <div>
-              <h2 className={styles.ctaTitle}>{t("ctaTitle")}</h2>
-              <p className={styles.ctaBody}>{t("ctaBody")}</p>
+              <h2 className={styles.ctaTitle}>{c("ctaTitle")}</h2>
+              <p className={styles.ctaBody}>{c("ctaBody")}</p>
             </div>
             <div className={styles.ctaActions}>
               <Link href="/products">
                 <Button variant="secondary" className={styles.ctaPrimary}>
-                  {tHome("ctaShop")}
+                  {cHome("ctaShop")}
                 </Button>
               </Link>
               <Link href="/wholesale">
                 <Button variant="outline" className={styles.ctaOutline}>
-                  {tHome("ctaWholesale")}
+                  {cHome("ctaWholesale")}
                 </Button>
               </Link>
             </div>

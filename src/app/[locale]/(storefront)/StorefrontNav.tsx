@@ -57,6 +57,7 @@ export default function StorefrontNav() {
     <header className={`${styles.nav} ${solid ? styles.solid : ""}`}>
       <Link href="/" className={styles.logo}>
         <Image src="/Assets/Logo/logo_white.svg" alt="Sultan" width={133} height={34} className={styles.logoImg} priority />
+        <span className={styles.logoTag}>Mauritius</span>
       </Link>
       <nav className={styles.links}>{navLinks}</nav>
       <div className={styles.right}>

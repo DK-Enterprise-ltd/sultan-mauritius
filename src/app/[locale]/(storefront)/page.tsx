@@ -67,10 +67,11 @@ export default async function HomePage() {
   const tNav = await getTranslations("nav");
   const locale = await getLocale();
   const isFr = locale === "fr";
-  const content = await getSiteContent("home");
+  const [content, wholesaleContent] = await Promise.all([getSiteContent("home"), getSiteContent("wholesale")]);
   // Sanity-edited copy wins when present; messages.json is the fallback
   // for a field nobody's touched in Studio yet (see src/lib/site-content.ts).
   const c = (key: string) => pick(content, key, locale, t(key));
+  const cWholesale = (key: string) => pick(wholesaleContent, key, locale, tWholesale(key));
   const viewer = getViewer();
 
   const allProducts = await getActiveProducts();
@@ -324,8 +325,8 @@ export default async function HomePage() {
         <section className={styles.wholesaleBanner}>
           <div className={styles.wholesaleBannerInner}>
             <div>
-              <h2 className={styles.wholesaleBannerTitle}>{tWholesale("title")}</h2>
-              <p className={styles.wholesaleBannerBody}>{tWholesale("subtitle")}</p>
+              <h2 className={styles.wholesaleBannerTitle}>{cWholesale("title")}</h2>
+              <p className={styles.wholesaleBannerBody}>{cWholesale("subtitle")}</p>
             </div>
             <div className={styles.wholesaleBannerActions}>
               <Link href="/wholesale">

@@ -20,6 +20,19 @@ const sanity = createClient({
 const stripDraftPrefix = (id) => id.replace(/^drafts\./, "");
 const SANITY_META_KEYS = ["_id", "_type", "_rev", "_createdAt", "_updatedAt"];
 
+// Mirrors sanityImageUrl() in src/lib/sanity-sync.ts — duplicated because
+// this is a plain CommonJS script (see the file-level ponytail note),
+// can't import that TS module without a build step.
+function sanityImageUrl(image) {
+  const ref = image && image.asset && image.asset._ref;
+  if (!ref || !process.env.SANITY_PROJECT_ID) return undefined;
+  const match = /^image-([a-f0-9]+)-(\d+x\d+)-(\w+)$/.exec(ref);
+  if (!match) return undefined;
+  const [, id, dims, format] = match;
+  const dataset = process.env.SANITY_DATASET || "production";
+  return `https://cdn.sanity.io/images/${process.env.SANITY_PROJECT_ID}/${dataset}/${id}-${dims}.${format}`;
+}
+
 async function backfillStockists() {
   const docs = await sanity.fetch(`*[_type == "stockist" && !(_id in path("drafts.**"))]`);
   for (const doc of docs) {
@@ -64,6 +77,7 @@ async function backfillProductCopy() {
       bestServedNoteFr: doc.bestServedNoteFr,
       specNote: doc.specNote,
       specNoteFr: doc.specNoteFr,
+      imageUrl: sanityImageUrl(doc.image),
     };
     await prisma.productCopy.upsert({
       where: { sanityId },
@@ -74,27 +88,38 @@ async function backfillProductCopy() {
   console.log(`Synced ${docs.length} product copy doc(s).`);
 }
 
-async function backfillHomeContent() {
-  const doc = await sanity.fetch(`*[_type == "homeContent" && !(_id in path("drafts.**"))][0]`);
+const SITE_CONTENT_KEY_BY_TYPE = {
+  homeContent: "home",
+  aboutContent: "about",
+  wholesaleContent: "wholesale",
+  stockistsContent: "stockists",
+  contactContent: "contact",
+  productsContent: "products",
+};
+
+async function backfillSiteContent(type, key) {
+  const doc = await sanity.fetch(`*[_type == "${type}" && !(_id in path("drafts.**"))][0]`);
   if (!doc) {
-    console.log("No homeContent document published yet.");
+    console.log(`No ${type} document published yet.`);
     return;
   }
   const fields = Object.fromEntries(
-    Object.entries(doc).filter(([key]) => !SANITY_META_KEYS.includes(key))
+    Object.entries(doc).filter(([k]) => !SANITY_META_KEYS.includes(k))
   );
   await prisma.siteContent.upsert({
-    where: { key: "home" },
-    create: { key: "home", data: fields },
+    where: { key },
+    create: { key, data: fields },
     update: { data: fields },
   });
-  console.log("Synced homeContent.");
+  console.log(`Synced ${type}.`);
 }
 
 async function main() {
   await backfillStockists();
   await backfillProductCopy();
-  await backfillHomeContent();
+  for (const [type, key] of Object.entries(SITE_CONTENT_KEY_BY_TYPE)) {
+    await backfillSiteContent(type, key);
+  }
 }
 
 main()

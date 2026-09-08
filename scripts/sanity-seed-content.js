@@ -98,9 +98,133 @@ async function seedProductCopy() {
   console.log(`Seeded ${skus.length} productCopy doc(s).`);
 }
 
+async function seedAboutContent() {
+  const a = en.about;
+  const aFr = fr.about;
+  await sanity.createOrReplace({
+    _id: "aboutContent",
+    _type: "aboutContent",
+    heroKicker: a.heroKicker,
+    heroKickerFr: aFr.heroKicker,
+    heroTitle: a.heroTitle,
+    heroTitleFr: aFr.heroTitle,
+    heroSubtitle: a.heroSubtitle,
+    heroSubtitleFr: aFr.heroSubtitle,
+    qualityKicker: a.qualityKicker,
+    qualityKickerFr: aFr.qualityKicker,
+    qualityTitle: a.qualityTitle,
+    qualityTitleFr: aFr.qualityTitle,
+    qualityBody: a.qualityBody,
+    qualityBodyFr: aFr.qualityBody,
+    paramsHeading: a.paramsHeading,
+    paramsHeadingFr: aFr.paramsHeading,
+    paramsNote: a.paramsNote,
+    paramsNoteFr: aFr.paramsNote,
+    mauritiusKicker: a.mauritiusKicker,
+    mauritiusKickerFr: aFr.mauritiusKicker,
+    mauritiusTitle: a.mauritiusTitle,
+    mauritiusTitleFr: aFr.mauritiusTitle,
+    mauritiusBody: a.mauritiusBody,
+    mauritiusBodyFr: aFr.mauritiusBody,
+    galleryHeading: a.galleryHeading,
+    galleryHeadingFr: aFr.galleryHeading,
+    ctaTitle: a.ctaTitle,
+    ctaTitleFr: aFr.ctaTitle,
+    ctaBody: a.ctaBody,
+    ctaBodyFr: aFr.ctaBody,
+  });
+  console.log("Seeded aboutContent.");
+}
+
+async function seedWholesaleContent() {
+  const w = en.wholesale;
+  const wFr = fr.wholesale;
+  await sanity.createOrReplace({
+    _id: "wholesaleContent",
+    _type: "wholesaleContent",
+    kicker: w.kicker,
+    kickerFr: wFr.kicker,
+    title: w.title,
+    titleFr: wFr.title,
+    subtitle: w.subtitle,
+    subtitleFr: wFr.subtitle,
+    talkPrefix: w.talkPrefix,
+    talkPrefixFr: wFr.talkPrefix,
+    talkOr: w.talkOr,
+    talkOrFr: wFr.talkOr,
+  });
+  console.log("Seeded wholesaleContent.");
+}
+
+async function seedContactContent() {
+  const c = en.contact;
+  const cFr = fr.contact;
+  await sanity.createOrReplace({
+    _id: "contactContent",
+    _type: "contactContent",
+    title: c.title,
+    titleFr: cFr.title,
+    subtitle: c.subtitle,
+    subtitleFr: cFr.subtitle,
+  });
+  console.log("Seeded contactContent.");
+}
+
+async function seedStockistsContent() {
+  const s = en.stockists;
+  const sFr = fr.stockists;
+  await sanity.createOrReplace({
+    _id: "stockistsContent",
+    _type: "stockistsContent",
+    title: s.title,
+    titleFr: sFr.title,
+    intro: s.intro,
+    introFr: sFr.intro,
+    empty: s.empty,
+    emptyFr: sFr.empty,
+  });
+  console.log("Seeded stockistsContent.");
+}
+
+async function seedProductsContent() {
+  const p = en.products;
+  const pFr = fr.products;
+  await sanity.createOrReplace({
+    _id: "productsContent",
+    _type: "productsContent",
+    title: p.title,
+    titleFr: pFr.title,
+    wholesaleNote: p.wholesaleNote,
+    wholesaleNoteFr: pFr.wholesaleNote,
+    empty: p.empty,
+    emptyFr: pFr.empty,
+    favoritesTitle: p.favoritesTitle,
+    favoritesTitleFr: pFr.favoritesTitle,
+    unitsLabel: p.unitsLabel,
+    unitsLabelFr: pFr.unitsLabel,
+    packsLabel: p.packsLabel,
+    packsLabelFr: pFr.packsLabel,
+    unitsSectionTitle: p.unitsSectionTitle,
+    unitsSectionTitleFr: pFr.unitsSectionTitle,
+    packsSectionTitle: p.packsSectionTitle,
+    packsSectionTitleFr: pFr.packsSectionTitle,
+  });
+  console.log("Seeded productsContent.");
+}
+
 async function main() {
-  await seedHomeContent();
-  await seedProductCopy();
+  // seedHomeContent/seedProductCopy already ran once (see the file header).
+  // createOrReplace() fully overwrites the document, so re-running them
+  // would blow away any edits already made in Studio. Only uncomment if
+  // you specifically want to reset those two back to the messages.json
+  // snapshot.
+  // await seedHomeContent();
+  // await seedProductCopy();
+  await seedAboutContent();
+  await seedWholesaleContent();
+  await seedContactContent();
+  await seedStockistsContent();
+  await seedProductsContent();
 }
 
 main().catch((err) => {

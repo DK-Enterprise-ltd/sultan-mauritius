@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal/Reveal";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
 import styles from "./page.module.css";
 
@@ -20,6 +21,9 @@ export async function generateMetadata({ params }: { params: { locale: string } 
 
 export default async function StockistsPage() {
   const t = await getTranslations("stockists");
+  const locale = await getLocale();
+  const content = await getSiteContent("stockists");
+  const c = (key: string) => pick(content, key, locale, t(key));
   const stockists = await prisma.stockist.findMany({
     where: { isActive: true },
     orderBy: [{ region: "asc" }, { town: "asc" }, { name: "asc" }],
@@ -33,11 +37,11 @@ export default async function StockistsPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>{t("title")}</h1>
-      <p className={styles.intro}>{t("intro")}</p>
+      <h1 className={styles.title}>{c("title")}</h1>
+      <p className={styles.intro}>{c("intro")}</p>
 
       {stockists.length === 0 ? (
-        <p className={styles.empty}>{t("empty")}</p>
+        <p className={styles.empty}>{c("empty")}</p>
       ) : (
         regions.map((region) => (
           <Reveal key={region} className={styles.region}>
