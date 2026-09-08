@@ -4,7 +4,6 @@ import { CartProvider } from "@/lib/cart-context";
 import { Link } from "@/i18n/navigation";
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
-import CookieConsentBanner from "@/components/CookieConsentBanner/CookieConsentBanner";
 import styles from "./layout.module.css";
 
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +15,6 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
         <Footer />
       </div>
       <CartDrawer />
-      <CookieConsentBanner />
     </CartProvider>
   );
 }

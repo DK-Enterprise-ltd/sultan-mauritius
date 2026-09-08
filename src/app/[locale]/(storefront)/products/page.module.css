@@ -89,7 +89,7 @@
 }
 
 .laneSparkling.laneActive {
-  background: var(--sultan-sun);
+  background: var(--sultan-plum);
   color: #fff;
 }
 
@@ -177,8 +177,8 @@
 }
 
 .chipActiveSparkling {
-  border-color: var(--sultan-sun);
-  background: var(--sultan-sun);
+  border-color: var(--sultan-plum);
+  background: var(--sultan-plum);
   color: #fff;
 }
 
