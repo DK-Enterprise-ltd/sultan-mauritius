@@ -64,7 +64,11 @@ export default async function AdminOrdersPage({
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td>{order.orderNumber}</td>
+                <td>
+                  <Link href={`/admin/orders/${order.id}`} className={styles.rowLink}>
+                    #{order.orderNumber}
+                  </Link>
+                </td>
                 <td>{order.customer.name}</td>
                 <td>{order.channel}</td>
                 <td>

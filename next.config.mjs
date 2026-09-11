@@ -5,6 +5,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 // Vercel already redirects http -> https and terminates TLS; HSTS below is
 // defense in depth for anyone who somehow reaches the origin over plain
 // HTTP first (a stale bookmark, a raw IP, a misconfigured DNS entry).
+// Content-Security-Policy lives in src/middleware.ts instead of here — it
+// needs to run for every response including the ones next-intl handles.
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },

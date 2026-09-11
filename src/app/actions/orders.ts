@@ -84,58 +84,73 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     new Prisma.Decimal(0)
   );
 
-  const order = await prisma.$transaction(async (tx) => {
-    const customer = await tx.customer.upsert({
-      where: { email: input.customer.email },
-      update: {
-        name: input.customer.name,
-        phone: input.customer.phone,
-        companyName: input.customer.companyName,
-        deliveryAddress: input.customer.deliveryAddress,
-        deliveryZone: input.customer.deliveryZone,
-      },
-      create: {
-        type: viewer.isB2B ? "BUSINESS" : "INDIVIDUAL",
-        name: input.customer.name,
-        email: input.customer.email,
-        phone: input.customer.phone,
-        companyName: input.customer.companyName,
-        deliveryAddress: input.customer.deliveryAddress,
-        deliveryZone: input.customer.deliveryZone,
-      },
-    });
-
-    const created = await tx.order.create({
-      data: {
-        customerId: customer.id,
-        channel: viewer.isB2B ? "B2B" : "B2C",
-        status: "PENDING",
-        deliveryAddress: input.customer.deliveryAddress,
-        deliveryZone: input.customer.deliveryZone,
-        subtotal,
-        total: subtotal,
-        notes: input.notes,
-        items: { create: lineItems },
-      },
-    });
-
-    for (const item of input.items) {
-      await tx.product.update({
-        where: { id: item.productId },
-        data: { stockQuantity: { decrement: item.quantity } },
-      });
-      await tx.stockMovement.create({
-        data: {
-          productId: item.productId,
-          type: "SALE",
-          quantityChange: -item.quantity,
-          orderId: created.id,
+  let order;
+  try {
+    order = await prisma.$transaction(async (tx) => {
+      const customer = await tx.customer.upsert({
+        where: { email: input.customer.email },
+        update: {
+          name: input.customer.name,
+          phone: input.customer.phone,
+          companyName: input.customer.companyName,
+          deliveryAddress: input.customer.deliveryAddress,
+          deliveryZone: input.customer.deliveryZone,
+        },
+        create: {
+          type: viewer.isB2B ? "BUSINESS" : "INDIVIDUAL",
+          name: input.customer.name,
+          email: input.customer.email,
+          phone: input.customer.phone,
+          companyName: input.customer.companyName,
+          deliveryAddress: input.customer.deliveryAddress,
+          deliveryZone: input.customer.deliveryZone,
         },
       });
-    }
 
-    return created;
-  });
+      const created = await tx.order.create({
+        data: {
+          customerId: customer.id,
+          channel: viewer.isB2B ? "B2B" : "B2C",
+          status: "PENDING",
+          deliveryAddress: input.customer.deliveryAddress,
+          deliveryZone: input.customer.deliveryZone,
+          subtotal,
+          total: subtotal,
+          notes: input.notes,
+          items: { create: lineItems },
+        },
+      });
+
+      for (const item of input.items) {
+        // Guarded, atomic decrement: without the stockQuantity >= quantity
+        // condition, two concurrent orders for the same last unit(s) could
+        // both pass the earlier read-only check and both decrement, taking
+        // stock negative. updateMany returns count: 0 when the guard
+        // fails, which we treat as "someone else took it" and roll back
+        // the whole order transaction.
+        const result = await tx.product.updateMany({
+          where: { id: item.productId, stockQuantity: { gte: item.quantity } },
+          data: { stockQuantity: { decrement: item.quantity } },
+        });
+        if (result.count === 0) {
+          const product = byId.get(item.productId);
+          throw new Error(`Not enough stock for ${product?.name ?? "one of the items in your cart"}.`);
+        }
+        await tx.stockMovement.create({
+          data: {
+            productId: item.productId,
+            type: "SALE",
+            quantityChange: -item.quantity,
+            orderId: created.id,
+          },
+        });
+      }
+
+      return created;
+    });
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "Could not place your order." };
+  }
 
   revalidateTag("products");
 

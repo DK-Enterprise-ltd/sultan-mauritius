@@ -5,6 +5,8 @@ import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
 import PrintButton from "./PrintButton";
+import InvoiceEditForm from "./InvoiceEditForm";
+import SendInvoiceButton from "./SendInvoiceButton";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +32,12 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
         <Link href="/admin/invoices" className={styles.back}>
           ← Back to invoices
         </Link>
-        <PrintButton />
+        <div className={styles.toolbarActions}>
+          <a href={`/api/admin/invoices/${invoice.id}/pdf`} className={styles.downloadButton}>
+            Download PDF
+          </a>
+          <PrintButton />
+        </div>
       </div>
 
       <div className={styles.sheet}>
@@ -43,7 +50,9 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
           <div className={styles.headerRight}>
             <h2 className={styles.invoiceTitle}>Invoice #{invoice.invoiceNumber}</h2>
             <Badge status={invoice.status} />
-            <p className={styles.metaLine}>Order #{order.orderNumber}</p>
+            <p className={styles.metaLine}>
+              <Link href={`/admin/orders/${order.id}`}>Order #{order.orderNumber}</Link>
+            </p>
             <p className={styles.metaLine}>
               Issued: {invoice.issuedAt ? invoice.issuedAt.toLocaleDateString("en-MU") : "Not yet issued"}
             </p>
@@ -114,6 +123,22 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
           Payment by MCB Juice or bank transfer (Sultan Mauritius Ltd · MCB · Account 000123456789), reference
           order #{order.orderNumber}.
         </p>
+      </div>
+
+      <div className={styles.adminPanel}>
+        <div className={styles.adminCard}>
+          <h2 className={styles.sectionLabel}>Send to customer</h2>
+          <SendInvoiceButton invoiceId={invoice.id} alreadySent={invoice.status !== "DRAFT"} />
+        </div>
+        <div className={styles.adminCard}>
+          <h2 className={styles.sectionLabel}>Edit invoice</h2>
+          <InvoiceEditForm
+            invoiceId={invoice.id}
+            status={invoice.status}
+            dueDate={invoice.dueDate}
+            amountPaid={invoice.amountPaid.toString()}
+          />
+        </div>
       </div>
     </div>
   );

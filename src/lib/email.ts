@@ -4,10 +4,14 @@ import { formatMur } from "@/lib/format";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// ponytail: no verified sending domain yet, so mail goes out from Resend's
-// shared onboarding@resend.dev address. Swap for a verified "orders@
-// sultanmauritius.mu" once a domain is added in Resend.
-const FROM = "Sultan Mauritius <onboarding@resend.dev>";
+// ponytail: falls back to Resend's shared onboarding@resend.dev address,
+// which only delivers to the Resend account's own verified email — every
+// other recipient silently fails to send. Once a domain is verified in
+// Resend, set EMAIL_FROM (e.g. "Sultan Mauritius <orders@sultanmauritius.mu>")
+// so switching senders is a config change, not a code change.
+const FROM = process.env.EMAIL_FROM || "Sultan Mauritius <onboarding@resend.dev>";
+
+let warnedMissingKey = false;
 
 const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNumber: number) => string }>> = {
   PENDING: {
@@ -50,11 +54,60 @@ type StatusEmailOrder = {
   customer: { name: string; email: string };
 };
 
+type InvoiceEmailPayload = {
+  invoiceNumber: number;
+  orderNumber: number;
+  dueDate: Date | null;
+  balanceDue: Parameters<typeof formatMur>[0];
+  customer: { name: string; email: string };
+  pdfBuffer: Buffer;
+};
+
+/** Unlike sendOrderStatusEmail, this throws on failure — "Send invoice" is
+ * the one action whose whole point is the email; the caller uses success
+ * to decide whether to mark the invoice ISSUED. */
+export async function sendInvoiceEmail(invoice: InvoiceEmailPayload): Promise<void> {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is not set — cannot send invoice emails.");
+  }
+
+  const dueLine = invoice.dueDate
+    ? `Payment is due by ${invoice.dueDate.toLocaleDateString("en-MU")}.`
+    : "Payment is due immediately.";
+
+  await resend.emails.send({
+    from: FROM,
+    to: invoice.customer.email,
+    subject: `Invoice #${invoice.invoiceNumber} for order #${invoice.orderNumber}`,
+    text:
+      `Hi ${invoice.customer.name},\n\n` +
+      `Please find attached invoice #${invoice.invoiceNumber} for order #${invoice.orderNumber}.\n\n` +
+      `Balance due: ${formatMur(invoice.balanceDue)}\n${dueLine}\n\n` +
+      `Sultan Mauritius`,
+    attachments: [
+      {
+        filename: `invoice-${invoice.invoiceNumber}.pdf`,
+        content: invoice.pdfBuffer,
+      },
+    ],
+  });
+}
+
 // Best-effort: a failed send should never roll back an admin's status
 // update, so this only logs on error rather than throwing.
 export async function sendOrderStatusEmail(order: StatusEmailOrder) {
   const copy = STATUS_COPY[order.status];
   if (!copy) return;
+
+  if (!process.env.RESEND_API_KEY) {
+    // Fail loud exactly once per server instance instead of attempting (and
+    // silently failing) a send on every status change with no key set.
+    if (!warnedMissingKey) {
+      warnedMissingKey = true;
+      console.error("RESEND_API_KEY is not set — order status emails will not be sent.");
+    }
+    return;
+  }
 
   try {
     await resend.emails.send({

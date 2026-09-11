@@ -40,6 +40,15 @@
   color: white;
 }
 
+.navLinkActive {
+  background: var(--sultan-teal);
+  color: white;
+}
+
+.navLinkActive:hover {
+  background: var(--sultan-teal);
+}
+
 .logoutForm {
   margin-top: 1rem;
   border-top: 1px solid var(--neutral-800);

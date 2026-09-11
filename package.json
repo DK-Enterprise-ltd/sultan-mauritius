@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "@react-pdf/renderer": "^3.4.5",
     "@sanity/icons": "^3.8.0",
     "@sanity/vision": "^3.99.0",
     "dotenv": "^17.4.2",

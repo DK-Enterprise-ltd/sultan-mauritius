@@ -44,6 +44,9 @@ responses. Use a period, comma, or colon instead.
   layouts (storefront and admin are independent Next.js root layouts, see
   below).
 - No test runner configured.
+- `resend` for transactional email (order status, invoice sends);
+  `@react-pdf/renderer` for server-side invoice PDF generation (no headless
+  browser).
 
 ## Structure
 
@@ -57,26 +60,51 @@ src/app/[locale]/(storefront)/      customer-facing site: nav, home, products,
 src/app/admin/layout.tsx           separate root layout (its own <html>),
                                      English-only, not locale-prefixed,
                                      excluded from the i18n middleware
-src/app/admin/                      internal: dashboard, inventory, orders,
-                                     invoices
+src/app/admin/                      internal: dashboard, inventory, orders
+                                     (list + per-order detail with full
+                                     customer info), invoices (list with
+                                     Draft/Sent/Paid filter + per-invoice
+                                     detail: edit due date/amount paid/
+                                     status, Send invoice, Download PDF)
 src/app/actions/                    "use server" actions (orders.ts,
-                                     inquiries.ts): the only place that
-                                     writes Order/ContactInquiry
+                                     inquiries.ts, invoices.tsx): the only
+                                     place that writes Order/ContactInquiry/
+                                     Invoice
+src/app/api/admin/invoices/[id]/pdf/route.tsx
+                                     admin-only PDF download for an invoice,
+                                     rendered server-side via
+                                     @react-pdf/renderer (src/lib/pdf/
+                                     invoice-pdf.tsx) — no headless browser
 src/components/                     Button, Card, Badge, ProductCard,
                                      InquiryForm, each with a sibling
                                      .module.css
 src/lib/                            prisma client, auth stub, pricing, cart
                                      context, MUR currency formatting,
-                                     catalog-i18n (French flavor/name lookup)
+                                     catalog-i18n (French flavor/name lookup),
+                                     email.ts (Resend), pdf/ (invoice PDF)
 src/i18n/                           next-intl routing, navigation, and
                                      request config
 messages/en.json, messages/fr.json  UI copy, keyed by page/component
                                      namespace
-src/middleware.ts                   next-intl locale middleware; matcher
-                                     excludes /admin, /api, static assets
+src/middleware.ts                   next-intl locale routing AND: rate
+                                     limiting (general + a tighter bucket
+                                     for POST/server-action/API traffic,
+                                     keyed off Vercel's trusted req.ip) AND
+                                     the Content-Security-Policy header for
+                                     every response. Admin/api/studio paths
+                                     skip next-intl but still get both.
 prisma/schema.prisma                source of truth for the data model
 prisma/seed.js                      plain CommonJS seed (no ts-node), run
-                                     directly with `node prisma/seed.js`
+                                     directly with `node prisma/seed.js` —
+                                     it's an upsert, safe to re-run, and is
+                                     the only thing that pushes a changed
+                                     Product.imageUrl mapping into the DB
+docs/security-checklist.md          project-specific security audit
+                                     (severity-tiered, P0-P3), built from
+                                     the reusable template at
+                                     ~/.claude/rules/ecc/common/
+                                     security-checklist.md — update it as
+                                     findings are fixed or new ones land
 ```
 
 ## Conventions worth preserving
@@ -115,6 +143,26 @@ prisma/seed.js                      plain CommonJS seed (no ts-node), run
 - `ponytail:` comments mark deliberate shortcuts (stubbed auth, plain
   CommonJS seed, localStorage cart, the flat i18n lookup); read them
   before "fixing" the thing they're attached to.
+- **Invoice lifecycle**: `generateInvoiceForOrder` (`src/app/actions/
+  invoices.tsx`) creates a `DRAFT` invoice, not a sent one — editable
+  (due date, amount paid, status) via the form on `/admin/invoices/[id]`
+  before anyone sees it. `sendInvoice` emails the customer the PDF via
+  Resend and only then flips status to `ISSUED`; unlike order-status
+  emails, a failed send is reported back to the admin instead of swallowed,
+  since sending *is* the point of that action. `balanceDue` is always
+  recomputed server-side from `order.total - amountPaid`, never taken from
+  client input directly — same discipline as the money path in `orders.ts`.
+- **Stock decrements are guarded, not just checked-then-written**:
+  `createOrder` uses `product.updateMany({ where: { stockQuantity: { gte:
+  quantity } } })` and rolls back the transaction on a zero-row result.
+  Follow this pattern for any future code that decrements shared inventory
+  — a plain read-then-`update` is a race under concurrent orders.
+- **Order status emails / invoice emails** go through `src/lib/email.ts`
+  (Resend). Requires `RESEND_API_KEY`; without it, sends are skipped with a
+  one-time console warning rather than attempted. `FROM` defaults to
+  Resend's shared sandbox address, which **only delivers to the Resend
+  account's own verified email** — set `EMAIL_FROM` once a sending domain
+  is verified in Resend so switching senders is a config change, not code.
 
 ## Brand
 
@@ -290,3 +338,7 @@ node prisma/seed.js      # seed sample products/customers/orders
 
 Storefront: http://localhost:3000/en or /fr. Admin (unprefixed, English
 only): http://localhost:3000/admin.
+
+Order-status and invoice emails need `RESEND_API_KEY` in `.env.local` (see
+`.env.example`) — without it, sends are skipped and logged, not attempted;
+the rest of the app works fine either way.

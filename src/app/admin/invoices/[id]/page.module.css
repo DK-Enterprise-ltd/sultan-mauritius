@@ -20,7 +20,13 @@
   color: var(--neutral-900);
 }
 
-.printButton {
+.toolbarActions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.printButton,
+.downloadButton {
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0.5rem 1rem;
@@ -29,6 +35,11 @@
   background: var(--neutral-900);
   color: white;
   cursor: pointer;
+}
+
+.downloadButton {
+  background: white;
+  color: var(--neutral-900);
 }
 
 .sheet {
@@ -167,8 +178,101 @@
   padding-top: 1rem;
 }
 
+.adminPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 700px) {
+  .adminPanel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.adminCard {
+  background: white;
+  border: 1px solid var(--neutral-200);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.editInput {
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  font-size: 0.9rem;
+  color: var(--neutral-900);
+}
+
+.editError {
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.saveButton {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-900);
+  background: var(--neutral-900);
+  color: white;
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sendPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.sendButton {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: white;
+  cursor: pointer;
+}
+
+.sendButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sendSuccess {
+  color: var(--sultan-green);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
 @media print {
-  .toolbar {
+  .toolbar,
+  .adminPanel {
     display: none;
   }
   .sheet {

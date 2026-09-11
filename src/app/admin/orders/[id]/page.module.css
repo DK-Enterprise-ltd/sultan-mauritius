@@ -1,0 +1,131 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.back {
+  color: var(--neutral-600);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.back:hover {
+  color: var(--neutral-900);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.headerRow h1 {
+  margin-bottom: 0;
+}
+
+.itemsTotals {
+  margin-top: 1rem;
+}
+
+.metaLine {
+  font-size: 0.85rem;
+  color: var(--neutral-500);
+}
+
+.definitionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.definitionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.definitionLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--neutral-500);
+}
+
+.definitionValue {
+  font-size: 0.95rem;
+  color: var(--neutral-900);
+}
+
+.definitionValue a {
+  color: var(--sultan-teal);
+}
+
+.totalsRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--neutral-700);
+  padding: 0.35rem 0;
+}
+
+.totalsRowStrong {
+  font-weight: 700;
+  color: var(--neutral-900);
+  border-top: 1px solid var(--neutral-200);
+  margin-top: 0.35rem;
+  padding-top: 0.6rem;
+}
+
+.invoiceActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.generateButton {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: white;
+  cursor: pointer;
+}
+
+.generateButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.invoiceLink {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sultan-teal);
+}
+
+.notes {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  color: var(--neutral-700);
+}

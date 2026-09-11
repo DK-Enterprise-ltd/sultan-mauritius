@@ -40,3 +40,11 @@ next-env.d.ts
 # this is just the unsorted leftover library, kept locally, not tracked.
 public/uploads/
 .neon
+
+# local project files (not part of the repo)
+/Invoice 1032.pdf
+/Open Product catalogue_260614_202929.pdf
+/Product Images/
+/Sultan_Mauritius_Project_Questionnaire.docx
+/Sultan_Mauritius_Scope_of_Work.docx
+/WhatsApp Image 2026-08-19 at 1.04.16 PM.jpeg

@@ -1,23 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { logoutAdmin } from "@/app/actions/admin-auth";
 import { sora, inter } from "../fonts";
 import "../globals.css";
 import AdminLoginForm from "./AdminLoginForm";
+import AdminNav from "./AdminNav";
 import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
   title: "Sultan Admin",
   robots: { index: false, follow: false },
 };
-
-const NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/inventory", label: "Inventory" },
-  { href: "/admin/invoices", label: "Invoices" },
-];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const authed = isAdmin();
@@ -29,13 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className={styles.shell}>
             <aside className={styles.sidebar}>
               <p className={styles.brand}>Sultan Admin</p>
-              <nav className={styles.nav}>
-                {NAV_ITEMS.map((item) => (
-                  <Link key={item.href} href={item.href} className={styles.navLink}>
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
+              <AdminNav />
               <form action={logoutAdmin} className={styles.logoutForm}>
                 <button type="submit" className={styles.logoutButton}>
                   Log out

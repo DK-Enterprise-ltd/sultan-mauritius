@@ -20,8 +20,43 @@ function isSensitive(pathname: string, method: string, isServerAction: boolean):
   );
 }
 
+// Only third-party origins actually referenced by the app (Fontshare CSS/
+// fonts, Sanity's asset CDN for productCopy.imageUrl overrides). Keep this
+// list in sync with layout.tsx <head> tags and any Sanity-hosted image src.
+const CSP_FONT_ORIGIN = "https://api.fontshare.com https://cdn.fontshare.com";
+const CSP_IMAGE_ORIGIN = "https://cdn.sanity.io";
+
+// ponytail: script-src stays 'unsafe-inline' rather than per-request
+// nonces. A nonce needs to reach both Next's own hydration scripts and the
+// static JSON-LD <script> in [locale]/layout.tsx, which means threading a
+// request header through next-intl's own createMiddleware() response —
+// not guaranteed safe to do blind without a live browser to check
+// hydration didn't break. Every other directive is still locked down
+// (no object embeds, no framing, no unknown origins), which is most of
+// the real-world value; tighten script-src to a nonce once this can be
+// verified against a running deployment.
+function buildCsp(): string {
+  return [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline'",
+    `style-src 'self' 'unsafe-inline' ${CSP_FONT_ORIGIN}`,
+    `font-src 'self' ${CSP_FONT_ORIGIN}`,
+    `img-src 'self' data: blob: ${CSP_IMAGE_ORIGIN}`,
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+}
+
 export default function middleware(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.ip || "unknown";
+  // Vercel's own req.ip is the trusted client-IP signal at that edge;
+  // x-forwarded-for is client-settable and only used as a local-dev
+  // fallback where req.ip isn't populated. Trusting the header first would
+  // let an attacker rotate a fake IP per request and bypass rate limits.
+  const ip = req.ip || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const { pathname } = req.nextUrl;
   // Server actions (createOrder, submitInquiry, loginAdmin, etc.) POST to
   // whatever page they were called from, marked by this header rather than
@@ -38,10 +73,10 @@ export default function middleware(req: NextRequest) {
     });
   }
 
-  if (pathname.startsWith("/api/") || pathname.startsWith("/admin") || pathname.startsWith("/studio")) {
-    return NextResponse.next();
-  }
-  return intlMiddleware(req);
+  const isAdminOrApi = pathname.startsWith("/api/") || pathname.startsWith("/admin") || pathname.startsWith("/studio");
+  const response = isAdminOrApi ? NextResponse.next() : intlMiddleware(req);
+  response.headers.set("Content-Security-Policy", buildCsp());
+  return response;
 }
 
 export const config = {
