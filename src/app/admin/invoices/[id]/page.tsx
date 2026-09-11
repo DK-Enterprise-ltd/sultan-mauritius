@@ -33,7 +33,10 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
           ← Back to invoices
         </Link>
         <div className={styles.toolbarActions}>
-          <a href={`/api/admin/invoices/${invoice.id}/pdf`} className={styles.downloadButton}>
+          <a
+            href={`/api/admin/invoices/${invoice.id}/pdf?download=1`}
+            className={styles.downloadButton}
+          >
             Download PDF
           </a>
           <PrintButton />
@@ -123,6 +126,15 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
           Payment by MCB Juice or bank transfer (Sultan Mauritius Ltd · MCB · Account 000123456789), reference
           order #{order.orderNumber}.
         </p>
+      </div>
+
+      <div className={styles.pdfPreviewCard}>
+        <h2 className={styles.sectionLabel}>Invoice PDF</h2>
+        <iframe
+          src={`/api/admin/invoices/${invoice.id}/pdf`}
+          title={`Invoice #${invoice.invoiceNumber} PDF`}
+          className={styles.pdfFrame}
+        />
       </div>
 
       <div className={styles.adminPanel}>

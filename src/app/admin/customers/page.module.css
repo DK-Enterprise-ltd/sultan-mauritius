@@ -1,0 +1,41 @@
+.searchForm {
+  margin-bottom: 1.25rem;
+  max-width: 420px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--neutral-200);
+  font-size: 0.9rem;
+}
+
+.searchButton {
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--neutral-900);
+  background: var(--neutral-900);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.typeBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--neutral-100);
+  color: var(--neutral-600);
+}
+
+.typeBUSINESS {
+  background: #e3f4f8;
+  color: var(--sultan-teal);
+}

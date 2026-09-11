@@ -38,7 +38,23 @@ responses. Use a period, comma, or colon instead.
   **not** in `schema.prisma` (Prisma 7 style); it lives in
   `prisma.config.ts` (CLI) and is passed to `PrismaPg` in `src/lib/prisma.ts`
   (runtime), both reading `DATABASE_URL`.
-- Plain CSS Modules per component/page, no Tailwind, no UI kit.
+- Plain CSS Modules per component/page, no Tailwind, no UI kit — **except
+  `/admin`**, which additionally loads Tailwind v4 + shadcn/ui + bklit's
+  chart components (`src/app/admin/admin-tailwind.css`, `components.json`),
+  scoped there on purpose: the admin layout is a separate Next.js root
+  layout (its own `<html>`), so Tailwind's reset/utilities never reach the
+  storefront. Add shadcn/bklit components with `npx shadcn@latest add
+  <name>` — they land in `src/components/ui/` or `src/components/charts/`.
+  **Known issue:** bklit's `AreaChart`/`BarChart` (`src/components/charts/
+  area-chart.tsx`, `bar-chart.tsx`) hang the browser tab after a few
+  seconds when actually rendered with data, reproduced in both dev and a
+  production build, isolated to shared code (both chart types hang
+  independently) rather than one component — likely a missing memoization
+  in the animation/domain-tweening state machine that never lets a phase
+  transition settle. Not fixed as of 2026-09-11; don't wire either into a
+  live page until root-caused. The rest of the library (installed
+  dependencies, `src/lib/utils.ts`'s `cn`, `src/components/ui/button.tsx`)
+  is unaffected.
 - Fonts: Sora (`--font-display`, headings) + Inter (`--font-body`), loaded
   via `next/font/google` in `src/app/fonts.ts` and used by both root
   layouts (storefront and admin are independent Next.js root layouts, see
@@ -60,12 +76,21 @@ src/app/[locale]/(storefront)/      customer-facing site: nav, home, products,
 src/app/admin/layout.tsx           separate root layout (its own <html>),
                                      English-only, not locale-prefixed,
                                      excluded from the i18n middleware
-src/app/admin/                      internal: dashboard, inventory, orders
-                                     (list + per-order detail with full
-                                     customer info), invoices (list with
-                                     Draft/Sent/Paid filter + per-invoice
-                                     detail: edit due date/amount paid/
-                                     status, Send invoice, Download PDF)
+src/app/admin/                      internal: dashboard (real stat cards +
+                                     sparklines via src/lib/admin-stats.ts),
+                                     inventory (list + per-product detail
+                                     with stock movement history, status
+                                     toggle), orders (list + per-order
+                                     detail with full customer info),
+                                     customers (searchable list, links to
+                                     their filtered orders), invoices (list
+                                     with Draft/Sent/Paid filter + per-
+                                     invoice detail: edit due date/amount
+                                     paid/status, Send invoice, Download
+                                     PDF). Top bar has a quick-jump search
+                                     (src/app/actions/admin-search.ts):
+                                     a number jumps straight to that order,
+                                     anything else searches customers.
 src/app/actions/                    "use server" actions (orders.ts,
                                      inquiries.ts, invoices.tsx): the only
                                      place that writes Order/ContactInquiry/
@@ -122,7 +147,12 @@ docs/security-checklist.md          project-specific security audit
   `loginAdmin` server action after a timing-safe compare against
   `ADMIN_USERNAME`/`ADMIN_PASSWORD` (`.env.local`). One shared login, no
   user table — `/admin` renders `AdminLoginForm` in place of the dashboard
-  when unauthenticated, rather than redirecting. `/admin` is intentionally
+  when unauthenticated, rather than redirecting. The session cookie's
+  `path` is `/` — it must cover both `/admin` and `/api/admin/...` (the PDF
+  route, and any future admin API route), which don't share a path prefix
+  other than `/`. Cookie `set()`/`delete()` calls must always use the same
+  `path`, or `delete()` silently no-ops instead of logging anyone out.
+  `/admin` is intentionally
   not linked from anywhere in the storefront (no nav/footer entry); it
   only exists as a path. **Customer-facing viewer/auth is still stubbed**:
   `getViewer()`'s B2B detection is a `sultan_b2b=1` cookie toggle, marked

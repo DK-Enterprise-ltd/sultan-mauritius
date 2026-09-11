@@ -9,7 +9,6 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 // needs to run for every response including the ones next-intl handles.
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
@@ -19,7 +18,17 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // X-Frame-Options: DENY everywhere except the invoice PDF route,
+      // which the admin invoice page embeds in its own same-origin
+      // <iframe> preview. Matching middleware.ts's CSP frame-ancestors
+      // exception for the same path — see the comment there for why.
+      {
+        source: "/:path((?!api/admin/invoices/.+/pdf).*)",
+        headers: [{ key: "X-Frame-Options", value: "DENY" }],
+      },
+    ];
   },
 };
 

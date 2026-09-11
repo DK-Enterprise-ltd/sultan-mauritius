@@ -24,24 +24,26 @@ export default function StockAdjuster({ productId, quantity }: { productId: stri
   }
 
   return (
-    <div className={styles.adjuster}>
-      <span className={styles.qty}>{quantity}</span>
-      <input
-        type="number"
-        min={1}
-        step={1}
-        value={amount}
-        disabled={pending}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="qty"
-        className={styles.qtyInput}
-      />
-      <button type="button" className={styles.adjustButton} disabled={pending} onClick={() => apply(-1)}>
-        −
-      </button>
-      <button type="button" className={styles.adjustButton} disabled={pending} onClick={() => apply(1)}>
-        +
-      </button>
+    <div className={styles.adjusterWrap}>
+      <div className={styles.adjuster}>
+        <span className={styles.qty}>{quantity}</span>
+        <input
+          type="number"
+          min={1}
+          step={1}
+          value={amount}
+          disabled={pending}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="qty"
+          className={styles.qtyInput}
+        />
+        <button type="button" className={styles.adjustButton} disabled={pending} onClick={() => apply(-1)}>
+          −
+        </button>
+        <button type="button" className={styles.adjustButton} disabled={pending} onClick={() => apply(1)}>
+          +
+        </button>
+      </div>
       {error && <span className={styles.adjustError}>{error}</span>}
     </div>
   );

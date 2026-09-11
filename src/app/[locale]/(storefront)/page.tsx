@@ -145,7 +145,7 @@ export default async function HomePage() {
     props: { srcSet: heroMobileSrcSet },
   } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-mobile-ice.jpg" });
   const {
-    props: { srcSet: heroDesktopSrcSet, ...heroDesktopRest },
+    props: { srcSet: heroDesktopSrcSet, alt: heroAlt, ...heroDesktopRest },
   } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-desktop-picnic.jpg" });
 
   return (
@@ -155,7 +155,7 @@ export default async function HomePage() {
           <picture>
             <source media="(max-width: 640px)" srcSet={heroMobileSrcSet} />
             <source media="(min-width: 641px)" srcSet={heroDesktopSrcSet} />
-            <img {...heroDesktopRest} className={styles.heroImage} />
+            <img alt={heroAlt} {...heroDesktopRest} className={styles.heroImage} />
           </picture>
         </div>
         <div className={styles.heroScrim} />

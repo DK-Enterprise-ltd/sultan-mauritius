@@ -2,7 +2,15 @@ import { Resend } from "resend";
 import type { OrderStatus } from "@prisma/client";
 import { formatMur } from "@/lib/format";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy: `new Resend(undefined)` throws synchronously at construction, not
+// just on send. Since this whole module is imported by createOrder (via
+// sendOrderStatusEmail), constructing it eagerly at module load would take
+// down checkout itself whenever RESEND_API_KEY is unset — not just emails.
+let resend: Resend | undefined;
+function getResend(): Resend {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 // ponytail: falls back to Resend's shared onboarding@resend.dev address,
 // which only delivers to the Resend account's own verified email — every
@@ -75,7 +83,7 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailPayload): Promise<vo
     ? `Payment is due by ${invoice.dueDate.toLocaleDateString("en-MU")}.`
     : "Payment is due immediately.";
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: invoice.customer.email,
     subject: `Invoice #${invoice.invoiceNumber} for order #${invoice.orderNumber}`,
@@ -110,7 +118,7 @@ export async function sendOrderStatusEmail(order: StatusEmailOrder) {
   }
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM,
       to: order.customer.email,
       subject: `${copy.subject}: Order #${order.orderNumber}`,

@@ -23,6 +23,53 @@
   font-size: 0.8rem;
 }
 
+.statusCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.statusToggleButton {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  background: white;
+  color: var(--neutral-600);
+  cursor: pointer;
+}
+
+.statusToggleButton:hover:not(:disabled) {
+  background: var(--neutral-100);
+}
+
+.statusToggleButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.nameLink {
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.nameLink:hover {
+  color: var(--sultan-teal);
+  text-decoration: underline;
+}
+
+.skuLink {
+  color: var(--neutral-500);
+  font-size: 0.85rem;
+}
+
+.skuLink:hover {
+  color: var(--sultan-teal);
+}
+
 .thumb {
   width: 40px;
   height: 40px;
@@ -45,7 +92,8 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .qty {
@@ -83,8 +131,14 @@
   background: var(--neutral-100);
 }
 
+.adjusterWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .adjustError {
-  flex-basis: 100%;
   color: #b45309;
   font-size: 0.75rem;
+  white-space: normal;
 }

@@ -31,6 +31,23 @@ export async function adjustStock(productId: string, delta: number) {
   });
 
   revalidatePath("/admin/inventory");
+  revalidatePath(`/admin/inventory/${productId}`);
+  revalidatePath("/admin");
+  return { ok: true as const };
+}
+
+/** Admin-only: activates or deactivates a product (hides/shows it from the
+ * storefront catalog via getActiveProducts()'s isActive filter). */
+export async function setProductActive(productId: string, isActive: boolean) {
+  if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: { isActive },
+  });
+
+  revalidatePath("/admin/inventory");
+  revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
   return { ok: true as const };
 }

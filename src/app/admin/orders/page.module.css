@@ -1,3 +1,14 @@
+.customerFilterNote {
+  font-size: 0.85rem;
+  color: var(--neutral-600);
+  margin-bottom: 0.75rem;
+}
+
+.customerFilterNote a {
+  color: var(--sultan-teal);
+  font-weight: 600;
+}
+
 .filters {
   display: flex;
   gap: 0.5rem;

@@ -13,27 +13,36 @@ const STATUSES = ["PENDING", "CONFIRMED", "PAID", "OUT_FOR_DELIVERY", "FULFILLED
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: { status?: string; customerId?: string };
 }) {
   if (!isAdmin()) return null;
 
   const status = STATUSES.includes(searchParams.status as (typeof STATUSES)[number])
     ? (searchParams.status as (typeof STATUSES)[number])
     : undefined;
+  const customerId = searchParams.customerId;
 
   const orders = await prisma.order.findMany({
-    where: status ? { status } : undefined,
+    where: { ...(status ? { status } : {}), ...(customerId ? { customerId } : {}) },
     orderBy: { createdAt: "desc" },
     include: { customer: true },
   });
+  const filteredCustomerName = customerId ? orders[0]?.customer.name : undefined;
 
   return (
     <div>
       <h1 className={styles.title}>Orders</h1>
 
+      {customerId && (
+        <p className={filterStyles.customerFilterNote}>
+          Showing orders for {filteredCustomerName ?? "this customer"} ·{" "}
+          <Link href={status ? `/admin/orders?status=${status}` : "/admin/orders"}>Clear</Link>
+        </p>
+      )}
+
       <div className={filterStyles.filters}>
         <Link
-          href="/admin/orders"
+          href={customerId ? `/admin/orders?customerId=${customerId}` : "/admin/orders"}
           className={`${filterStyles.filter} ${!status ? filterStyles.filterActive : ""}`}
         >
           All
@@ -41,7 +50,7 @@ export default async function AdminOrdersPage({
         {STATUSES.map((s) => (
           <Link
             key={s}
-            href={`/admin/orders?status=${s}`}
+            href={`/admin/orders?status=${s}${customerId ? `&customerId=${customerId}` : ""}`}
             className={`${filterStyles.filter} ${status === s ? filterStyles.filterActive : ""}`}
           >
             {s}

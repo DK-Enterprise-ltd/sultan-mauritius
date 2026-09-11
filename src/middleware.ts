@@ -35,10 +35,21 @@ const CSP_IMAGE_ORIGIN = "https://cdn.sanity.io";
 // (no object embeds, no framing, no unknown origins), which is most of
 // the real-world value; tighten script-src to a nonce once this can be
 // verified against a running deployment.
-function buildCsp(): string {
+// The admin invoice detail page embeds its own PDF in a same-origin
+// <iframe> preview; frame-ancestors 'none' would block that too, since it
+// governs framing by anyone, self included. Every other path keeps 'none'.
+const INVOICE_PDF_PATH = /^\/api\/admin\/invoices\/[^/]+\/pdf$/;
+
+function buildCsp(pathname: string): string {
+  const frameAncestors = INVOICE_PDF_PATH.test(pathname) ? "frame-ancestors 'self'" : "frame-ancestors 'none'";
+  // Next's dev-only Fast Refresh runtime evals code to apply hot updates;
+  // that's a dev-server implementation detail, never shipped in a
+  // production build, so the relaxation is scoped to development only.
+  const scriptSrc =
+    process.env.NODE_ENV === "development" ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'" : "script-src 'self' 'unsafe-inline'";
   return [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",
+    scriptSrc,
     `style-src 'self' 'unsafe-inline' ${CSP_FONT_ORIGIN}`,
     `font-src 'self' ${CSP_FONT_ORIGIN}`,
     `img-src 'self' data: blob: ${CSP_IMAGE_ORIGIN}`,
@@ -46,7 +57,7 @@ function buildCsp(): string {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'none'",
+    frameAncestors,
     "upgrade-insecure-requests",
   ].join("; ");
 }
@@ -75,7 +86,7 @@ export default function middleware(req: NextRequest) {
 
   const isAdminOrApi = pathname.startsWith("/api/") || pathname.startsWith("/admin") || pathname.startsWith("/studio");
   const response = isAdminOrApi ? NextResponse.next() : intlMiddleware(req);
-  response.headers.set("Content-Security-Policy", buildCsp());
+  response.headers.set("Content-Security-Policy", buildCsp(pathname));
   return response;
 }
 
