@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
   brandCol: { flex: 1 },
   logo: { width: 54, height: 54, marginBottom: 8 },
   brandTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 2 },
-  brandSub: { fontSize: 8, color: MUTED, marginBottom: 1 },
 
   headerRight: { alignItems: "flex-end" },
   invoiceTitle: { fontSize: 24, fontWeight: 400, color: "#0f172a", marginBottom: 4 },
@@ -125,7 +124,7 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
   // Assuming 15% VAT included or calculated if tax active
   const vatAmount = totalNum * 0.15;
   const taxableAmount = totalNum - vatAmount;
-  const logoPath = path.join(process.cwd(), "public/Assets/Logo/grignoti-logo.png");
+  const logoPath = path.join(process.cwd(), "public/Assets/Logo/logo-avatar.png");
 
   return (
     <Document title={`Invoice ${invoice.invoiceNumber}`}>
@@ -135,9 +134,12 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           <View style={styles.headerRow}>
             <View style={styles.brandCol}>
               <Image style={styles.logo} src={logoPath} />
-              <Text style={styles.brandTitle}>Grignoti ltd</Text>
-              <Text style={styles.brandSub}>BRN: C25226789</Text>
-              <Text style={styles.brandSub}>VAT: 28451792</Text>
+              <Text style={styles.brandTitle}>Sultan Mauritius Ltd</Text>
+              {/* ponytail: BRN/VAT omitted, not fabricated — Sultan's own
+                  registration numbers aren't in the system yet (see the
+                  same [BRN NUMBER]/[VAT NUMBER] placeholders in
+                  legal/legal-notice/page.tsx). Add both lines back once
+                  real numbers are known. */}
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.invoiceTitle}>VAT Invoice</Text>
