@@ -52,6 +52,7 @@
   border-radius: 6px;
   font-size: 0.9rem;
   color: var(--neutral-300);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .navIcon {
@@ -81,10 +82,11 @@
 .navLinkActive {
   background: var(--sultan-teal);
   color: white;
+  font-weight: 500;
 }
 
 .navLinkActive:hover {
-  background: var(--sultan-teal);
+  background: #158294;
 }
 
 .navLinkActive .navBadge {

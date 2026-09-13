@@ -33,7 +33,11 @@ async function AdminShell({ children }: { children: React.ReactNode }) {
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
         <p className={styles.brand}>Sultan Admin</p>
-        <AdminNav pendingOrders={pendingOrders} lowStockCount={lowStockCount} />
+        <AdminNav
+          pendingOrders={pendingOrders}
+          lowStockCount={lowStockCount}
+          unhandledInquiries={unhandledInquiries}
+        />
         <form action={logoutAdmin} className={styles.logoutForm}>
           <button type="submit" className={styles.logoutButton}>
             Log out

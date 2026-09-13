@@ -1,6 +1,6 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import path from "path";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 import type { Invoice, Order, OrderItem, Product, Customer } from "@prisma/client";
-import { formatMur } from "@/lib/format";
 
 type InvoicePdfData = Invoice & {
   order: Order & {
@@ -9,187 +9,246 @@ type InvoicePdfData = Invoice & {
   };
 };
 
-const INK = "#16140e";
-const MUTED = "#7d7565";
-const RULE = "#e2ded4";
+const INK = "#1e293b";
+const MUTED = "#64748b";
+const RULE = "#e2e8f0";
+const DARK_BG = "#333333";
 
 const styles = StyleSheet.create({
-  page: { padding: 40, fontSize: 10, color: INK, fontFamily: "Helvetica" },
+  page: { padding: 36, fontSize: 9, color: INK, fontFamily: "Helvetica", backgroundColor: "#ffffff" },
 
-  headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 24 },
-  brand: { fontSize: 16, fontWeight: 700, marginBottom: 4 },
-  brandLine: { fontSize: 9, color: MUTED },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 28 },
+
+  brandCol: { flex: 1 },
+  logo: { width: 54, height: 54, marginBottom: 8 },
+  brandTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a", marginBottom: 2 },
+  brandSub: { fontSize: 8, color: MUTED, marginBottom: 1 },
 
   headerRight: { alignItems: "flex-end" },
-  invoiceKicker: { fontSize: 9, fontWeight: 700, letterSpacing: 1, color: MUTED, marginBottom: 2 },
-  invoiceTitle: { fontSize: 20, fontWeight: 700, marginBottom: 8 },
-  balanceDueLabel: { fontSize: 8, color: MUTED, textAlign: "right" },
-  balanceDueValue: { fontSize: 13, fontWeight: 700, textAlign: "right", marginBottom: 8 },
+  invoiceTitle: { fontSize: 24, fontWeight: 400, color: "#0f172a", marginBottom: 4 },
+  invoiceNumber: { fontSize: 9, fontWeight: 700, color: MUTED, marginBottom: 10 },
+  balanceBox: { alignItems: "flex-end" },
+  balanceLabel: { fontSize: 8, color: MUTED, fontWeight: 700, marginBottom: 2 },
+  balanceValue: { fontSize: 14, fontWeight: 700, color: "#0f172a" },
 
-  metaTable: { alignItems: "flex-end" },
-  metaRow: { flexDirection: "row", marginBottom: 2 },
-  metaLabel: { fontSize: 9, color: MUTED, width: 90, textAlign: "right", marginRight: 8 },
-  metaValue: { fontSize: 9, fontWeight: 700, width: 100, textAlign: "right" },
+  addressSection: { flexDirection: "row", justifyContent: "space-between", marginBottom: 24 },
+  companyCol: { width: "45%" },
+  companyName: { fontSize: 10, fontWeight: 700, color: "#0f172a", marginBottom: 2 },
+  addressLine: { fontSize: 8.5, color: "#334155", marginBottom: 1.5 },
 
-  billTo: { marginBottom: 20 },
-  sectionLabel: {
-    fontSize: 8,
-    fontWeight: 700,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    color: MUTED,
-    marginBottom: 4,
-  },
-  billName: { fontSize: 11, fontWeight: 700, marginBottom: 2 },
-  billLine: { fontSize: 10, marginBottom: 1 },
+  clientCol: { width: "48%" },
+  metaRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 3 },
+  metaLabel: { fontSize: 8.5, color: MUTED },
+  metaValue: { fontSize: 8.5, color: "#0f172a", textAlign: "right" },
 
-  table: { borderWidth: 1, borderColor: RULE, borderRadius: 2, marginBottom: 16 },
+  table: { marginBottom: 12 },
   tableHeaderRow: {
     flexDirection: "row",
-    backgroundColor: "#f7f5f1",
-    borderBottomWidth: 1,
-    borderBottomColor: RULE,
+    backgroundColor: DARK_BG,
     paddingVertical: 6,
     paddingHorizontal: 8,
+    borderRadius: 1,
   },
+  headerCell: { fontSize: 8, fontWeight: 700, color: "#ffffff", textTransform: "uppercase" },
+
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: RULE,
-    paddingVertical: 6,
+    paddingVertical: 7,
     paddingHorizontal: 8,
+    alignItems: "center",
   },
-  tableRowLast: { borderBottomWidth: 0 },
-  colItem: { flex: 3 },
-  colNum: { flex: 1, textAlign: "right" },
-  headerCell: { fontSize: 8, fontWeight: 700, textTransform: "uppercase", color: MUTED },
 
-  totals: { alignSelf: "flex-end", width: 220, marginTop: 4 },
-  totalRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 3, fontSize: 10 },
-  balanceDueRow: {
+  colIndex: { width: "5%", textAlign: "center", fontSize: 8, color: MUTED },
+  colDesc: { width: "55%", paddingRight: 8 },
+  colQty: { width: "12%", textAlign: "right" },
+  colRate: { width: "13%", textAlign: "right" },
+  colAmount: { width: "15%", textAlign: "right" },
+
+  itemTitle: { fontSize: 9, color: "#0f172a", fontWeight: 500 },
+  itemSub: { fontSize: 7.5, color: MUTED, marginTop: 1 },
+
+  totalsSection: { alignItems: "flex-end", marginTop: 8, marginBottom: 24 },
+  totalsTable: { width: 240 },
+  totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 3 },
+  totalsLabel: { fontSize: 8.5, color: "#334155", textAlign: "right" },
+  totalsValue: { fontSize: 8.5, color: "#0f172a", textAlign: "right" },
+
+  grandTotalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 6,
+    backgroundColor: "#f1f5f9",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
     marginTop: 4,
-    borderTopWidth: 1,
-    borderTopColor: INK,
-    fontSize: 11,
-    fontWeight: 700,
+    borderRadius: 2,
   },
+  grandTotalLabel: { fontSize: 9, fontWeight: 700, color: "#0f172a", textAlign: "right" },
+  grandTotalValue: { fontSize: 10, fontWeight: 700, color: "#0f172a", textAlign: "right" },
 
-  notes: { marginTop: 20 },
-  footerNote: { marginTop: 28, fontSize: 8, color: MUTED, borderTopWidth: 1, borderTopColor: RULE, paddingTop: 10 },
+  notesSection: { marginBottom: 24 },
+  notesTitle: { fontSize: 9, fontWeight: 700, color: "#0f172a", marginBottom: 3 },
+  notesBody: { fontSize: 8, color: "#475569" },
+
+  disclaimer: { fontSize: 6.5, color: "#94a3b8", lineHeight: 1.3, marginBottom: 24 },
+
+  footer: {
+    position: "absolute",
+    bottom: 24,
+    left: 36,
+    right: 36,
+    borderTopWidth: 1,
+    borderTopColor: RULE,
+    paddingTop: 8,
+    alignItems: "center",
+  },
+  footerText: { fontSize: 8, color: MUTED },
 });
 
+function formatNumber(num: number | string | { toNumber?: () => number }): string {
+  const val = typeof num === "object" && num !== null && "toNumber" in num && typeof num.toNumber === "function" ? num.toNumber() : Number(num);
+  return isNaN(val) ? "0.00" : val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 function formatDate(date: Date | null): string {
-  return date ? date.toLocaleDateString("en-MU", { day: "2-digit", month: "short", year: "numeric" }) : "—";
+  return date ? date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 }
 
 export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
   const { order } = invoice;
   const { customer } = order;
 
+  const subtotalNum = typeof order.subtotal === "object" && "toNumber" in order.subtotal ? order.subtotal.toNumber() : Number(order.subtotal);
+  const totalNum = typeof order.total === "object" && "toNumber" in order.total ? order.total.toNumber() : Number(order.total);
+
+  // Assuming 15% VAT included or calculated if tax active
+  const vatAmount = totalNum * 0.15;
+  const taxableAmount = totalNum - vatAmount;
+  const logoPath = path.join(process.cwd(), "public/Assets/Logo/grignoti-logo.png");
+
   return (
     <Document title={`Invoice ${invoice.invoiceNumber}`}>
       <Page size="A4" style={styles.page}>
-        {/* wrap=false: this is a fixed-format single-page invoice (one order,
-            a bounded item list). A row that doesn't fit renders past the
-            bottom margin instead of silently spilling onto a page 2 that
-            nothing here expects or paginates. */}
         <View wrap={false}>
+          {/* Header */}
           <View style={styles.headerRow}>
-            <View>
-              <Text style={styles.brand}>Sultan Mauritius Ltd</Text>
-              <Text style={styles.brandLine}>Port Louis, Mauritius</Text>
-              <Text style={styles.brandLine}>hello@sultan.mu · +230 5 000 0000</Text>
+            <View style={styles.brandCol}>
+              <Image style={styles.logo} src={logoPath} />
+              <Text style={styles.brandTitle}>Grignoti ltd</Text>
+              <Text style={styles.brandSub}>BRN: C25226789</Text>
+              <Text style={styles.brandSub}>VAT: 28451792</Text>
             </View>
             <View style={styles.headerRight}>
-              <Text style={styles.invoiceKicker}>INVOICE</Text>
-              <Text style={styles.invoiceTitle}>#{invoice.invoiceNumber}</Text>
-              <Text style={styles.balanceDueLabel}>Balance due</Text>
-              <Text style={styles.balanceDueValue}>{formatMur(invoice.balanceDue)}</Text>
-              <View style={styles.metaTable}>
+              <Text style={styles.invoiceTitle}>VAT Invoice</Text>
+              <Text style={styles.invoiceNumber}># INV-{String(invoice.invoiceNumber).padStart(6, "0")}</Text>
+              <View style={styles.balanceBox}>
+                <Text style={styles.balanceLabel}>Balance Due</Text>
+                <Text style={styles.balanceValue}>MUR {formatNumber(invoice.balanceDue)}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Customer / Company & Meta Section */}
+          <View style={styles.addressSection}>
+            <View style={styles.companyCol}>
+              <Text style={styles.companyName}>Sultan Mauritius Ltd</Text>
+              <Text style={styles.addressLine}>Port Louis</Text>
+              <Text style={styles.addressLine}>Mauritius</Text>
+              <Text style={styles.addressLine}>+230 5 792 4340</Text>
+              <Text style={styles.addressLine}>contact@sultanmauritius.mu</Text>
+            </View>
+
+            <View style={styles.clientCol}>
+              <Text style={[styles.metaLabel, { fontWeight: 700, color: "#0f172a", marginBottom: 4 }]}>Client details</Text>
+              <Text style={[styles.companyName, { fontSize: 9, marginBottom: 4 }]}>
+                {customer.companyName ? `${customer.companyName} ${customer.vatNumber ? `- BRN ${customer.vatNumber}` : ""}` : customer.name}
+              </Text>
+              {order.deliveryAddress && <Text style={styles.addressLine}>{order.deliveryAddress}</Text>}
+
+              <View style={{ marginTop: 8 }}>
                 <View style={styles.metaRow}>
-                  <Text style={styles.metaLabel}>Order</Text>
-                  <Text style={styles.metaValue}>#{order.orderNumber}</Text>
+                  <Text style={styles.metaLabel}>Invoice Date :</Text>
+                  <Text style={styles.metaValue}>{formatDate(invoice.issuedAt ?? new Date())}</Text>
                 </View>
                 <View style={styles.metaRow}>
-                  <Text style={styles.metaLabel}>Status</Text>
-                  <Text style={styles.metaValue}>{invoice.status}</Text>
+                  <Text style={styles.metaLabel}>Terms :</Text>
+                  <Text style={styles.metaValue}>{customer.creditTermsDays ? `Net ${customer.creditTermsDays}` : "Due on receipt"}</Text>
                 </View>
                 <View style={styles.metaRow}>
-                  <Text style={styles.metaLabel}>Issued</Text>
-                  <Text style={styles.metaValue}>{formatDate(invoice.issuedAt)}</Text>
-                </View>
-                <View style={styles.metaRow}>
-                  <Text style={styles.metaLabel}>Due</Text>
+                  <Text style={styles.metaLabel}>Due Date :</Text>
                   <Text style={styles.metaValue}>{formatDate(invoice.dueDate)}</Text>
                 </View>
               </View>
             </View>
           </View>
 
-          <View style={styles.billTo}>
-            <Text style={styles.sectionLabel}>Bill to</Text>
-            <Text style={styles.billName}>{customer.companyName || customer.name}</Text>
-            {customer.companyName && <Text style={styles.billLine}>{customer.name}</Text>}
-            <Text style={styles.billLine}>{customer.email}</Text>
-            <Text style={styles.billLine}>{customer.phone}</Text>
-            {order.deliveryAddress && <Text style={styles.billLine}>{order.deliveryAddress}</Text>}
-            {order.deliveryZone && <Text style={styles.billLine}>{order.deliveryZone}</Text>}
-            {customer.vatNumber && <Text style={styles.billLine}>VAT: {customer.vatNumber}</Text>}
-          </View>
-
+          {/* Items Table */}
           <View style={styles.table}>
             <View style={styles.tableHeaderRow}>
-              <Text style={[styles.headerCell, styles.colItem]}>Description</Text>
-              <Text style={[styles.headerCell, styles.colNum]}>Qty</Text>
-              <Text style={[styles.headerCell, styles.colNum]}>Rate</Text>
-              <Text style={[styles.headerCell, styles.colNum]}>Amount</Text>
+              <Text style={[styles.headerCell, styles.colIndex]}>#</Text>
+              <Text style={[styles.headerCell, styles.colDesc]}>Description</Text>
+              <Text style={[styles.headerCell, styles.colQty]}>Qty</Text>
+              <Text style={[styles.headerCell, styles.colRate]}>Rate</Text>
+              <Text style={[styles.headerCell, styles.colAmount]}>Amount</Text>
             </View>
-            {order.items.map((item, i) => (
-              <View
-                key={item.id}
-                style={i === order.items.length - 1 ? [styles.tableRow, styles.tableRowLast] : styles.tableRow}
-              >
-                <Text style={styles.colItem}>{item.product.name}</Text>
-                <Text style={styles.colNum}>{item.quantity}</Text>
-                <Text style={styles.colNum}>{formatMur(item.unitPriceAtOrder)}</Text>
-                <Text style={styles.colNum}>{formatMur(item.lineTotal)}</Text>
+
+            {order.items.map((item, idx) => (
+              <View key={item.id} style={styles.tableRow}>
+                <Text style={styles.colIndex}>{idx + 1}</Text>
+                <View style={styles.colDesc}>
+                  <Text style={styles.itemTitle}>{item.product.name}</Text>
+                  {item.product.sku && <Text style={styles.itemSub}>SKU: {item.product.sku}</Text>}
+                </View>
+                <Text style={styles.colQty}>{item.quantity}</Text>
+                <Text style={styles.colRate}>{formatNumber(item.unitPriceAtOrder)}</Text>
+                <Text style={styles.colAmount}>{formatNumber(item.lineTotal)}</Text>
               </View>
             ))}
           </View>
 
-          <View style={styles.totals}>
-            <View style={styles.totalRow}>
-              <Text>Subtotal</Text>
-              <Text>{formatMur(order.subtotal)}</Text>
-            </View>
-            <View style={styles.totalRow}>
-              <Text>Order total</Text>
-              <Text>{formatMur(order.total)}</Text>
-            </View>
-            <View style={styles.totalRow}>
-              <Text>Amount paid</Text>
-              <Text>{formatMur(invoice.amountPaid)}</Text>
-            </View>
-            <View style={styles.balanceDueRow}>
-              <Text>Balance due</Text>
-              <Text>{formatMur(invoice.balanceDue)}</Text>
+          {/* Totals Table */}
+          <View style={styles.totalsSection}>
+            <View style={styles.totalsTable}>
+              <View style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>Sub Total</Text>
+                <Text style={styles.totalsValue}>{formatNumber(subtotalNum)}</Text>
+              </View>
+              <View style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>Total Taxable Amount</Text>
+                <Text style={styles.totalsValue}>{formatNumber(taxableAmount)}</Text>
+              </View>
+              <View style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>VAT (15%)</Text>
+                <Text style={styles.totalsValue}>{formatNumber(vatAmount)}</Text>
+              </View>
+
+              <View style={styles.grandTotalRow}>
+                <Text style={styles.grandTotalLabel}>Total</Text>
+                <Text style={styles.grandTotalValue}>MUR {formatNumber(totalNum)}</Text>
+              </View>
             </View>
           </View>
 
-          {order.notes && (
-            <View style={styles.notes}>
-              <Text style={styles.sectionLabel}>Order notes</Text>
-              <Text style={styles.billLine}>{order.notes}</Text>
-            </View>
-          )}
+          {/* Notes */}
+          <View style={styles.notesSection}>
+            <Text style={styles.notesTitle}>Notes</Text>
+            <Text style={styles.notesBody}>
+              {order.notes || "Thanks for your business. Payment via Bank Transfer or MCB Juice."}
+            </Text>
+          </View>
 
-          <Text style={styles.footerNote}>
-            Payment by MCB Juice or bank transfer (Sultan Mauritius Ltd · MCB · Account 000123456789),
-            reference order #{order.orderNumber}. Thank you for choosing Sultan.
+          {/* Legal Disclaimer */}
+          <Text style={styles.disclaimer}>
+            We reserve the right if necessary, to recover any unpaid claims or part thereof through our attorney at law. In such case the attorney&apos;s commission of 10% shall be payable by the client.
           </Text>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              Sultan Mauritius Ltd · Premium Natural Mineral Water
+            </Text>
+          </View>
         </View>
       </Page>
     </Document>
