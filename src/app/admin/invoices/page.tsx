@@ -68,6 +68,7 @@ export default async function AdminInvoicesPage({
               <th>Status</th>
               <th>Balance due</th>
               <th>Due date</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -85,11 +86,16 @@ export default async function AdminInvoicesPage({
                 </td>
                 <td>{formatMur(inv.balanceDue)}</td>
                 <td>{inv.dueDate ? inv.dueDate.toLocaleDateString("en-MU") : "—"}</td>
+                <td>
+                  <Link href={`/admin/invoices/${inv.id}`} className={filterStyles.seeInvoiceButton}>
+                    See invoice
+                  </Link>
+                </td>
               </tr>
             ))}
             {invoices.length === 0 && (
               <tr>
-                <td colSpan={6} className={styles.empty}>No invoices yet.</td>
+                <td colSpan={7} className={styles.empty}>No invoices yet.</td>
               </tr>
             )}
           </tbody>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { isAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { logoutAdmin } from "@/app/actions/admin-auth";
@@ -19,15 +20,27 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// These badge counts render on every admin page (they live in the shared
+// layout), which every page below forces to re-render dynamically — without
+// caching, that's 3 extra DB round trips on top of whatever the page itself
+// queries, on every single navigation. A stale badge for up to 30s is
+// invisible to an admin, so cache instead of re-querying every click.
+const getSidebarCounts = unstable_cache(
+  async () => {
+    const [pendingOrders, products, unhandledInquiries] = await Promise.all([
+      prisma.order.count({ where: { status: "PENDING" } }),
+      prisma.product.findMany({ where: { isActive: true }, select: { stockQuantity: true, lowStockThreshold: true } }),
+      prisma.contactInquiry.count({ where: { handled: false } }),
+    ]);
+    const lowStockCount = products.filter((p) => p.stockQuantity <= p.lowStockThreshold).length;
+    return { pendingOrders, lowStockCount, unhandledInquiries };
+  },
+  ["admin-sidebar-counts"],
+  { revalidate: 30 },
+);
+
 async function AdminShell({ children }: { children: React.ReactNode }) {
-  const [pendingOrders, lowStockCount, unhandledInquiries] = await Promise.all([
-    prisma.order.count({ where: { status: "PENDING" } }),
-    prisma
-      .product
-      .findMany({ where: { isActive: true }, select: { stockQuantity: true, lowStockThreshold: true } })
-      .then((products) => products.filter((p) => p.stockQuantity <= p.lowStockThreshold).length),
-    prisma.contactInquiry.count({ where: { handled: false } }),
-  ]);
+  const { pendingOrders, lowStockCount, unhandledInquiries } = await getSidebarCounts();
 
   return (
     <div className={styles.shell}>
