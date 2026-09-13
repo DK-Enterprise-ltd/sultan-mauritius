@@ -1,6 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { isAdmin } from "@/lib/auth";
 import { cleanStr, isValidEmail } from "@/lib/validate";
 
 type InquiryInput = {
@@ -44,4 +46,41 @@ export async function submitInquiry(input: InquiryInput): Promise<{ ok: true } |
   });
 
   return { ok: true };
+}
+
+export async function toggleInquiryHandled(id: string, handled: boolean): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!isAdmin()) {
+    return { ok: false, error: "Not authorized." };
+  }
+
+  try {
+    await prisma.contactInquiry.update({
+      where: { id },
+      data: { handled },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/inquiries");
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Could not update inquiry status." };
+  }
+}
+
+export async function deleteInquiry(id: string): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!isAdmin()) {
+    return { ok: false, error: "Not authorized." };
+  }
+
+  try {
+    await prisma.contactInquiry.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/inquiries");
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Could not delete inquiry." };
+  }
 }

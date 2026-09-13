@@ -76,10 +76,10 @@ export default async function AdminDashboard() {
           <span className={styles.quickLinkValue}>{lowStockProducts.length}</span>
           <span className={styles.quickLinkLabel}>Low stock products</span>
         </Link>
-        <span className={styles.quickLink}>
+        <Link href="/admin/inquiries?filter=unhandled" className={styles.quickLink}>
           <span className={styles.quickLinkValue}>{unhandledInquiries}</span>
           <span className={styles.quickLinkLabel}>Unhandled inquiries</span>
-        </span>
+        </Link>
       </div>
 
       <section className={styles.section}>

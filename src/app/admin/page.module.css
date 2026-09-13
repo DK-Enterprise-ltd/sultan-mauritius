@@ -27,10 +27,19 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+a.quickLink:hover {
+  border-color: var(--sultan-teal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
 }
 
 .quickLinkValue {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--neutral-900);
 }
@@ -38,6 +47,7 @@
 .quickLinkLabel {
   font-size: 0.8rem;
   color: var(--neutral-500);
+  font-weight: 500;
 }
 
 .section {
@@ -46,6 +56,8 @@
   border-radius: 10px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
 }
 
 .sectionTitle {

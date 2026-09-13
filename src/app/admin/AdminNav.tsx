@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, Package, FileText, Users } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, FileText, Users, MessageSquare } from "lucide-react";
 import styles from "./layout.module.css";
 
 type NavItem = {
@@ -22,7 +22,15 @@ function isActive(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
-export default function AdminNav({ pendingOrders, lowStockCount }: { pendingOrders: number; lowStockCount: number }) {
+export default function AdminNav({
+  pendingOrders,
+  lowStockCount,
+  unhandledInquiries,
+}: {
+  pendingOrders: number;
+  lowStockCount: number;
+  unhandledInquiries?: number;
+}) {
   const pathname = usePathname();
 
   const groups: NavGroup[] = [
@@ -34,6 +42,7 @@ export default function AdminNav({ pendingOrders, lowStockCount }: { pendingOrde
         { href: "/admin/inventory", label: "Inventory", icon: Package, badge: lowStockCount || undefined },
         { href: "/admin/customers", label: "Customers", icon: Users },
         { href: "/admin/invoices", label: "Invoices", icon: FileText },
+        { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare, badge: unhandledInquiries || undefined },
       ],
     },
   ];
