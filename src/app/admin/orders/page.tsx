@@ -25,7 +25,7 @@ export default async function AdminOrdersPage({
   const orders = await prisma.order.findMany({
     where: { ...(status ? { status } : {}), ...(customerId ? { customerId } : {}) },
     orderBy: { createdAt: "desc" },
-    include: { customer: true },
+    include: { customer: true, invoice: true },
   });
   const filteredCustomerName = customerId ? orders[0]?.customer.name : undefined;
 
@@ -68,6 +68,7 @@ export default async function AdminOrdersPage({
               <th>Status</th>
               <th>Total</th>
               <th>Placed</th>
+              <th>Invoice</th>
             </tr>
           </thead>
           <tbody>
@@ -85,11 +86,20 @@ export default async function AdminOrdersPage({
                 </td>
                 <td>{formatMur(order.total)}</td>
                 <td>{order.createdAt.toLocaleDateString("en-MU")}</td>
+                <td>
+                  {order.invoice ? (
+                    <Link href={`/admin/invoices/${order.invoice.id}`} className={filterStyles.seeInvoiceButton}>
+                      See invoice
+                    </Link>
+                  ) : (
+                    "—"
+                  )}
+                </td>
               </tr>
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className={styles.empty}>No orders match this filter.</td>
+                <td colSpan={7} className={styles.empty}>No orders match this filter.</td>
               </tr>
             )}
           </tbody>

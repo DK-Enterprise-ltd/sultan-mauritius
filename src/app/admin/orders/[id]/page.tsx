@@ -147,8 +147,8 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
             <h2 className={pageStyles.sectionTitle}>Invoice</h2>
             <div className={styles.invoiceActions}>
               {order.invoice ? (
-                <Link href={`/admin/invoices/${order.invoice.id}`} className={styles.invoiceLink}>
-                  View invoice #{order.invoice.invoiceNumber} →
+                <Link href={`/admin/invoices/${order.invoice.id}`} className={styles.generateButton}>
+                  See invoice #{order.invoice.invoiceNumber}
                 </Link>
               ) : (
                 <GenerateInvoiceButton orderId={order.id} />

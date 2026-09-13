@@ -114,3 +114,19 @@
   opacity: 0.5;
   cursor: default;
 }
+
+.seeInvoiceButton {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: white;
+  white-space: nowrap;
+}
+
+.seeInvoiceButton:hover {
+  opacity: 0.85;
+}

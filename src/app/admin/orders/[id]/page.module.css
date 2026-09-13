@@ -118,12 +118,6 @@
   cursor: default;
 }
 
-.invoiceLink {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--sultan-teal);
-}
-
 .notes {
   white-space: pre-wrap;
   font-size: 0.9rem;
