@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
@@ -40,7 +41,13 @@ export default async function AdminInventoryPage() {
                   <td>
                     <Link href={`/admin/inventory/${p.id}`}>
                       {p.imageUrl ? (
-                        <img src={p.imageUrl} alt={p.name} className={rowStyles.thumb} />
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.name}
+                          width={120}
+                          height={120}
+                          className={rowStyles.thumb}
+                        />
                       ) : (
                         <span className={rowStyles.thumbPlaceholder} aria-hidden />
                       )}

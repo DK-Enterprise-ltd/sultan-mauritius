@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
@@ -37,8 +38,13 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
 
       <div className={styles.grid}>
         {product.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={product.imageUrl} alt={product.name} className={styles.image} />
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            width={260}
+            height={260}
+            className={styles.image}
+          />
         ) : (
           <span className={styles.imagePlaceholder} aria-hidden />
         )}
