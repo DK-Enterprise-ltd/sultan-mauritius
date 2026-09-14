@@ -143,10 +143,10 @@ export default async function HomePage() {
   const heroCommon = { alt: "", width: 1600, height: 1600, priority: true, sizes: "100vw" } as const;
   const {
     props: { srcSet: heroMobileSrcSet },
-  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-mobile-ice.jpg" });
+  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/phone-hero.png" });
   const {
     props: { srcSet: heroDesktopSrcSet, alt: heroAlt, ...heroDesktopRest },
-  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-desktop-picnic.jpg" });
+  } = getImageProps({ ...heroCommon, src: "/Assets/Lifestyle/hero-desktop.png" });
 
   return (
     <>
