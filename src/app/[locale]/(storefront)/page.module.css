@@ -78,22 +78,6 @@
   text-align: center;
 }
 
-.heroDot {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--sultan-sky);
-  box-shadow: 0 8px 24px rgba(27, 42, 74, 0.35);
-  opacity: 0;
-  animation: sultan-settle 0.9s cubic-bezier(0.34, 1.4, 0.5, 1) 1.55s both;
-}
-
-@keyframes sultan-settle {
-  0% { opacity: 0; transform: translateY(-30px) scale(0.9); }
-  72% { opacity: 1; transform: translateY(5px) scale(1); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
 .heroTitle {
   opacity: 0;
   animation: sultan-rise 1s cubic-bezier(0.22, 0.9, 0.24, 1) 0.9s both;
@@ -115,7 +99,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroDot,
   .heroTitle,
   .heroSubtitle,
   .heroActions,

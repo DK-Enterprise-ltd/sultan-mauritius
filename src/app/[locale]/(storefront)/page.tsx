@@ -162,7 +162,6 @@ export default async function HomePage() {
         <span className={styles.heroRing} aria-hidden />
         <span className={`${styles.heroRing} ${styles.heroRing2}`} aria-hidden />
         <div className={styles.heroContent}>
-          <span className={styles.heroDot} aria-hidden />
           <h1 className={styles.heroTitle}>{c("heroTitle")}</h1>
           <p className={styles.heroSubtitle}>{c("heroSubtitle")}</p>
           <div className={styles.heroActions}>
