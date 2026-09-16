@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
 
@@ -33,6 +33,9 @@ export async function adjustStock(productId: string, delta: number) {
   revalidatePath("/admin/inventory");
   revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
+  // Sidebar's low-stock badge is cached separately from the route cache
+  // revalidatePath above touches — needs its own tag to update immediately.
+  revalidateTag("admin-sidebar-counts");
   return { ok: true as const };
 }
 
@@ -49,5 +52,8 @@ export async function setProductActive(productId: string, isActive: boolean) {
   revalidatePath("/admin/inventory");
   revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
+  // Deactivating/reactivating changes which products count toward the
+  // sidebar's low-stock badge (it only counts isActive products).
+  revalidateTag("admin-sidebar-counts");
   return { ok: true as const };
 }

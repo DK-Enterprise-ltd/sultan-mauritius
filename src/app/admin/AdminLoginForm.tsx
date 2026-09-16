@@ -22,11 +22,11 @@ export default function AdminLoginForm() {
     <form action={formAction} className={styles.loginForm}>
       <h1 className={styles.loginTitle}>Sultan Admin</h1>
       <label className={styles.loginLabel}>
-        Username
+        Username *
         <input name="username" type="text" autoComplete="username" required className={styles.loginInput} />
       </label>
       <label className={styles.loginLabel}>
-        Password
+        Password *
         <input name="password" type="password" autoComplete="current-password" required className={styles.loginInput} />
       </label>
       {state.error && <p className={styles.loginError}>{state.error}</p>}

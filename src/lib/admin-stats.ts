@@ -85,6 +85,8 @@ async function ordersByStatus(days: number): Promise<StatusCount[]> {
   return STATUS_ORDER.map((status) => ({ status, count: countByStatus.get(status) ?? 0 }));
 }
 
+export type LowStockProduct = { id: string; name: string; stockQuantity: number; lowStockThreshold: number };
+
 export type DashboardStats = {
   revenueThisMonth: number;
   revenueTrend: number | null;
@@ -93,6 +95,7 @@ export type DashboardStats = {
   newCustomersThisMonth: number;
   newCustomersTrend: number | null;
   lowStockCount: number;
+  lowStockProducts: LowStockProduct[];
   sparklines: { orders: DailyPoint[]; revenue: DailyPoint[] };
   ordersByStatus: StatusCount[];
 };
@@ -124,13 +127,17 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     prisma.order.count({ where: { createdAt: { gte: lastMonth.start, lt: lastMonth.end }, ...NOT_CANCELLED } }),
     prisma.customer.count({ where: { createdAt: { gte: thisMonth.start, lt: thisMonth.end } } }),
     prisma.customer.count({ where: { createdAt: { gte: lastMonth.start, lt: lastMonth.end } } }),
-    prisma.product.findMany({ where: { isActive: true }, select: { stockQuantity: true, lowStockThreshold: true } }),
+    prisma.product.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, stockQuantity: true, lowStockThreshold: true },
+    }),
     dailySeries(14),
     ordersByStatus(30),
   ]);
 
   const revenueThisMonth = (revenueThisMonthAgg._sum.total ?? new Prisma.Decimal(0)).toNumber();
   const revenueLastMonth = (revenueLastMonthAgg._sum.total ?? new Prisma.Decimal(0)).toNumber();
+  const lowStockProducts = activeProducts.filter((p) => p.stockQuantity <= p.lowStockThreshold);
 
   return {
     revenueThisMonth,
@@ -139,7 +146,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     ordersTrend: percentChange(ordersThisMonth, ordersLastMonth),
     newCustomersThisMonth,
     newCustomersTrend: percentChange(newCustomersThisMonth, newCustomersLastMonth),
-    lowStockCount: activeProducts.filter((p) => p.stockQuantity <= p.lowStockThreshold).length,
+    lowStockCount: lowStockProducts.length,
+    lowStockProducts,
     sparklines,
     ordersByStatus: statusCounts,
   };

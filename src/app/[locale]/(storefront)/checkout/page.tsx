@@ -84,33 +84,34 @@ export default function CheckoutPage() {
         <form className={styles.form} onSubmit={handleSubmit}>
           <h2 className={styles.sectionTitle}>{t("deliveryDetails")}</h2>
           <label className={styles.field}>
-            {t("fullName")}
+            {t("fullName")} *
             <input name="name" required />
           </label>
           <label className={styles.field}>
-            {t("email")}
+            {t("email")} *
             <input name="email" type="email" required />
           </label>
           <label className={styles.field}>
-            {t("phone")}
+            {t("phone")} *
             <input name="phone" required />
           </label>
           <label className={styles.field}>
             {t("companyName")}
+            {channel === "B2B" ? " *" : ""}
             <input name="companyName" required={channel === "B2B"} />
           </label>
           {channel === "B2B" && (
             <label className={styles.field}>
-              {t("brn")}
+              {t("brn")} *
               <input name="brn" required />
             </label>
           )}
           <label className={styles.field}>
-            {t("deliveryAddress")}
+            {t("deliveryAddress")} *
             <textarea name="deliveryAddress" required />
           </label>
           <label className={styles.field}>
-            {t("deliveryZone")}
+            {t("deliveryZone")} *
             <select name="deliveryZone" value={zone} onChange={(e) => setZone(e.target.value)} required>
               <option value="" disabled>
                 {t("deliveryZonePlaceholder")}

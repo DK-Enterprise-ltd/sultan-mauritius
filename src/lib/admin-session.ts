@@ -8,6 +8,12 @@ export const ADMIN_SESSION_COOKIE = "sultan_admin_session";
 const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 export const ADMIN_SESSION_MAX_AGE_SECONDS = MAX_AGE_MS / 1000;
 
+export function timingSafeStringEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB);
+}
+
 function sign(expiresAt: string): string {
   const secret = process.env.ADMIN_SESSION_SECRET;
   if (!secret) throw new Error("ADMIN_SESSION_SECRET is not set");

@@ -1,19 +1,15 @@
 "use server";
 
-import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_SECONDS,
   createAdminSessionToken,
+  timingSafeStringEqual,
 } from "@/lib/admin-session";
-
-function timingSafeStringEqual(a: string, b: string): boolean {
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
-  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB);
-}
+import { isAdmin } from "@/lib/auth";
+import { verifyAdminPassword, setAdminPassword } from "@/lib/admin-credential";
 
 export type AdminLoginState = { error?: string };
 
@@ -21,13 +17,11 @@ export async function loginAdmin(_prevState: AdminLoginState, formData: FormData
   const username = String(formData.get("username") ?? "");
   const password = String(formData.get("password") ?? "");
   const expectedUsername = process.env.ADMIN_USERNAME ?? "";
-  const expectedPassword = process.env.ADMIN_PASSWORD ?? "";
 
   const valid =
     expectedUsername.length > 0 &&
-    expectedPassword.length > 0 &&
     timingSafeStringEqual(username, expectedUsername) &&
-    timingSafeStringEqual(password, expectedPassword);
+    (await verifyAdminPassword(password));
 
   if (!valid) {
     return { error: "Incorrect username or password." };
@@ -57,4 +51,30 @@ export async function logoutAdmin() {
   cookies().delete({ name: ADMIN_SESSION_COOKIE, path: "/" });
   cookies().delete({ name: ADMIN_SESSION_COOKIE, path: "/admin" });
   redirect("/admin");
+}
+
+export type ChangePasswordState = { error?: string; success?: boolean };
+
+export async function changeAdminPassword(
+  _prevState: ChangePasswordState,
+  formData: FormData,
+): Promise<ChangePasswordState> {
+  if (!isAdmin()) return { error: "Not authorized." };
+
+  const oldPassword = String(formData.get("oldPassword") ?? "");
+  const newPassword = String(formData.get("newPassword") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  if (!(await verifyAdminPassword(oldPassword))) {
+    return { error: "Current password is incorrect." };
+  }
+  if (newPassword.length < 8) {
+    return { error: "New password must be at least 8 characters." };
+  }
+  if (newPassword !== confirmPassword) {
+    return { error: "New passwords do not match." };
+  }
+
+  await setAdminPassword(newPassword);
+  return { success: true };
 }

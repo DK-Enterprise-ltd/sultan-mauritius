@@ -36,7 +36,7 @@ const getSidebarCounts = unstable_cache(
     return { pendingOrders, lowStockCount, unhandledInquiries };
   },
   ["admin-sidebar-counts"],
-  { revalidate: 30 },
+  { revalidate: 30, tags: ["admin-sidebar-counts"] },
 );
 
 async function AdminShell({ children }: { children: React.ReactNode }) {

@@ -231,6 +231,16 @@ model User {
   createdAt    DateTime @default(now())
 }
 
+// ponytail: still one shared admin login (see src/lib/admin-session.ts), not
+// real per-user accounts — this is just enough persistence to let that one
+// password be changed at runtime. A single row, id fixed to "singleton".
+// Falls back to ADMIN_PASSWORD until an admin changes it once.
+model AdminCredential {
+  id           String   @id @default("singleton")
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}
+
 // ---------------------------------------------------------------------------
 // CMS content — synced one-way from Sanity Studio via /api/sanity/* webhooks
 // (src/app/api/sanity/). Sanity is the authoring surface (for the business,

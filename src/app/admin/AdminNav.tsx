@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, Package, FileText, Users, MessageSquare } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, FileText, Users, MessageSquare, Settings } from "lucide-react";
 import styles from "./layout.module.css";
 
 type NavItem = {
@@ -45,6 +45,7 @@ export default function AdminNav({
         { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare, badge: unhandledInquiries || undefined },
       ],
     },
+    { label: "Account", items: [{ href: "/admin/settings", label: "Settings", icon: Settings }] },
   ];
 
   return (

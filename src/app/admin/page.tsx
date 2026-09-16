@@ -16,13 +16,12 @@ export default async function AdminDashboard() {
   // order/customer data is ever fetched for an unauthenticated request.
   if (!isAdmin()) return null;
 
-  const [stats, pendingOrders, lowStockProducts, unhandledInquiries, recentOrders] = await Promise.all([
+  // lowStockProducts comes from stats below instead of a second
+  // "active products" query here — it's the same table/filter
+  // getDashboardStats() already fetches for lowStockCount.
+  const [stats, pendingOrders, unhandledInquiries, recentOrders] = await Promise.all([
     getDashboardStats(),
     prisma.order.count({ where: { status: "PENDING" } }),
-    prisma
-      .product
-      .findMany({ where: { isActive: true } })
-      .then((products) => products.filter((p) => p.stockQuantity <= p.lowStockThreshold)),
     prisma.contactInquiry.count({ where: { handled: false } }),
     prisma.order.findMany({
       orderBy: { createdAt: "desc" },
@@ -30,6 +29,7 @@ export default async function AdminDashboard() {
       include: { customer: true },
     }),
   ]);
+  const { lowStockProducts } = stats;
 
   return (
     <div>

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
 import { cleanStr, isValidEmail } from "@/lib/validate";
@@ -61,6 +61,9 @@ export async function toggleInquiryHandled(id: string, handled: boolean): Promis
 
     revalidatePath("/admin");
     revalidatePath("/admin/inquiries");
+    // Sidebar's unhandled-inquiries badge is cached separately from the
+    // route cache revalidatePath above touches.
+    revalidateTag("admin-sidebar-counts");
     return { ok: true };
   } catch {
     return { ok: false, error: "Could not update inquiry status." };
@@ -79,6 +82,7 @@ export async function deleteInquiry(id: string): Promise<{ ok: true } | { ok: fa
 
     revalidatePath("/admin");
     revalidatePath("/admin/inquiries");
+    revalidateTag("admin-sidebar-counts");
     return { ok: true };
   } catch {
     return { ok: false, error: "Could not delete inquiry." };

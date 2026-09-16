@@ -63,13 +63,13 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
       />
       {wholesale && (
         <label className={styles.field}>
-          {t("companyName")}
+          {t("companyName")} *
           <input name="companyName" required />
         </label>
       )}
       <div className={styles.row}>
         <label className={styles.field}>
-          {t("name")}
+          {t("name")} *
           <input name="name" required />
         </label>
         <label className={styles.field}>
@@ -78,13 +78,13 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
         </label>
       </div>
       <label className={styles.field}>
-        {t("email")}
+        {t("email")} *
         <input name="email" type="email" required />
       </label>
       {wholesale && (
         <>
           <label className={styles.field}>
-            {t("estimatedVolume")}
+            {t("estimatedVolume")} *
             <input name="estimatedVolume" required />
           </label>
           <div className={styles.row}>
@@ -100,7 +100,7 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
         </>
       )}
       <label className={styles.field}>
-        {t("message")}
+        {t("message")} *
         <textarea name="message" required />
       </label>
 
