@@ -1,15 +1,15 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { updateOrderStatus } from "@/app/actions/orders";
 import type { OrderStatus } from "@prisma/client";
 import styles from "./page.module.css";
 
-// ponytail: the real-world flow only ever moves forward one step at a time
-// (pending -> confirmed -> paid -> out for delivery -> fulfilled), so this
-// only offers "mark as <next step>" instead of a free jump-anywhere dropdown.
-// Cancelling is the one out-of-sequence move, kept as a separate action.
-const FLOW: OrderStatus[] = ["PENDING", "CONFIRMED", "PAID", "OUT_FOR_DELIVERY", "FULFILLED"];
+// ponytail: only 3 real states, always moved forward one step at a time
+// (pending -> confirmed -> fulfilled) plus the one out-of-sequence move,
+// cancel. No online payment, so there's no separate "paid"/"out for
+// delivery" step to track here.
+const FLOW: OrderStatus[] = ["PENDING", "CONFIRMED", "FULFILLED"];
 
 function nextStatus(status: OrderStatus): OrderStatus | null {
   const i = FLOW.indexOf(status);
@@ -18,12 +18,22 @@ function nextStatus(status: OrderStatus): OrderStatus | null {
 
 export default function StatusSelect({ orderId, status }: { orderId: string; status: OrderStatus }) {
   const [pending, startTransition] = useTransition();
+  const [eta, setEta] = useState("");
   const next = nextStatus(status);
   const canCancel = status !== "FULFILLED" && status !== "CANCELLED";
 
   return (
     <div className={styles.statusCell}>
       <span className={`${styles.statusBadge} ${styles[`status${status}`]}`}>{status.replace(/_/g, " ")}</span>
+      {next === "CONFIRMED" && (
+        <input
+          type="date"
+          className={styles.etaInput}
+          value={eta}
+          onChange={(e) => setEta(e.target.value)}
+          aria-label="Estimated delivery date"
+        />
+      )}
       {next && (
         <button
           type="button"
@@ -31,11 +41,11 @@ export default function StatusSelect({ orderId, status }: { orderId: string; sta
           disabled={pending}
           onClick={() =>
             startTransition(() => {
-              updateOrderStatus(orderId, next);
+              updateOrderStatus(orderId, next, next === "CONFIRMED" && eta ? new Date(eta) : undefined);
             })
           }
         >
-          Mark as {next.replace(/_/g, " ").toLowerCase()}
+          Mark as {next.toLowerCase()}
         </button>
       )}
       {canCancel && (

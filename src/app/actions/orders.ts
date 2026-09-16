@@ -4,8 +4,9 @@ import { Prisma, OrderStatus } from "@prisma/client";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getViewer, isAdmin } from "@/lib/auth";
-import { sendOrderStatusEmail } from "@/lib/email";
+import { sendOrderStatusEmail, sendNewOrderAdminNotification } from "@/lib/email";
 import { cleanStr, isValidEmail } from "@/lib/validate";
+import { calculateDeliveryFee, fulfillmentMethodFor, MIN_B2C_ORDER_MUR } from "@/lib/delivery";
 
 const MAX_QUANTITY_PER_LINE = 500;
 
@@ -16,6 +17,7 @@ type OrderInput = {
     email: string;
     phone: string;
     companyName?: string;
+    brn?: string;
     deliveryAddress: string;
     deliveryZone?: string;
   };
@@ -38,11 +40,14 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     }
   }
 
+  const viewer = getViewer();
+
   const customer = {
     name: cleanStr(input.customer.name, 200),
     email: cleanStr(input.customer.email, 254).toLowerCase(),
     phone: cleanStr(input.customer.phone, 40),
     companyName: input.customer.companyName ? cleanStr(input.customer.companyName, 200) : undefined,
+    brn: input.customer.brn ? cleanStr(input.customer.brn, 50) : undefined,
     deliveryAddress: cleanStr(input.customer.deliveryAddress, 500),
     deliveryZone: input.customer.deliveryZone ? cleanStr(input.customer.deliveryZone, 100) : undefined,
   };
@@ -50,9 +55,10 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
   if (!customer.name || !isValidEmail(customer.email) || !customer.phone || !customer.deliveryAddress) {
     return { ok: false, error: "Please fill in your name, a valid email, phone, and delivery address." };
   }
+  if (viewer.isB2B && !customer.brn) {
+    return { ok: false, error: "A Business Registration Number (BRN) is required for B2B orders." };
+  }
   input = { items: input.items, customer, notes };
-
-  const viewer = getViewer();
   const productIds = input.items.map((i) => i.productId);
   const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
   const byId = new Map(products.map((p) => [p.id, p]));
@@ -84,6 +90,15 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     new Prisma.Decimal(0)
   );
 
+  const channel = viewer.isB2B ? "B2B" : "B2C";
+  if (channel === "B2C" && subtotal.lessThan(MIN_B2C_ORDER_MUR)) {
+    return { ok: false, error: `Minimum order for delivery is Rs ${MIN_B2C_ORDER_MUR}.` };
+  }
+
+  const fulfillmentMethod = fulfillmentMethodFor(customer.deliveryZone);
+  const deliveryFee = new Prisma.Decimal(calculateDeliveryFee(channel, customer.deliveryZone));
+  const total = subtotal.plus(deliveryFee);
+
   let order;
   try {
     order = await prisma.$transaction(async (tx) => {
@@ -93,6 +108,7 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
           name: input.customer.name,
           phone: input.customer.phone,
           companyName: input.customer.companyName,
+          brn: input.customer.brn,
           deliveryAddress: input.customer.deliveryAddress,
           deliveryZone: input.customer.deliveryZone,
         },
@@ -102,6 +118,7 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
           email: input.customer.email,
           phone: input.customer.phone,
           companyName: input.customer.companyName,
+          brn: input.customer.brn,
           deliveryAddress: input.customer.deliveryAddress,
           deliveryZone: input.customer.deliveryZone,
         },
@@ -110,12 +127,14 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
       const created = await tx.order.create({
         data: {
           customerId: customer.id,
-          channel: viewer.isB2B ? "B2B" : "B2C",
+          channel,
           status: "PENDING",
           deliveryAddress: input.customer.deliveryAddress,
           deliveryZone: input.customer.deliveryZone,
+          fulfillmentMethod,
           subtotal,
-          total: subtotal,
+          deliveryFee,
+          total,
           notes: input.notes,
           items: { create: lineItems },
         },
@@ -160,19 +179,27 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     total: order.total,
     customer: { name: input.customer.name, email: input.customer.email },
   });
+  await sendNewOrderAdminNotification({
+    orderNumber: order.orderNumber,
+    total: order.total,
+    orderId: order.id,
+    customer: { name: input.customer.name, email: input.customer.email },
+  });
 
   return { ok: true, orderNumber: order.orderNumber, id: order.id };
 }
 
-/** Admin-only: moves an order to the next stage of fulfilment.
+/** Admin-only: moves an order to the next stage (pending -> confirmed ->
+ * fulfilled) or cancels it. `estimatedDeliveryAt` is only meaningful when
+ * confirming — the admin sets an ETA at that point, see StatusSelect.
  * TODO(real-auth): gated by isAdmin() only, same stub as the rest of the
  * admin surface — see src/lib/auth.ts. */
-export async function updateOrderStatus(orderId: string, status: OrderStatus) {
+export async function updateOrderStatus(orderId: string, status: OrderStatus, estimatedDeliveryAt?: Date) {
   if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
 
   const order = await prisma.order.update({
     where: { id: orderId },
-    data: { status },
+    data: { status, ...(status === "CONFIRMED" && estimatedDeliveryAt ? { estimatedDeliveryAt } : {}) },
     include: { customer: true },
   });
   revalidatePath("/admin/orders");

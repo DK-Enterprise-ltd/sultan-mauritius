@@ -59,24 +59,21 @@
   color: var(--sultan-teal);
 }
 
-.statusPAID {
+.statusFULFILLED {
   background: #e7f3ea;
   color: var(--sultan-green);
-}
-
-.statusOUT_FOR_DELIVERY {
-  background: #fdf1e2;
-  color: var(--sultan-sun);
-}
-
-.statusFULFILLED {
-  background: #e3f4f8;
-  color: var(--sultan-navy);
 }
 
 .statusCANCELLED {
   background: #fbe7ee;
   color: var(--sultan-plum);
+}
+
+.etaInput {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
 }
 
 .advanceButton {

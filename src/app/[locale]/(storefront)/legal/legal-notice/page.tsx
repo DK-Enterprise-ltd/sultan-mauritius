@@ -17,11 +17,12 @@ export default function LegalNoticePage() {
 
       <h2>Company</h2>
       <ul>
-        <li>Legal name: <strong>Sultan Mauritius Ltd</strong></li>
-        <li>Registered office: <span className={styles.placeholder}>[FULL REGISTERED ADDRESS]</span>, Mauritius</li>
-        <li>Business Registration Number (BRN): <span className={styles.placeholder}>[BRN NUMBER]</span></li>
-        <li>VAT registration number: <span className={styles.placeholder}>[VAT NUMBER]</span></li>
-        <li>Director(s): <span className={styles.placeholder}>[DIRECTOR NAME(S)]</span></li>
+        <li>Trading name: <strong>Sultan Mauritius</strong></li>
+        <li>Legal name: <strong>Grignoti Ltd</strong></li>
+        <li>Registered office: 95, La Paix Street, Port Louis, Mauritius</li>
+        <li>Business Registration Number (BRN): C25226789</li>
+        <li>VAT registration number: 28451792</li>
+        <li>Director: Jameellah Emamdee</li>
       </ul>
 
       <h2>Contact</h2>
@@ -33,11 +34,11 @@ export default function LegalNoticePage() {
 
       <h2>Regulatory</h2>
       <p>
-        Food and beverage import/distribution registration: <span className={styles.placeholder}>[REGISTRATION NUMBER, IF APPLICABLE]</span>.
+        No food and beverage import/distribution registration number is displayed on this website at this stage.
       </p>
 
       <h2>Responsible for content</h2>
-      <p>Sultan Mauritius Ltd is responsible for the content of this website.</p>
+      <p>Grignoti Ltd, trading as Sultan Mauritius, is responsible for the content of this website.</p>
     </>
   );
 }

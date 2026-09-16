@@ -4,58 +4,37 @@ import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
   title: "Payment Instructions | Sultan Mauritius",
-  description: "MCB Juice and bank transfer payment instructions, step by step.",
+  description: "How payment works for Sultan Mauritius orders.",
 };
 
 export default function PaymentInstructionsPage() {
   return (
     <>
-      <h1>MCB Juice & Bank Transfer Payment Instructions</h1>
+      <h1>Payment Instructions</h1>
       <span className={styles.updated}>Last updated: {LAST_UPDATED}</span>
 
       <p>
-        We do not take card payments online. Orders are paid by MCB Juice, direct bank transfer, or cash on
-        delivery (where available, see our <a href="/legal/delivery-shipping">Delivery & Shipping Policy</a>). All
-        amounts are in Mauritian Rupees (MUR).
+        This website does not currently process online payments: no card payment, no bank/SWIFT transfer, and no
+        MCB Juice are taken through the site. All amounts are shown in Mauritian Rupees (MUR).
       </p>
 
-      <h2>Bank transfer</h2>
-      <ul>
-        <li>Beneficiary name: <strong>Sultan Mauritius Ltd</strong></li>
-        <li>Bank: <strong>MCB (Mauritius Commercial Bank Ltd)</strong></li>
-        <li>Account number: <strong>000123456789</strong></li>
-        <li>SWIFT/BIC (for transfers from outside Mauritius): <span className={styles.placeholder}>[SWIFT/BIC CODE]</span></li>
-        <li>Payment reference: <strong>your order number</strong> — always include this so we can match your payment</li>
-      </ul>
-
-      <h2>MCB Juice</h2>
-      <ol>
-        <li>Open the MCB Juice app and choose &quot;Merchant Pay&quot; or &quot;Send Money&quot;.</li>
-        <li>Enter the Sultan Mauritius merchant number: <span className={styles.placeholder}>[MCB JUICE MERCHANT NUMBER]</span>.</li>
-        <li>Enter the exact order total shown at checkout.</li>
-        <li>In the payment note or reference field, enter your order number.</li>
-        <li>Send the payment, then email or WhatsApp a screenshot of the confirmation to{" "}
-          <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> / <span className={styles.placeholder}>[PAYMENT WHATSAPP NUMBER]</span>.
-        </li>
-      </ol>
-
-      <h2>Cash on delivery</h2>
+      <h2>Individual (B2C) orders</h2>
       <p>
-        Where offered for your delivery area, you may pay in cash to the driver on delivery. Please have the exact
-        order total ready, as drivers may not carry change for large notes.
+        Standard payment is on delivery or collection, according to the arrangement agreed with you when your
+        order is confirmed. See our <a href="/legal/delivery-shipping">Delivery &amp; Shipping Policy</a> for
+        delivery areas, fees, and the minimum order for delivery.
       </p>
 
-      <h2>When we dispatch your order</h2>
+      <h2>Business (B2B) orders</h2>
       <p>
-        For MCB Juice and bank transfer, we dispatch once we can match your payment to your order number, which is
-        usually the same business day for MCB Juice and within{" "}
-        <span className={styles.placeholder}>[X BUSINESS DAYS]</span> for bank transfers. If we cannot match a
-        payment because the reference was missing or incorrect, we will contact you before dispatching.
+        Standard payment is on delivery, unless different terms have been expressly agreed with you in writing.
+        Any exceptional credit arrangement is agreed individually with your account and is not a standard term
+        offered on this website. See our <a href="/legal/terms-business">Business Sales Terms</a>.
       </p>
 
       <h2>Payment queries</h2>
       <p>
-        If a payment fails, is delayed, or you paid the wrong amount, contact us at{" "}
+        If you have a question about payment on an order, contact us at{" "}
         <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> or +230 5 000 0000 with your order number.
       </p>
     </>

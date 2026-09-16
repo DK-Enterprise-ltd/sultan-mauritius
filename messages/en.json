@@ -122,6 +122,13 @@
     "subtotal": "Subtotal",
     "checkout": "Proceed to checkout"
   },
+  "deliveryCheck": {
+    "label": "Check if we deliver to your area",
+    "placeholder": "e.g. Curepipe",
+    "checkButton": "Check",
+    "available": "We deliver to {area}. Standard delivery fee and minimum order apply at checkout.",
+    "pickupOnly": "We don't deliver directly to {area}, but you can still order: we'll agree a pickup point with you before confirming."
+  },
   "checkout": {
     "title": "Order review",
     "emptyNotice": "Your cart is empty. Add products before checking out.",
@@ -130,30 +137,47 @@
     "email": "Email",
     "phone": "Phone",
     "companyName": "Company name (wholesale only)",
+    "brn": "Business Registration Number (BRN)",
+    "modeB2CLabel": "Personal / Residential",
+    "modeB2CSummary": "Minimum {min} order · {fee} delivery · standard areas only",
+    "modeB2BLabel": "Business / B2B",
+    "modeB2BSummary": "BRN required · pack ordering · free delivery in standard areas · payment on delivery · B2B Terms apply",
     "deliveryAddress": "Delivery address",
-    "deliveryZone": "Delivery zone / region",
+    "deliveryZone": "Delivery area",
+    "deliveryZonePlaceholder": "Select your area",
+    "outsideAreaOption": "Outside these areas — arrange pickup",
+    "pickupNotice": "You're outside our standard delivery areas. We'll contact you to agree a pickup point before confirming your order.",
     "orderNotes": "Order notes",
     "placeOrder": "Place order",
     "placingOrder": "Placing order…",
     "orderSummary": "Order summary",
+    "deliveryFeeLabel": "Delivery fee",
+    "free": "Free",
     "total": "Total",
+    "minOrderNotice": "Minimum order for delivery: {amount}.",
+    "belowMinimum": "Add {amount} more to reach the minimum order for delivery.",
+    "freeDeliveryB2B": "Free delivery for approved business accounts within our standard delivery areas.",
+    "agreeB2BTermsPrefix": "I have read and agree to the",
+    "agreeB2BTermsLink": "B2B Sales Terms",
     "payment": "Payment",
-    "paymentNote": "No online payment: settle by bank transfer or cash on delivery.",
-    "bankDetails": "Bank transfer: Sultan Mauritius Ltd · MCB · Account 000123456789\nPlease use your order number as payment reference."
+    "paymentNote": "No online payment. Pay on delivery or collection, as agreed when we confirm your order."
   },
   "order": {
     "orderNumber": "Order #{number}",
     "placedTitle": "Order placed!",
     "thankYou": "Thank you, {name}.",
     "subtitle": "We've received your order and it's awaiting confirmation.",
-    "emailNotice": "Your order has been placed successfully. Please await confirmation — we'll email the payment details to {email} once it's confirmed.",
+    "emailNotice": "Your order has been placed successfully. Please await confirmation — we'll email you at {email} once it's confirmed.",
     "total": "Total",
-    "paymentInstructions": "Payment instructions",
-    "paymentPending": "We'll email these to you once your order is confirmed.",
-    "paymentIntro": "No online payment is taken. Please settle by:",
-    "bankTransfer": "Bank transfer: Sultan Mauritius Ltd · MCB · Account 000123456789, reference order #{number}",
-    "cashOnDelivery": "Cash on delivery",
-    "deliveryTo": "Delivery to"
+    "deliveryFee": "Delivery fee",
+    "free": "Free",
+    "paymentInstructions": "Payment",
+    "paymentPending": "No online payment. Pay on delivery or collection, as agreed once your order is confirmed.",
+    "paymentIntro": "No online payment. Pay on delivery or collection, as agreed when your order was confirmed.",
+    "deliveryTo": "Delivery to",
+    "fulfillmentDelivery": "Delivery",
+    "fulfillmentPickup": "Pickup — we'll agree a collection point with you before confirming your order.",
+    "eta": "Estimated delivery: {date}"
   },
   "about": {
     "heroKicker": "Our story",
@@ -211,7 +235,7 @@
     "tradeHeading": "Trade",
     "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
-    "paymentNote": "Bank transfer & cash on delivery, no online payment"
+    "paymentNote": "No online payment: pay on delivery or collection"
   },
   "meta": {
     "homeTitle": "Sultan Mauritius: Pure. Elegant. Timeless.",

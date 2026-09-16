@@ -7,6 +7,7 @@ import { formatMur } from "@/lib/format";
 import { localizeFlavor } from "@/lib/catalog-i18n";
 import type { Locale } from "@/i18n/routing";
 import Button from "@/components/Button/Button";
+import DeliveryAreaCheck from "@/components/DeliveryAreaCheck/DeliveryAreaCheck";
 import styles from "./page.module.css";
 
 export default function CartPage() {
@@ -67,6 +68,8 @@ export default function CartPage() {
         <span>{t("subtotal")}</span>
         <span className={styles.subtotal}>{formatMur(subtotal)}</span>
       </div>
+
+      <DeliveryAreaCheck />
 
       <Link href="/checkout">
         <Button variant="primary">{t("checkout")}</Button>

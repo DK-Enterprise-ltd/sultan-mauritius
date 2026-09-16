@@ -14,19 +14,19 @@ export default function CopyrightPage() {
       <span className={styles.updated}>Last updated: {LAST_UPDATED}</span>
 
       <p>
-        © {new Date().getFullYear()} Sultan Mauritius Ltd. All rights reserved.
+        © {new Date().getFullYear()} Grignoti Ltd, trading as Sultan Mauritius. All rights reserved.
       </p>
 
       <h2>Ownership</h2>
       <p>
-        The text, product photography, graphics, layout, and design of this website belong to Sultan Mauritius Ltd
-        or are used under license, and are protected by copyright law.
+        The text, product photography, graphics, layout, and design of this website belong to Grignoti Ltd or are
+        used under license, and are protected by copyright law.
       </p>
 
       <h2>Trademarks</h2>
       <p>
-        The Sultan name and logo are used under license by Sultan Mauritius Ltd. No permission is granted to use
-        these marks other than to identify our products in the ordinary course of buying from us.
+        The Sultan name and logo are used under license by Grignoti Ltd. No permission is granted to use these
+        marks other than to identify our products in the ordinary course of buying from us.
       </p>
 
       <h2>Permitted use</h2>

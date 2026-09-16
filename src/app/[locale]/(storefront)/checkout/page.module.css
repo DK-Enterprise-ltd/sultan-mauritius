@@ -10,6 +10,37 @@
   margin-bottom: 2.5rem;
 }
 
+.modeBanner {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-card-sm);
+  margin-bottom: 2rem;
+}
+
+.modeBannerB2C {
+  background: var(--wash-still);
+}
+
+.modeBannerB2B {
+  background: var(--wash-sparkling, var(--wash-still));
+}
+
+.modeLabel {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sultan-navy);
+}
+
+.modeSummary {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -41,6 +72,7 @@
 }
 
 .field input,
+.field select,
 .field textarea {
   font: inherit;
   font-weight: 400;
@@ -55,6 +87,7 @@
 }
 
 .field input:focus,
+.field select:focus,
 .field textarea:focus {
   outline: none;
   border-color: var(--sultan-teal);
@@ -69,6 +102,34 @@
   color: #b91c1c;
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink);
+}
+
+.checkboxField input {
+  margin-top: 0.2rem;
+}
+
+.notice {
+  color: var(--sultan-navy);
+  background: var(--wash-still);
+  border-radius: var(--radius-card-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+}
+
+.minOrderNote {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
 }
 
 .summary {
@@ -111,14 +172,6 @@
 .payment p {
   font-size: 0.85rem;
   color: var(--ink-soft);
-}
-
-.bankDetails {
-  margin-top: 0.5rem;
-  padding: 0.85rem 1rem;
-  background: var(--paper-raised);
-  border-radius: var(--radius-card-sm);
-  white-space: pre-line;
 }
 
 @media (max-width: 800px) {

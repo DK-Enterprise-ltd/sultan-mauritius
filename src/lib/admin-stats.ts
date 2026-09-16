@@ -63,7 +63,7 @@ async function dailySeries(days: number): Promise<{ orders: DailyPoint[]; revenu
 
 export type StatusCount = { status: OrderStatus; count: number };
 
-const STATUS_ORDER: OrderStatus[] = ["PENDING", "CONFIRMED", "PAID", "OUT_FOR_DELIVERY", "FULFILLED", "CANCELLED"];
+const STATUS_ORDER: OrderStatus[] = ["PENDING", "CONFIRMED", "FULFILLED", "CANCELLED"];
 
 /** Order counts by status over the last `days` days, in a fixed display
  * order — feeds the "orders by status" bar chart. Cancelled orders are

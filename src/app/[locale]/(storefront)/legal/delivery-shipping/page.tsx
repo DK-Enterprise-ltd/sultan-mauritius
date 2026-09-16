@@ -1,67 +1,68 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { STANDARD_DELIVERY_AREAS, MIN_B2C_ORDER_MUR, B2C_DELIVERY_FEE_MUR } from "@/lib/delivery";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
   title: "Delivery & Shipping Policy | Sultan Mauritius",
-  description: "Residential delivery and bulk freight terms for Sultan Mauritius orders.",
+  description: "Residential and business delivery terms for Sultan Mauritius orders.",
 };
 
 export default function DeliveryShippingPage() {
   return (
     <>
-      <h1>Delivery & Shipping Policy</h1>
+      <h1>Delivery &amp; Shipping Policy</h1>
       <span className={styles.updated}>Last updated: {LAST_UPDATED}</span>
 
       <p>
-        We deliver across Mauritius. Delivery to Rodrigues and other outer islands is{" "}
-        <span className={styles.placeholder}>[AVAILABLE ON REQUEST / NOT CURRENTLY OFFERED — TO CONFIRM]</span>.
+        Delivery and order fulfilment is currently available within Mauritius only. Rodrigues and other outer
+        islands are not currently served.
       </p>
 
-      <h2>Residential (individual) delivery</h2>
+      <h2>Standard delivery areas</h2>
+      <p>Direct delivery is currently available in the following areas:</p>
       <ul>
-        <li>Standard delivery time: <span className={styles.placeholder}>[X–Y BUSINESS DAYS]</span> from order confirmation</li>
-        <li>Delivery fee: free above <span className={styles.placeholder}>[MUR THRESHOLD]</span>, a flat{" "}
-          <span className={styles.placeholder}>[MUR FEE]</span> below that
+        {STANDARD_DELIVERY_AREAS.map((area) => (
+          <li key={area}>{area}</li>
+        ))}
+      </ul>
+      <p>
+        If you are located outside these areas, you can still place an order, but you will need to arrange
+        collection from a pickup point agreed with us before your order is confirmed.
+      </p>
+
+      <h2>Individual / residential (B2C) delivery</h2>
+      <ul>
+        <li>Minimum order value for delivery: <strong>Rs {MIN_B2C_ORDER_MUR}</strong></li>
+        <li>Delivery fee within the standard delivery areas: <strong>Rs {B2C_DELIVERY_FEE_MUR}</strong></li>
+        <li>
+          Estimated delivery time: <strong>2–4 business days</strong>, depending on quantity ordered, delivery
+          location, and our delivery schedule. This is an estimated timeframe, not a guaranteed delivery date.
         </li>
-        <li>Someone must be available at the delivery address to receive the order, especially for cash-on-delivery payments</li>
-        <li>If a delivery attempt fails because no one is available, we will contact you to arrange redelivery, which may carry an additional fee</li>
+        <li>Someone must be available at the delivery address to receive and inspect the order</li>
       </ul>
 
-      <h2>Commercial and bulk freight</h2>
+      <h2>Business (B2B) delivery</h2>
       <ul>
-        <li>Bulk orders are scheduled at a delivery window agreed with you at order confirmation</li>
-        <li>Free freight applies above <span className={styles.placeholder}>[CASE/PALLET THRESHOLD]</span>; smaller trade orders are charged at{" "}
-          <span className={styles.placeholder}>[RATE]</span>
-        </li>
-        <li>Palletised or large-volume deliveries are made kerbside or dockside; you are responsible for providing suitable access and manpower to offload, unless we have agreed otherwise in writing</li>
-        <li>Lead times for large or made-to-order volumes are confirmed at the time of order and may exceed standard residential timeframes</li>
+        <li>Approved business customers receive <strong>free delivery</strong> within the standard delivery areas above; there is no delivery charge for qualifying B2B orders</li>
+        <li>Customers outside the standard delivery areas will need to arrange an agreed pickup point</li>
+        <li>Estimated delivery time: <strong>2–4 business days</strong>, depending on order quantity, location, and delivery schedule</li>
+        <li>Products must be ordered according to the pack quantities stated in each product description, see our <a href="/legal/terms-business">Business Sales Terms</a></li>
       </ul>
 
-      <h2>Tracking and confirmation</h2>
+      <h2>Payment</h2>
       <p>
-        We confirm dispatch by email, phone, or WhatsApp with an estimated delivery window. We do not currently
-        offer live courier tracking.
+        This website does not currently process online payments. See our{" "}
+        <a href="/legal/payment-instructions">Payment Instructions</a> for how payment on delivery/collection
+        works for individual and business orders.
       </p>
 
-      <h2>Risk and title</h2>
+      <h2>Inspection on delivery</h2>
       <p>
-        Risk in the goods passes to you once they are delivered to the address, or the site, you provided. Title
-        passes once we have received payment in full.
-      </p>
-
-      <h2>Delays</h2>
-      <p>
-        We are not liable for delays caused by events outside our reasonable control, including weather, traffic
-        disruption, or courier issues, but we will keep you informed and reschedule as soon as reasonably possible.
-      </p>
-
-      <h2>Damaged or missing items</h2>
-      <p>
-        Please check your delivery on arrival. Report any damage or shortage to{" "}
-        <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> within the timeframe set out in our{" "}
-        <a href="/legal/cancellation-refund">Cancellation & Refund Policy</a>, ideally with photos, so we can
-        arrange a replacement or refund.
+        Please inspect your order when it arrives. Any broken, damaged, incorrect, or visibly defective products
+        should be reported to the delivery representative immediately and returned to them at that time. See our{" "}
+        <a href="/legal/cancellation-refund">Cancellation &amp; Refund Policy</a> for what happens after a
+        delivery has been inspected and accepted.
       </p>
     </>
   );

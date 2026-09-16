@@ -39,6 +39,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
       </div>
       <p className={styles.metaLine}>
         {order.channel} · Placed {order.createdAt.toLocaleString("en-MU")}
+        {order.estimatedDeliveryAt && ` · ETA ${order.estimatedDeliveryAt.toLocaleDateString("en-MU")}`}
       </p>
 
       <div className={styles.grid}>
@@ -73,6 +74,10 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 <span>Subtotal</span>
                 <span>{formatMur(order.subtotal)}</span>
               </div>
+              <div className={styles.totalsRow}>
+                <span>Delivery fee</span>
+                <span>{order.deliveryFee.isZero() ? "Free" : formatMur(order.deliveryFee)}</span>
+              </div>
               <div className={`${styles.totalsRow} ${styles.totalsRowStrong}`}>
                 <span>Total</span>
                 <span>{formatMur(order.total)}</span>
@@ -102,6 +107,12 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                   <span className={styles.definitionValue}>{customer.companyName}</span>
                 </div>
               )}
+              {customer.brn && (
+                <div className={styles.definitionRow}>
+                  <span className={styles.definitionLabel}>BRN</span>
+                  <span className={styles.definitionValue}>{customer.brn}</span>
+                </div>
+              )}
               <div className={styles.definitionRow}>
                 <span className={styles.definitionLabel}>Customer type</span>
                 <span className={styles.definitionValue}>{customer.type}</span>
@@ -116,6 +127,12 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                 <span className={styles.definitionLabel}>Phone</span>
                 <span className={styles.definitionValue}>
                   <a href={`tel:${customer.phone}`}>{customer.phone}</a>
+                </span>
+              </div>
+              <div className={styles.definitionRow}>
+                <span className={styles.definitionLabel}>Fulfillment</span>
+                <span className={styles.definitionValue}>
+                  {order.fulfillmentMethod === "PICKUP" ? "Pickup — agree a collection point with the customer" : "Delivery"}
                 </span>
               </div>
               <div className={styles.definitionRow}>

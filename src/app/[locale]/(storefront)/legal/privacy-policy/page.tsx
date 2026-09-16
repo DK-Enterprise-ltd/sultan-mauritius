@@ -14,17 +14,17 @@ export default function PrivacyPolicyPage() {
       <span className={styles.updated}>Last updated: {LAST_UPDATED}</span>
 
       <p>
-        Sultan Mauritius Ltd (&quot;Sultan Mauritius&quot;, &quot;we&quot;, &quot;us&quot;) distributes Sultan mineral
-        water in Mauritius, to individual consumers and to businesses. This policy explains what personal and
-        business data we collect, why, and how it is protected, in line with the Mauritius Data Protection Act
-        2017. Because we serve both consumer and business customers, the data we collect differs between the two,
-        so it is set out in two separate sections below.
+        Sultan Mauritius (&quot;we&quot;, &quot;us&quot;), a trading name of Grignoti Ltd, distributes Sultan
+        mineral water in Mauritius, to individual consumers and to businesses. This policy explains what personal
+        and business data we collect, why, and how it is protected, in line with the Mauritius Data Protection
+        Act 2017. Because we serve both consumer and business customers, the data we collect differs between the
+        two, so it is set out in two separate sections below.
       </p>
 
       <h2>Who we are</h2>
       <p>
-        Sultan Mauritius Ltd, registered office <span className={styles.placeholder}>[REGISTERED ADDRESS]</span>,
-        Business Registration Number <span className={styles.placeholder}>[BRN NUMBER]</span>. Contact:{" "}
+        Grignoti Ltd, trading as Sultan Mauritius, registered office 95, La Paix Street, Port Louis, Mauritius,
+        Business Registration Number C25226789. Contact:{" "}
         <a href="mailto:hello@sultan.mu">hello@sultan.mu</a>, +230 5 000 0000.
       </p>
 
@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>Name, delivery address, phone number, email address</li>
         <li>Order history, order value, product preferences</li>
-        <li>Payment reference for bank transfer or MCB Juice (we do not collect or store card numbers, as we take no online card payments)</li>
+        <li>We do not process online payments and do not collect or store card, bank, or mobile-wallet payment details through this website</li>
         <li>Locale preference (English/French) and basic device/browser data via strictly necessary cookies</li>
       </ul>
       <p>
@@ -64,8 +64,7 @@ export default function PrivacyPolicyPage() {
 
       <h2>Who we share data with</h2>
       <ul>
-        <li>Delivery and courier partners, limited to what is needed to complete delivery</li>
-        <li>Our bank (MCB) and MCB Juice, to reconcile payments you send us</li>
+        <li>Delivery and courier partners, limited to what is needed to complete delivery or arrange pickup</li>
         <li>IT infrastructure providers that host this website and its database</li>
         <li>The Mauritius Revenue Authority and other authorities, where legally required</li>
       </ul>

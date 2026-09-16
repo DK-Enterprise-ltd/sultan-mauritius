@@ -32,13 +32,20 @@ enum SalesChannel {
   B2B
 }
 
+// Deliberately just 3 real states + cancelled: no online payment, so there's
+// no separate "paid" step to track here (Invoice.status covers payment
+// reconciliation). Stock is decremented at order creation (PENDING), not on
+// any later status — see createOrder.
 enum OrderStatus {
-  PENDING // submitted, awaiting admin confirmation
-  CONFIRMED // admin confirmed availability, awaiting payment
-  PAID // payment received, stock will be/has been deducted
-  OUT_FOR_DELIVERY // handed to delivery, en route
-  FULFILLED // delivered / picked up
+  PENDING // submitted; admin is notified and reviews it
+  CONFIRMED // admin approved the order and set an ETA (Order.estimatedDeliveryAt)
+  FULFILLED // delivered / picked up and paid (POD)
   CANCELLED
+}
+
+enum FulfillmentMethod {
+  DELIVERY // standard delivery area, see src/lib/delivery.ts
+  PICKUP // outside standard delivery areas — pickup point agreed before confirmation
 }
 
 enum StockMovementType {
@@ -117,6 +124,7 @@ model Customer {
   email            String       @unique
   phone            String
   companyName      String? // BUSINESS only
+  brn              String? // BUSINESS only — Business Registration Number, required to order B2B
   vatNumber        String? // BUSINESS only, for compliant invoicing
   creditTermsDays  Int? // BUSINESS only — null means pay-before-fulfillment
   deliveryAddress  String?
@@ -141,9 +149,12 @@ model Order {
   channel        SalesChannel
   status         OrderStatus  @default(PENDING)
   deliveryAddress String?
-  deliveryZone    String?
+  deliveryZone    String? // one of STANDARD_DELIVERY_AREAS, or unset/other for pickup
+  fulfillmentMethod FulfillmentMethod @default(DELIVERY)
+  estimatedDeliveryAt DateTime? // set by admin when confirming (CONFIRMED)
   subtotal       Decimal      @db.Decimal(10, 2)
-  total          Decimal      @db.Decimal(10, 2)
+  deliveryFee    Decimal      @default(0) @db.Decimal(10, 2)
+  total          Decimal      @db.Decimal(10, 2) // subtotal + deliveryFee
   notes          String?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt

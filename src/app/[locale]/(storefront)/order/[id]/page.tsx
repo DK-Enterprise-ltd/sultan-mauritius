@@ -44,6 +44,10 @@ export default async function OrderConfirmationPage({
             <span>{formatMur(item.lineTotal)}</span>
           </div>
         ))}
+        <div className={styles.row}>
+          <span>{t("deliveryFee")}</span>
+          <span>{order.deliveryFee.isZero() ? t("free") : formatMur(order.deliveryFee)}</span>
+        </div>
         <div className={styles.total}>
           <span>{t("total")}</span>
           <span>{formatMur(order.total)}</span>
@@ -52,23 +56,17 @@ export default async function OrderConfirmationPage({
 
       <div className={styles.payment}>
         <h2>{t("paymentInstructions")}</h2>
-        {order.status === "PENDING" ? (
-          <p>{t("paymentPending")}</p>
-        ) : (
-          <>
-            <p>{t("paymentIntro")}</p>
-            <ul>
-              <li>{t("bankTransfer", { number: order.orderNumber })}</li>
-              <li>{t("cashOnDelivery")}</li>
-            </ul>
-          </>
-        )}
+        <p>{order.status === "PENDING" ? t("paymentPending") : t("paymentIntro")}</p>
       </div>
 
       <div className={styles.delivery}>
         <h2>{t("deliveryTo")}</h2>
+        <p>{order.fulfillmentMethod === "PICKUP" ? t("fulfillmentPickup") : t("fulfillmentDelivery")}</p>
         <p>{order.deliveryAddress}</p>
         {order.deliveryZone && <p>{order.deliveryZone}</p>}
+        {order.estimatedDeliveryAt && (
+          <p>{t("eta", { date: order.estimatedDeliveryAt.toLocaleDateString("en-MU") })}</p>
+        )}
       </div>
     </div>
   );

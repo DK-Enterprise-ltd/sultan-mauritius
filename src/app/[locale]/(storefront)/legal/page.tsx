@@ -7,7 +7,7 @@ export default function LegalIndexPage() {
     <>
       <h1>Legal & Policies</h1>
       <span className={styles.updated}>
-        Everything about how Sultan Mauritius Ltd handles your data, orders, payments and deliveries.
+        Everything about how Sultan Mauritius (Grignoti Ltd) handles your data, orders, payments and deliveries.
       </span>
       <div className={styles.indexGrid}>
         {LEGAL_PAGES.map((p) => (

@@ -3,84 +3,87 @@ import { LAST_UPDATED } from "@/lib/legal-pages";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — Business | Sultan Mauritius",
-  description: "Bulk orders, credit terms, and wholesale liability for Sultan Mauritius business customers.",
+  title: "B2B Sales Terms | Sultan Mauritius",
+  description: "Business account requirements, pack ordering, payment, and delivery terms for Sultan Mauritius trade customers.",
 };
 
 export default function TermsBusinessPage() {
   return (
     <>
-      <h1>Terms & Conditions — Business Customers</h1>
+      <h1>B2B Sales Terms — Grignoti Ltd</h1>
       <span className={styles.updated}>Last updated: {LAST_UPDATED}</span>
 
       <p>
         These terms apply to restaurants, supermarkets, distributors, and other registered businesses that
-        purchase Sultan water from us for resale or business use, including through our{" "}
-        <a href="/wholesale">wholesale</a> channel. If you are an individual buying for personal use, our{" "}
-        <a href="/legal/terms-consumer">Consumer Terms & Conditions</a> apply instead. Placing a trade order
-        constitutes acceptance of these terms.
+        purchase Sultan water from Grignoti Ltd (trading as Sultan Mauritius) for resale or business use,
+        including through our <a href="/wholesale">wholesale</a> channel. If you are an individual buying for
+        personal use, our <a href="/legal/terms-consumer">Consumer Terms &amp; Conditions</a> apply instead.
+        Confirming a trade order constitutes acceptance of these terms.
       </p>
 
-      <h2>1. Trade accounts</h2>
+      <h2>1. Business registration</h2>
       <p>
-        We may ask for your Business Registration Number, VAT number, and authorised ordering contacts before
-        approving a trade account. We may set a credit limit and review it at our discretion.
+        To purchase under B2B conditions, you must provide a valid Business Registration Number (BRN) and accept
+        these B2B Sales Terms before placing or confirming an order.
       </p>
 
-      <h2>2. Pricing and bulk orders</h2>
+      <h2>2. Pack-based ordering</h2>
       <p>
-        Wholesale pricing is quoted per SKU and volume tier and may be agreed individually per account. Prices
-        exclude delivery unless stated otherwise and are subject to change on notice for future orders; confirmed
-        orders are priced as quoted at confirmation.
+        Products must be purchased according to the pack quantities stated in the relevant product description.
+        You are responsible for reviewing pack sizes before confirming an order. Individual-unit purchases do not
+        qualify for B2B ordering or pricing unless specifically stated otherwise on that product.
       </p>
 
-      <h2>3. Payment terms</h2>
+      <h2>3. Order confirmation</h2>
       <p>
-        Unless we have approved credit terms for your account (standard credit period:{" "}
-        <span className={styles.placeholder}>[NET DAYS — TO CONFIRM]</span>), payment by MCB Juice or bank transfer
-        is due before dispatch. See <a href="/legal/payment-instructions">Payment Instructions</a>. Invoices on
-        approved credit terms are due within the agreed period; overdue balances may accrue interest at{" "}
-        <span className={styles.placeholder}>[RATE — TO CONFIRM]</span> per month and may result in the account
-        being placed on hold.
+        You must confirm the required products/SKUs, flavour, pack size, and quantity before your order is
+        prepared for dispatch. Once an order has been confirmed, we will prepare the goods based on the
+        information you supplied.
       </p>
 
-      <h2>4. Delivery and risk</h2>
+      <h2>4. Payment</h2>
       <p>
-        Bulk and commercial freight terms are set out in our{" "}
-        <a href="/legal/delivery-shipping">Delivery & Shipping Policy</a>. Unless agreed otherwise in writing, risk
-        in the goods passes to you on delivery to, or collection from, the agreed site, and you are responsible for
-        providing suitable access and manpower to receive the delivery.
+        Standard B2B orders are payable on delivery (POD), unless alternative payment or credit terms have been
+        expressly agreed between Grignoti Ltd and your business in writing. There is no general Net 15/Net 30
+        credit period or standard late-payment interest rate; any exceptional credit arrangement is agreed
+        individually and is not a standard term offered on this website. See our{" "}
+        <a href="/legal/payment-instructions">Payment Instructions</a>.
       </p>
 
-      <h2>5. Order cancellation</h2>
+      <h2>5. Delivery</h2>
       <p>
-        Cancellation requests must be made before an order is dispatched or, for made-to-order volumes, before
-        production begins. Orders cancelled after dispatch may be subject to a restocking fee and recovery of
-        freight costs already incurred. Confirmed bulk or custom-volume orders may be marked non-cancellable at the
-        time of confirmation. The consumer cooling-off right described in our{" "}
-        <a href="/legal/cancellation-refund">Cancellation & Refund Policy</a> does not apply to commercial orders
-        placed under these terms.
+        Approved B2B customers receive free delivery within our standard delivery areas, see our{" "}
+        <a href="/legal/delivery-shipping">Delivery &amp; Shipping Policy</a>. Orders are generally delivered
+        within 2–4 business days, depending on order size, location, and delivery scheduling: this is an
+        estimated timeframe, not a guaranteed delivery date. Customers outside the standard delivery areas must
+        arrange collection from a pickup point agreed with us.
+      </p>
+      <p>
+        You should ensure that an authorised person is available to receive and inspect the order at the agreed
+        delivery or pickup time. Where a delivery cannot be completed because no authorised representative is
+        available, a new delivery or collection arrangement may be required.
       </p>
 
-      <h2>6. Inspection and claims</h2>
+      <h2>6. Inspection of goods</h2>
       <p>
-        You must inspect deliveries on receipt and report shortages, damage, or quality issues within{" "}
-        <span className={styles.placeholder}>[X BUSINESS DAYS — TO CONFIRM]</span> of delivery. Claims made after
-        this period may not be accepted, except for defects that could not reasonably have been discovered on
-        inspection.
+        You must inspect the products, SKUs, quantities, and condition of the goods upon receipt. Any shortage,
+        incorrect product, damage, or breakage must be reported to the delivery representative immediately and
+        before accepting the delivery. Damaged goods should be returned at the time of delivery. See our{" "}
+        <a href="/legal/cancellation-refund">Cancellation &amp; Refund Policy</a>.
       </p>
 
-      <h2>7. Liability</h2>
+      <h2>7. Acceptance of delivery</h2>
       <p>
-        Our total liability arising from a business order is limited to the value of that order. We are not liable
-        for indirect or consequential loss, including loss of profit, business, or goodwill, except where the law
-        does not allow such an exclusion.
+        Acceptance of the delivery confirms that you have had an opportunity to inspect the goods and, except for
+        rights that cannot legally be excluded, that the order has been received in the agreed condition and
+        quantity.
       </p>
 
-      <h2>8. Force majeure</h2>
+      <h2>8. Liability</h2>
       <p>
-        Neither party is liable for delay or failure to perform caused by events beyond its reasonable control,
-        including supply disruption, adverse weather, or governmental action.
+        Our total liability arising from a business order is limited to the value of that order. We are not
+        liable for indirect or consequential loss, including loss of profit, business, or goodwill, except where
+        the law does not allow such an exclusion.
       </p>
 
       <h2>9. Confidentiality</h2>
@@ -89,13 +92,7 @@ export default function TermsBusinessPage() {
         disclosed to third parties.
       </p>
 
-      <h2>10. Termination</h2>
-      <p>
-        Either party may close a trade account on reasonable written notice. We may suspend or close an account
-        immediately for non-payment or breach of these terms.
-      </p>
-
-      <h2>11. Governing law</h2>
+      <h2>10. Governing law</h2>
       <p>These terms are governed by the laws of Mauritius and subject to the jurisdiction of its courts.</p>
     </>
   );

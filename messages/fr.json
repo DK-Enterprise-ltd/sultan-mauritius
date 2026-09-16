@@ -122,6 +122,13 @@
     "subtotal": "Sous-total",
     "checkout": "Passer à la commande"
   },
+  "deliveryCheck": {
+    "label": "Vérifiez si nous livrons dans votre zone",
+    "placeholder": "ex. Curepipe",
+    "checkButton": "Vérifier",
+    "available": "Nous livrons à {area}. Les frais de livraison et la commande minimum standards s'appliquent au paiement.",
+    "pickupOnly": "Nous ne livrons pas directement à {area}, mais vous pouvez tout de même commander : nous conviendrons d'un point de retrait avec vous avant de confirmer."
+  },
   "checkout": {
     "title": "Récapitulatif de commande",
     "emptyNotice": "Votre panier est vide. Ajoutez des produits avant de commander.",
@@ -130,30 +137,47 @@
     "email": "E-mail",
     "phone": "Téléphone",
     "companyName": "Nom de l'entreprise (grossiste uniquement)",
+    "brn": "Numéro d'enregistrement d'entreprise (BRN)",
+    "modeB2CLabel": "Particulier / Résidentiel",
+    "modeB2CSummary": "Commande minimum {min} · livraison {fee} · zones standards uniquement",
+    "modeB2BLabel": "Entreprise / B2B",
+    "modeB2BSummary": "BRN requis · commande par pack · livraison gratuite dans les zones standards · paiement à la livraison · les conditions B2B s'appliquent",
     "deliveryAddress": "Adresse de livraison",
-    "deliveryZone": "Zone / région de livraison",
+    "deliveryZone": "Zone de livraison",
+    "deliveryZonePlaceholder": "Sélectionnez votre zone",
+    "outsideAreaOption": "Hors de ces zones — retrait à convenir",
+    "pickupNotice": "Vous êtes en dehors de nos zones de livraison standards. Nous vous contacterons pour convenir d'un point de retrait avant de confirmer votre commande.",
     "orderNotes": "Remarques sur la commande",
     "placeOrder": "Valider la commande",
     "placingOrder": "Validation en cours…",
     "orderSummary": "Résumé de la commande",
+    "deliveryFeeLabel": "Frais de livraison",
+    "free": "Gratuit",
     "total": "Total",
+    "minOrderNotice": "Commande minimum pour la livraison : {amount}.",
+    "belowMinimum": "Ajoutez {amount} pour atteindre le minimum de commande pour la livraison.",
+    "freeDeliveryB2B": "Livraison gratuite pour les comptes professionnels agréés dans nos zones de livraison standards.",
+    "agreeB2BTermsPrefix": "J'ai lu et j'accepte les",
+    "agreeB2BTermsLink": "Conditions de vente B2B",
     "payment": "Paiement",
-    "paymentNote": "Aucun paiement en ligne : règlement par virement bancaire ou en espèces à la livraison.",
-    "bankDetails": "Virement bancaire : Sultan Mauritius Ltd · MCB · Compte 000123456789\nVeuillez indiquer votre numéro de commande en référence."
+    "paymentNote": "Aucun paiement en ligne. Réglez à la livraison ou au retrait, selon les modalités convenues lors de la confirmation de votre commande."
   },
   "order": {
     "orderNumber": "Commande n° {number}",
     "placedTitle": "Commande passée !",
     "thankYou": "Merci, {name}.",
     "subtitle": "Nous avons bien reçu votre commande, en attente de confirmation.",
-    "emailNotice": "Votre commande a bien été enregistrée. Merci de patienter le temps de la confirmation : nous vous enverrons les détails de paiement à {email} une fois la commande confirmée.",
+    "emailNotice": "Votre commande a bien été enregistrée. Merci de patienter le temps de la confirmation : nous vous contacterons à {email} une fois la commande confirmée.",
     "total": "Total",
-    "paymentInstructions": "Instructions de paiement",
-    "paymentPending": "Nous vous les enverrons par e-mail dès que votre commande sera confirmée.",
-    "paymentIntro": "Aucun paiement en ligne n'est requis. Merci de régler par :",
-    "bankTransfer": "Virement bancaire : Sultan Mauritius Ltd · MCB · Compte 000123456789, référence commande n° {number}",
-    "cashOnDelivery": "Espèces à la livraison",
-    "deliveryTo": "Livraison à"
+    "deliveryFee": "Frais de livraison",
+    "free": "Gratuit",
+    "paymentInstructions": "Paiement",
+    "paymentPending": "Aucun paiement en ligne. Réglez à la livraison ou au retrait, selon les modalités convenues à la confirmation de votre commande.",
+    "paymentIntro": "Aucun paiement en ligne. Réglez à la livraison ou au retrait, selon les modalités convenues lors de la confirmation de votre commande.",
+    "deliveryTo": "Livraison à",
+    "fulfillmentDelivery": "Livraison",
+    "fulfillmentPickup": "Retrait — nous convenons d'un point de retrait avec vous avant de confirmer votre commande.",
+    "eta": "Livraison estimée : {date}"
   },
   "about": {
     "heroKicker": "Notre histoire",
@@ -211,7 +235,7 @@
     "tradeHeading": "Professionnels",
     "contactHeading": "Contact",
     "copyright": "© {year} Sultan Mauritius",
-    "paymentNote": "Virement bancaire et espèces à la livraison, aucun paiement en ligne"
+    "paymentNote": "Aucun paiement en ligne : réglez à la livraison ou au retrait"
   },
   "meta": {
     "homeTitle": "Sultan Mauritius : Pure. Élégante. Intemporelle.",

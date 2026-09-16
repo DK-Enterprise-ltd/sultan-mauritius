@@ -161,12 +161,8 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           <View style={styles.headerRow}>
             <View style={styles.brandCol}>
               <SultanLogoMark />
-              <Text style={styles.brandTitle}>Sultan Mauritius Ltd</Text>
-              {/* ponytail: BRN/VAT omitted, not fabricated — Sultan's own
-                  registration numbers aren't in the system yet (see the
-                  same [BRN NUMBER]/[VAT NUMBER] placeholders in
-                  legal/legal-notice/page.tsx). Add both lines back once
-                  real numbers are known. */}
+              <Text style={styles.brandTitle}>Sultan Mauritius</Text>
+              <Text style={styles.addressLine}>Grignoti Ltd · BRN C25226789 · VAT 28451792</Text>
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.invoiceTitle}>VAT Invoice</Text>
@@ -181,9 +177,9 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           {/* Customer / Company & Meta Section */}
           <View style={styles.addressSection}>
             <View style={styles.companyCol}>
-              <Text style={styles.companyName}>Sultan Mauritius Ltd</Text>
-              <Text style={styles.addressLine}>Port Louis</Text>
-              <Text style={styles.addressLine}>Mauritius</Text>
+              <Text style={styles.companyName}>Sultan Mauritius (Grignoti Ltd)</Text>
+              <Text style={styles.addressLine}>95, La Paix Street</Text>
+              <Text style={styles.addressLine}>Port Louis, Mauritius</Text>
               <Text style={styles.addressLine}>+230 5 792 4340</Text>
               <Text style={styles.addressLine}>contact@sultanmauritius.mu</Text>
             </View>
@@ -263,7 +259,7 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           <View style={styles.notesSection}>
             <Text style={styles.notesTitle}>Notes</Text>
             <Text style={styles.notesBody}>
-              {order.notes || "Thanks for your business. Payment via Bank Transfer or MCB Juice."}
+              {order.notes || "Thanks for your business. No online payment: payable on delivery/collection, as agreed."}
             </Text>
           </View>
 
@@ -275,7 +271,7 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           {/* Footer */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              Sultan Mauritius Ltd · Premium Natural Mineral Water
+              Sultan Mauritius (Grignoti Ltd) · Premium Natural Mineral Water
             </Text>
           </View>
         </View>

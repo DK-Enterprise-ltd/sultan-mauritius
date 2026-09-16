@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import type { OrderStatus } from "@prisma/client";
 import { formatMur } from "@/lib/format";
+import { SITE_URL } from "@/lib/seo";
 
 // Lazy: `new Resend(undefined)` throws synchronously at construction, not
 // just on send. Since this whole module is imported by createOrder (via
@@ -63,7 +64,7 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
           </tr>
           <tr>
             <td style="background-color: #f8fafc; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;">
-              <p style="margin: 0 0 4px 0;"><strong>Sultan Mauritius Ltd</strong></p>
+              <p style="margin: 0 0 4px 0;"><strong>Sultan Mauritius</strong>, a brand of Grignoti Ltd</p>
               <p style="margin: 0;">Premium Mineral Water Sourced from Uludağ</p>
             </td>
           </tr>
@@ -76,43 +77,19 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
   `.trim();
 }
 
+// ponytail: only 2 customer emails in the real flow (received, fulfilled).
+// CANCELLED stays as the one exception worth a notice; CONFIRMED (admin
+// approves + sets an ETA) is silent by design — no online payment, so
+// there's no payment-details email to send at that step.
 const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNumber: number) => string; htmlBody?: (orderNumber: number) => string }>> = {
   PENDING: {
     subject: "We've received your order",
     body: (n) =>
       `We've received order #${n} and it's awaiting confirmation.\n\n` +
-      `Please await confirmation, after which we'll email you the payment details.`,
+      `No online payment is taken: pay on delivery or collection, as agreed once your order is confirmed.`,
     htmlBody: (n) =>
       `<p>We've received order <strong>#${n}</strong> and it is currently awaiting confirmation.</p>` +
-      `<p>Please await confirmation, after which we will email you the payment details.</p>`,
-  },
-  CONFIRMED: {
-    subject: "Your order is confirmed: payment details",
-    body: (n) =>
-      `We've confirmed order #${n} and are getting it ready.\n\n` +
-      `To complete your purchase, please pay by bank transfer or MCB Juice, using order #${n} as your payment reference:\n` +
-      `- Bank transfer: Sultan Mauritius Ltd, MCB, Account 000123456789\n` +
-      `- MCB Juice: see the Payment Instructions page on our website for the merchant number and steps\n` +
-      `- Cash on delivery may also be available in your area`,
-    htmlBody: (n) =>
-      `<p>We've confirmed order <strong>#${n}</strong> and are getting it ready for fulfillment.</p>` +
-      `<div style="background-color: #f1f5f9; padding: 16px; border-radius: 6px; margin: 16px 0;">` +
-      `<p style="margin-top: 0; font-weight: 600;">Payment Instructions (Reference: Order #${n}):</p>` +
-      `<ul style="margin-bottom: 0; padding-left: 20px;">` +
-      `<li><strong>Bank Transfer:</strong> Sultan Mauritius Ltd, MCB, Account 000123456789</li>` +
-      `<li><strong>MCB Juice:</strong> Check Payment Instructions on our site for merchant details</li>` +
-      `<li>Cash on delivery may also be available in your area</li>` +
-      `</ul></div>`,
-  },
-  PAID: {
-    subject: "Payment received",
-    body: (n) => `We've received payment for order #${n}. It's now being prepared for delivery.`,
-    htmlBody: (n) => `<p>We've received payment for order <strong>#${n}</strong>. It is now being prepared for delivery.</p>`,
-  },
-  OUT_FOR_DELIVERY: {
-    subject: "Your order is out for delivery",
-    body: (n) => `Order #${n} is on its way to you.`,
-    htmlBody: (n) => `<p>Order <strong>#${n}</strong> is on its way to you.</p>`,
+      `<p>No online payment is taken: pay on delivery or collection, as agreed once your order is confirmed.</p>`,
   },
   FULFILLED: {
     subject: "Your order has been delivered",
@@ -183,6 +160,45 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailPayload): Promise<vo
       },
     ],
   });
+}
+
+const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || "hello@sultan.mu";
+
+type NewOrderNotification = {
+  orderNumber: number;
+  orderId: string;
+  total: Parameters<typeof formatMur>[0];
+  customer: { name: string; email: string };
+};
+
+/** Tells the admin a new order needs review — the other half of "pending":
+ * the customer gets the PENDING receipt above, the admin gets this so they
+ * know to go confirm it and set an ETA. Best-effort, like
+ * sendOrderStatusEmail: a failed send should never block checkout. */
+export async function sendNewOrderAdminNotification(order: NewOrderNotification) {
+  if (!process.env.RESEND_API_KEY) return; // sendOrderStatusEmail already warns once
+
+  const orderUrl = `${SITE_URL}/admin/orders/${order.orderId}`;
+  const htmlContent = wrapHtmlEmail(
+    `New order #${order.orderNumber}`,
+    `<h2 style="margin-top: 0; color: #1b2a4a; font-size: 18px;">New order #${order.orderNumber}</h2>` +
+      `<p>${order.customer.name} (${order.customer.email}) just placed an order for ${formatMur(order.total)}.</p>` +
+      `<p><a href="${orderUrl}">Review it in the admin panel</a> to confirm and set a delivery ETA.</p>`
+  );
+
+  try {
+    await getResend().emails.send({
+      from: FROM,
+      to: ADMIN_NOTIFICATION_EMAIL,
+      subject: `New order #${order.orderNumber} — ${formatMur(order.total)}`,
+      text:
+        `${order.customer.name} (${order.customer.email}) just placed order #${order.orderNumber} ` +
+        `for ${formatMur(order.total)}.\n\nReview it: ${orderUrl}`,
+      html: htmlContent,
+    });
+  } catch (error) {
+    console.error(`Failed to send new-order admin notification for order #${order.orderNumber}:`, error);
+  }
 }
 
 // Best-effort: a failed send should never roll back an admin's status
