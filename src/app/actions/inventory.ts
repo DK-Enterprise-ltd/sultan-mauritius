@@ -236,11 +236,21 @@ export async function deleteProduct(productId: string) {
   try {
     await prisma.product.delete({ where: { id: productId } });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
-      return {
-        ok: false as const,
-        error: "This product has order or stock history and can't be deleted. Deactivate it instead.",
-      };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2003") {
+        return {
+          ok: false as const,
+          error: "This product has order or stock history and can't be deleted. Deactivate it instead.",
+        };
+      }
+      // Already deleted (e.g. a double-click, or a second tab that deleted
+      // it first) — treat as success rather than surfacing a crash for a
+      // row that's gone either way.
+      if (error.code === "P2025") {
+        revalidatePath("/admin/inventory");
+        revalidatePath("/admin");
+        return { ok: true as const };
+      }
     }
     throw error;
   }

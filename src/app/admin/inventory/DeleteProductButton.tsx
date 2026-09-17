@@ -21,11 +21,15 @@ export default function DeleteProductButton({ productId, productName }: { produc
           if (!confirm(`Delete "${productName}"? This can't be undone.`)) return;
           setError(null);
           startTransition(async () => {
-            const result = await deleteProduct(productId);
-            if (result.ok) {
-              router.push("/admin/inventory");
-            } else {
-              setError(result.error);
+            try {
+              const result = await deleteProduct(productId);
+              if (result.ok) {
+                router.push("/admin/inventory");
+              } else {
+                setError(result.error);
+              }
+            } catch {
+              setError("Something went wrong deleting this product. Try again.");
             }
           });
         }}
