@@ -172,9 +172,6 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
   }
 
   revalidateTag("products");
-  // New order affects the sidebar's pending-orders badge immediately, not
-  // just after its 30s soft-refresh.
-  revalidateTag("admin-sidebar-counts");
 
   await sendOrderStatusEmail({
     orderNumber: order.orderNumber,
@@ -207,10 +204,6 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus, es
   });
   revalidatePath("/admin/orders");
   revalidatePath("/admin");
-  // revalidatePath doesn't reach the sidebar counts: they're cached via
-  // unstable_cache (a separate cache from the route cache revalidatePath
-  // invalidates), so it needs its own matching tag.
-  revalidateTag("admin-sidebar-counts");
 
   await sendOrderStatusEmail(order);
   return { ok: true as const };

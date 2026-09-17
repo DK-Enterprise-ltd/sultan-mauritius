@@ -11,7 +11,7 @@
   "home": {
     "heroKicker": "Pure. Élégante. Intemporelle.",
     "heroTitle": "Une hydratation raffinée, en bouteille pour votre quotidien.",
-    "heroSubtitle": "Eau minérale gazeuse aromatisée en verre, et eau de source plate pour chaque jour, puisée à Uludağ, en Turquie, et sur les tables mauriciennes depuis 2021.",
+    "heroSubtitle": "Eau minérale gazeuse aromatisée en verre, et eau de source plate pour chaque jour, puisée en Turquie, et sur les tables mauriciennes depuis 2021.",
     "ctaShop": "Découvrir la gamme",
     "ctaWholesale": "Demande grossiste",
     "sparklingTitle": "Gazeuse, avec du caractère",
@@ -120,7 +120,8 @@
     "browse": "Voir les produits",
     "remove": "Retirer",
     "subtotal": "Sous-total",
-    "checkout": "Passer à la commande"
+    "checkout": "Passer à la commande",
+    "belowMinimum": "Ajoutez {amount} pour atteindre le minimum de commande pour la livraison."
   },
   "deliveryCheck": {
     "label": "Vérifiez si nous livrons dans votre zone",

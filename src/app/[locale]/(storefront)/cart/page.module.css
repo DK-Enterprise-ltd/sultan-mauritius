@@ -110,6 +110,15 @@
   color: var(--ink);
 }
 
+.notice {
+  color: var(--sultan-navy);
+  background: var(--wash-still);
+  border-radius: var(--radius-card-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
 .empty {
   padding: 6rem 2rem;
   text-align: center;

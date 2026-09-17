@@ -9,7 +9,6 @@ type NavItem = {
   href: string;
   label: string;
   icon: typeof LayoutDashboard;
-  badge?: number;
 };
 
 type NavGroup = {
@@ -22,31 +21,23 @@ function isActive(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
-export default function AdminNav({
-  pendingOrders,
-  lowStockCount,
-  unhandledInquiries,
-}: {
-  pendingOrders: number;
-  lowStockCount: number;
-  unhandledInquiries?: number;
-}) {
-  const pathname = usePathname();
+const groups: NavGroup[] = [
+  { label: "Overview", items: [{ href: "/admin", label: "Dashboard", icon: LayoutDashboard }] },
+  {
+    label: "Commerce",
+    items: [
+      { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+      { href: "/admin/inventory", label: "Inventory", icon: Package },
+      { href: "/admin/customers", label: "Customers", icon: Users },
+      { href: "/admin/invoices", label: "Invoices", icon: FileText },
+      { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },
+    ],
+  },
+  { label: "Account", items: [{ href: "/admin/settings", label: "Settings", icon: Settings }] },
+];
 
-  const groups: NavGroup[] = [
-    { label: "Overview", items: [{ href: "/admin", label: "Dashboard", icon: LayoutDashboard }] },
-    {
-      label: "Commerce",
-      items: [
-        { href: "/admin/orders", label: "Orders", icon: ShoppingCart, badge: pendingOrders || undefined },
-        { href: "/admin/inventory", label: "Inventory", icon: Package, badge: lowStockCount || undefined },
-        { href: "/admin/customers", label: "Customers", icon: Users },
-        { href: "/admin/invoices", label: "Invoices", icon: FileText },
-        { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare, badge: unhandledInquiries || undefined },
-      ],
-    },
-    { label: "Account", items: [{ href: "/admin/settings", label: "Settings", icon: Settings }] },
-  ];
+export default function AdminNav() {
+  const pathname = usePathname();
 
   return (
     <nav className={styles.nav}>
@@ -65,7 +56,6 @@ export default function AdminNav({
               >
                 <Icon size={17} className={styles.navIcon} aria-hidden />
                 <span className={styles.navLabel}>{item.label}</span>
-                {!!item.badge && <span className={styles.navBadge}>{item.badge}</span>}
               </Link>
             );
           })}

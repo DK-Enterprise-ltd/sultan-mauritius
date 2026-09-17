@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { Search, Bell } from "lucide-react";
+import { Search } from "lucide-react";
 import { searchAdmin } from "@/app/actions/admin-search";
 import styles from "./layout.module.css";
 
-export default function AdminTopbar({ alertCount }: { alertCount: number }) {
+export default function AdminTopbar() {
   return (
     <header className={styles.topbar}>
       <form action={searchAdmin} className={styles.searchForm}>
@@ -15,10 +14,6 @@ export default function AdminTopbar({ alertCount }: { alertCount: number }) {
           className={styles.searchInput}
         />
       </form>
-      <Link href="/admin" className={styles.bellLink} aria-label={`${alertCount} open alerts`}>
-        <Bell size={18} />
-        {alertCount > 0 && <span className={styles.bellBadge}>{alertCount}</span>}
-      </Link>
     </header>
   );
 }

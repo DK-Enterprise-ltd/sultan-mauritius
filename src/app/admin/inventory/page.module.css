@@ -1,3 +1,27 @@
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.headerRow h1 {
+  margin-bottom: 0;
+}
+
+.addButton {
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  background: var(--sultan-teal);
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.addButton:hover {
+  background: #158294;
+}
+
 .lowRow {
   background: #fff7ed;
 }

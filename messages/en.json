@@ -11,7 +11,7 @@
   "home": {
     "heroKicker": "Pure. Elegant. Timeless.",
     "heroTitle": "Refined hydration, bottled for everyday royalty.",
-    "heroSubtitle": "Sparkling flavoured mineral water in glass, and still spring water for every day, sourced from Uludağ, Turkey, and on Mauritian tables since 2021.",
+    "heroSubtitle": "Sparkling flavoured mineral water in glass, and still spring water for every day, sourced from Turkey, and on Mauritian tables since 2021.",
     "ctaShop": "Shop the range",
     "ctaWholesale": "Wholesale enquiries",
     "sparklingTitle": "Sparkling, with real character",
@@ -120,7 +120,8 @@
     "browse": "Browse products",
     "remove": "Remove",
     "subtotal": "Subtotal",
-    "checkout": "Proceed to checkout"
+    "checkout": "Proceed to checkout",
+    "belowMinimum": "Add {amount} more to reach the minimum order for delivery."
   },
   "deliveryCheck": {
     "label": "Check if we deliver to your area",

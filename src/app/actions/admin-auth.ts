@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_SECONDS,
@@ -50,6 +51,12 @@ export async function logoutAdmin() {
   // browser, and it needs clearing too.
   cookies().delete({ name: ADMIN_SESSION_COOKIE, path: "/" });
   cookies().delete({ name: ADMIN_SESSION_COOKIE, path: "/admin" });
+  // Unlike every other admin action, nothing here writes to a page the
+  // client would already have route-cached — except /admin itself, which
+  // was just viewed as the authenticated dashboard. Without busting that,
+  // the redirect below can serve the stale cached dashboard instead of the
+  // login form.
+  revalidatePath("/admin", "layout");
   redirect("/admin");
 }
 

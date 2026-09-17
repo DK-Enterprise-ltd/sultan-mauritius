@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useCart } from "@/lib/cart-context";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor } from "@/lib/catalog-i18n";
+import { MIN_B2C_ORDER_MUR } from "@/lib/delivery";
 import type { Locale } from "@/i18n/routing";
 import Button from "@/components/Button/Button";
 import DeliveryAreaCheck from "@/components/DeliveryAreaCheck/DeliveryAreaCheck";
@@ -14,6 +16,14 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal } = useCart();
   const t = useTranslations("cart");
   const locale = useLocale() as Locale;
+  // ponytail: same devtools-cookie B2B stub used at checkout (src/lib/auth.ts's
+  // getViewer()) — just enough to preview the B2C minimum here; createOrder
+  // still re-checks it server-side.
+  const [isB2B, setIsB2B] = useState(false);
+  useEffect(() => {
+    setIsB2B(document.cookie.includes("sultan_b2b=1"));
+  }, []);
+  const belowMinimum = !isB2B && subtotal < MIN_B2C_ORDER_MUR;
 
   if (items.length === 0) {
     return (
@@ -71,9 +81,21 @@ export default function CartPage() {
 
       <DeliveryAreaCheck />
 
-      <Link href="/checkout">
-        <Button variant="primary">{t("checkout")}</Button>
-      </Link>
+      {belowMinimum && (
+        <p className={styles.notice}>
+          {t("belowMinimum", { amount: formatMur(MIN_B2C_ORDER_MUR - subtotal) })}
+        </p>
+      )}
+
+      {belowMinimum ? (
+        <Button variant="primary" disabled>
+          {t("checkout")}
+        </Button>
+      ) : (
+        <Link href="/checkout">
+          <Button variant="primary">{t("checkout")}</Button>
+        </Link>
+      )}
     </div>
   );
 }

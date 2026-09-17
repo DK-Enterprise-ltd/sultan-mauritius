@@ -1,0 +1,57 @@
+.toolbar {
+  margin-bottom: 1.25rem;
+}
+
+.back {
+  color: var(--neutral-600);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.back:hover {
+  color: var(--neutral-900);
+}
+
+.form {
+  max-width: 480px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--neutral-600);
+  margin-bottom: 1rem;
+}
+
+.field input,
+.field select {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  color: var(--neutral-900);
+}
+
+.error {
+  color: #b45309;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.submit {
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--sultan-teal);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: #158294;
+}
