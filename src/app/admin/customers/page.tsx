@@ -3,6 +3,8 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
+import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
+import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
 import ownStyles from "./page.module.css";
 
@@ -11,12 +13,13 @@ export const dynamic = "force-dynamic";
 export default async function AdminCustomersPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: { q?: string; page?: string };
 }) {
   if (!isAdmin()) return null;
 
   const q = searchParams.q?.trim();
-  const customers = await prisma.customer.findMany({
+  const page = parsePage(searchParams.page);
+  const customerRows = await prisma.customer.findMany({
     where: q
       ? {
           OR: [
@@ -27,8 +30,26 @@ export default async function AdminCustomersPage({
         }
       : undefined,
     orderBy: { createdAt: "desc" },
-    include: { orders: { select: { total: true, status: true } } },
+    skip: (page - 1) * ADMIN_PAGE_SIZE,
+    take: ADMIN_PAGE_SIZE + 1,
   });
+  const { rows: customers, hasNextPage } = paginateRows(customerRows);
+
+  const customerIds = customers.map((c) => c.id);
+  const [orderCounts, spendSums] = await Promise.all([
+    prisma.order.groupBy({
+      by: ["customerId"],
+      where: { customerId: { in: customerIds } },
+      _count: { _all: true },
+    }),
+    prisma.order.groupBy({
+      by: ["customerId"],
+      where: { customerId: { in: customerIds }, status: { not: "CANCELLED" } },
+      _sum: { total: true },
+    }),
+  ]);
+  const orderCountByCustomer = new Map(orderCounts.map((o) => [o.customerId, o._count._all]));
+  const spendByCustomer = new Map(spendSums.map((o) => [o.customerId, o._sum.total ?? new Prisma.Decimal(0)]));
 
   return (
     <div>
@@ -62,9 +83,8 @@ export default async function AdminCustomersPage({
           </thead>
           <tbody>
             {customers.map((c) => {
-              const lifetimeSpend = c.orders
-                .filter((o) => o.status !== "CANCELLED")
-                .reduce((sum, o) => sum.plus(o.total), new Prisma.Decimal(0));
+              const orderCount = orderCountByCustomer.get(c.id) ?? 0;
+              const lifetimeSpend = spendByCustomer.get(c.id) ?? new Prisma.Decimal(0);
               return (
                 <tr key={c.id}>
                   <td>{c.name}</td>
@@ -82,7 +102,7 @@ export default async function AdminCustomersPage({
                   <td>{c.phone}</td>
                   <td>
                     <Link href={`/admin/orders?customerId=${c.id}`} className={styles.rowLink}>
-                      {c.orders.length}
+                      {orderCount}
                     </Link>
                   </td>
                   <td>{formatMur(lifetimeSpend)}</td>
@@ -98,6 +118,7 @@ export default async function AdminCustomersPage({
             )}
           </tbody>
         </table>
+        <PaginationControls page={page} hasNextPage={hasNextPage} searchParams={searchParams} />
       </div>
     </div>
   );

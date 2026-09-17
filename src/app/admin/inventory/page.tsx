@@ -3,6 +3,8 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
+import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
+import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
 import rowStyles from "./page.module.css";
 import StockAdjuster from "./StockAdjuster";
@@ -10,14 +12,29 @@ import ProductStatusToggle from "./ProductStatusToggle";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminInventoryPage() {
+export default async function AdminInventoryPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   if (!isAdmin()) return null;
 
-  const products = await prisma.product.findMany({ orderBy: { name: "asc" } });
+  const page = parsePage(searchParams.page);
+  const productRows = await prisma.product.findMany({
+    orderBy: { name: "asc" },
+    skip: (page - 1) * ADMIN_PAGE_SIZE,
+    take: ADMIN_PAGE_SIZE + 1,
+  });
+  const { rows: products, hasNextPage } = paginateRows(productRows);
 
   return (
     <div>
-      <h1 className={styles.title}>Inventory</h1>
+      <div className={rowStyles.headerRow}>
+        <h1 className={styles.title}>Inventory</h1>
+        <Link href="/admin/inventory/new" className={rowStyles.addButton}>
+          + Add product
+        </Link>
+      </div>
 
       <div className={styles.section}>
         <table className={styles.table}>
@@ -82,6 +99,7 @@ export default async function AdminInventoryPage() {
             )}
           </tbody>
         </table>
+        <PaginationControls page={page} hasNextPage={hasNextPage} searchParams={searchParams} />
       </div>
     </div>
   );

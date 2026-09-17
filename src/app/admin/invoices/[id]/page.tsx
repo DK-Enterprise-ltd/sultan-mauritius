@@ -5,6 +5,7 @@ import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
 import InvoiceEditForm from "./InvoiceEditForm";
 import SendInvoiceButton from "./SendInvoiceButton";
+import PdfPreview from "./PdfPreview";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -49,11 +50,7 @@ export default async function AdminInvoiceDetailPage({ params }: { params: { id:
       </div>
 
       <div className={styles.pdfPreviewCard}>
-        <iframe
-          src={`/api/admin/invoices/${invoice.id}/pdf`}
-          title={`Invoice #${invoice.invoiceNumber} PDF`}
-          className={styles.pdfFrame}
-        />
+        <PdfPreview invoiceId={invoice.id} invoiceNumber={invoice.invoiceNumber} />
       </div>
 
       <div className={styles.adminPanel}>

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
+import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
+import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
 import filterStyles from "./page.module.css";
 import StatusSelect from "./StatusSelect";
@@ -13,7 +15,7 @@ const STATUSES = ["PENDING", "CONFIRMED", "FULFILLED", "CANCELLED"] as const;
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: { status?: string; customerId?: string };
+  searchParams: { status?: string; customerId?: string; page?: string };
 }) {
   if (!isAdmin()) return null;
 
@@ -21,12 +23,16 @@ export default async function AdminOrdersPage({
     ? (searchParams.status as (typeof STATUSES)[number])
     : undefined;
   const customerId = searchParams.customerId;
+  const page = parsePage(searchParams.page);
 
-  const orders = await prisma.order.findMany({
+  const orderRows = await prisma.order.findMany({
     where: { ...(status ? { status } : {}), ...(customerId ? { customerId } : {}) },
     orderBy: { createdAt: "desc" },
     include: { customer: true, invoice: true },
+    skip: (page - 1) * ADMIN_PAGE_SIZE,
+    take: ADMIN_PAGE_SIZE + 1,
   });
+  const { rows: orders, hasNextPage } = paginateRows(orderRows);
   const filteredCustomerName = customerId ? orders[0]?.customer.name : undefined;
 
   return (
@@ -104,6 +110,7 @@ export default async function AdminOrdersPage({
             )}
           </tbody>
         </table>
+        <PaginationControls page={page} hasNextPage={hasNextPage} searchParams={searchParams} />
       </div>
     </div>
   );

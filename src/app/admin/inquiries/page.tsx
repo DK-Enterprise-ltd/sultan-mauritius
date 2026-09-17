@@ -3,6 +3,8 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
 import InquiryActions from "./InquiryActions";
+import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
+import PaginationControls from "../PaginationControls";
 import pageStyles from "../page.module.css";
 import styles from "./page.module.css";
 
@@ -11,12 +13,13 @@ export const dynamic = "force-dynamic";
 export default async function AdminInquiriesPage({
   searchParams,
 }: {
-  searchParams: { filter?: string; q?: string };
+  searchParams: { filter?: string; q?: string; page?: string };
 }) {
   if (!isAdmin()) return null;
 
   const filter = searchParams.filter;
   const q = searchParams.q?.trim();
+  const page = parsePage(searchParams.page);
 
   const whereClause: Prisma.ContactInquiryWhereInput = {};
   if (filter === "unhandled") {
@@ -34,10 +37,13 @@ export default async function AdminInquiriesPage({
     ];
   }
 
-  const inquiries = await prisma.contactInquiry.findMany({
+  const inquiryRows = await prisma.contactInquiry.findMany({
     where: whereClause,
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * ADMIN_PAGE_SIZE,
+    take: ADMIN_PAGE_SIZE + 1,
   });
+  const { rows: inquiries, hasNextPage } = paginateRows(inquiryRows);
 
   return (
     <div className={styles.container}>
@@ -140,6 +146,7 @@ export default async function AdminInquiriesPage({
             )}
           </tbody>
         </table>
+        <PaginationControls page={page} hasNextPage={hasNextPage} searchParams={searchParams} />
       </div>
     </div>
   );

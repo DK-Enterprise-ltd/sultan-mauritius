@@ -105,6 +105,34 @@ a.quickLink:hover {
   text-decoration: underline;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pageLink {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--neutral-200);
+  background: white;
+  color: var(--neutral-600);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.pageLinkDisabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.pageNumber {
+  font-size: 0.85rem;
+  color: var(--neutral-500);
+  font-weight: 600;
+}
+
 .alertList {
   list-style: disc;
   padding-left: 1.25rem;

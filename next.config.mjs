@@ -17,6 +17,14 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  images: {
+    // Admin-uploaded product photos live in Vercel Blob, not /public.
+    // Product.imageUrl (Sanity CDN) is the other remote source next/image renders (see admin/inventory).
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      { protocol: "https", hostname: "cdn.sanity.io" },
+    ],
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

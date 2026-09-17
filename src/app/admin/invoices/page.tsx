@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
 import Badge from "@/components/Badge/Badge";
+import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
+import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
 import filterStyles from "../orders/page.module.css";
 
@@ -13,19 +15,23 @@ const STATUSES = ["DRAFT", "ISSUED", "PAID"] as const;
 export default async function AdminInvoicesPage({
   searchParams,
 }: {
-  searchParams: { status?: string };
+  searchParams: { status?: string; page?: string };
 }) {
   if (!isAdmin()) return null;
 
   const status = STATUSES.includes(searchParams.status as (typeof STATUSES)[number])
     ? (searchParams.status as (typeof STATUSES)[number])
     : undefined;
+  const page = parsePage(searchParams.page);
 
-  const invoices = await prisma.invoice.findMany({
+  const invoiceRows = await prisma.invoice.findMany({
     where: status ? { status } : undefined,
     orderBy: { createdAt: "desc" },
     include: { order: { include: { customer: true } } },
+    skip: (page - 1) * ADMIN_PAGE_SIZE,
+    take: ADMIN_PAGE_SIZE + 1,
   });
+  const { rows: invoices, hasNextPage } = paginateRows(invoiceRows);
 
   return (
     <div>
@@ -100,6 +106,7 @@ export default async function AdminInvoicesPage({
             )}
           </tbody>
         </table>
+        <PaginationControls page={page} hasNextPage={hasNextPage} searchParams={searchParams} />
       </div>
     </div>
   );
