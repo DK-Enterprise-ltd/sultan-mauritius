@@ -72,11 +72,21 @@ export async function createProduct(formData: FormData) {
   if (!Number.isInteger(lowStockThreshold) || lowStockThreshold < 0) return fail("Low stock threshold must be a whole number.");
   if (image instanceof File && image.size > MAX_IMAGE_BYTES) return fail("Image must be under 5MB.");
 
+  let wholesalePrice: number | null = null;
+  if (wholesalePriceRaw) {
+    wholesalePrice = Number(wholesalePriceRaw);
+    if (!Number.isFinite(wholesalePrice) || wholesalePrice <= 0) return fail("Wholesale price must be a positive number.");
+  }
+
   let imageUrl: string | null = null;
   if (image instanceof File && image.size > 0) {
     if (!image.type.startsWith("image/")) return fail("Image file must be a photo (JPEG/PNG/WebP).");
-    const blob = await put(`products/${sku}-${Date.now()}`, image, { access: "public" });
-    imageUrl = blob.url;
+    try {
+      const blob = await put(`products/${sku}-${Date.now()}`, image, { access: "public" });
+      imageUrl = blob.url;
+    } catch {
+      return fail("Image upload failed. Try again, or add the photo later from the product page.");
+    }
   }
 
   try {
@@ -89,7 +99,7 @@ export async function createProduct(formData: FormData) {
         sizeMl,
         packCount,
         retailPrice: new Prisma.Decimal(retailPrice),
-        wholesalePrice: wholesalePriceRaw ? new Prisma.Decimal(Number(wholesalePriceRaw)) : null,
+        wholesalePrice: wholesalePrice !== null ? new Prisma.Decimal(wholesalePrice) : null,
         stockQuantity,
         lowStockThreshold,
         imageUrl,
@@ -104,6 +114,97 @@ export async function createProduct(formData: FormData) {
     }
     throw error;
   }
+}
+
+/** Admin-only: updates every editable field of an existing product,
+ * including replacing or removing either photo. A new "image"/"image2" file
+ * upload replaces the existing photo; the "removeImage"/"removeImage2"
+ * checkboxes clear a photo without replacing it. Same fail()-via-redirect
+ * pattern as createProduct, back to the edit form. */
+export async function updateProduct(productId: string, formData: FormData) {
+  if (!isAdmin()) redirect("/admin");
+
+  const sku = cleanStr(String(formData.get("sku") ?? ""), 40);
+  const name = cleanStr(String(formData.get("name") ?? ""), 120);
+  const type = String(formData.get("type") ?? "");
+  const flavor = cleanStr(String(formData.get("flavor") ?? ""), 60) || null;
+  const sizeMl = Number(formData.get("sizeMl"));
+  const packCount = Number(formData.get("packCount") || 1);
+  const retailPrice = Number(formData.get("retailPrice"));
+  const wholesalePriceRaw = String(formData.get("wholesalePrice") ?? "").trim();
+  const lowStockThreshold = Number(formData.get("lowStockThreshold") || 20);
+  const image = formData.get("image");
+  const image2 = formData.get("image2");
+  const removeImage = formData.get("removeImage") === "on";
+  const removeImage2 = formData.get("removeImage2") === "on";
+
+  const fail = (error: string) =>
+    redirect(`/admin/inventory/${productId}/edit?error=${encodeURIComponent(error)}`);
+
+  if (!sku || !name) return fail("SKU and name are required.");
+  if (!Object.values(ProductType).includes(type as ProductType)) return fail("Choose a product type.");
+  if (!Number.isInteger(sizeMl) || sizeMl <= 0) return fail("Size (ml) must be a positive whole number.");
+  if (!Number.isInteger(packCount) || packCount <= 0) return fail("Pack count must be a positive whole number.");
+  if (!Number.isFinite(retailPrice) || retailPrice <= 0) return fail("Retail price must be a positive number.");
+  if (!Number.isInteger(lowStockThreshold) || lowStockThreshold < 0) return fail("Low stock threshold must be a whole number.");
+  if (image instanceof File && image.size > MAX_IMAGE_BYTES) return fail("Image must be under 5MB.");
+  if (image2 instanceof File && image2.size > MAX_IMAGE_BYTES) return fail("Second image must be under 5MB.");
+  if (image instanceof File && image.size > 0 && !image.type.startsWith("image/")) {
+    return fail("Image file must be a photo (JPEG/PNG/WebP).");
+  }
+  if (image2 instanceof File && image2.size > 0 && !image2.type.startsWith("image/")) {
+    return fail("Second image file must be a photo (JPEG/PNG/WebP).");
+  }
+
+  let wholesalePrice: number | null = null;
+  if (wholesalePriceRaw) {
+    wholesalePrice = Number(wholesalePriceRaw);
+    if (!Number.isFinite(wholesalePrice) || wholesalePrice <= 0) return fail("Wholesale price must be a positive number.");
+  }
+
+  const data: Prisma.ProductUpdateInput = {
+    sku,
+    name,
+    type: type as ProductType,
+    flavor,
+    sizeMl,
+    packCount,
+    retailPrice: new Prisma.Decimal(retailPrice),
+    wholesalePrice: wholesalePrice !== null ? new Prisma.Decimal(wholesalePrice) : null,
+    lowStockThreshold,
+  };
+
+  try {
+    if (image instanceof File && image.size > 0) {
+      const blob = await put(`products/${sku}-${Date.now()}`, image, { access: "public" });
+      data.imageUrl = blob.url;
+    } else if (removeImage) {
+      data.imageUrl = null;
+    }
+
+    if (image2 instanceof File && image2.size > 0) {
+      const blob2 = await put(`products/${sku}-2-${Date.now()}`, image2, { access: "public" });
+      data.imageUrl2 = blob2.url;
+    } else if (removeImage2) {
+      data.imageUrl2 = null;
+    }
+  } catch {
+    return fail("Image upload failed. Try again.");
+  }
+
+  try {
+    await prisma.product.update({ where: { id: productId }, data });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return fail("A product with that SKU already exists.");
+    }
+    throw error;
+  }
+
+  revalidatePath("/admin/inventory");
+  revalidatePath(`/admin/inventory/${productId}`);
+  revalidatePath("/admin");
+  redirect(`/admin/inventory/${productId}`);
 }
 
 /** Admin-only: activates or deactivates a product (hides/shows it from the

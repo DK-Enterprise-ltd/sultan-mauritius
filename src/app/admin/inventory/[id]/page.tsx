@@ -53,6 +53,9 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
         <div>
           <div className={styles.headerRow}>
             <h1 className={pageStyles.title}>{product.name}</h1>
+            <Link href={`/admin/inventory/${product.id}/edit`} className={styles.editLink}>
+              Edit product
+            </Link>
           </div>
           <p className={styles.sku}>
             {product.sku} {product.flavor ? `· ${product.flavor}` : ""}
