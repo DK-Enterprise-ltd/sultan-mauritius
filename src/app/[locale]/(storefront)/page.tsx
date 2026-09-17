@@ -64,7 +64,6 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   const tDetail = await getTranslations("productDetail");
   const tWholesale = await getTranslations("wholesale");
-  const tNav = await getTranslations("nav");
   const locale = await getLocale();
   const isFr = locale === "fr";
   const [content, wholesaleContent] = await Promise.all([getSiteContent("home"), getSiteContent("wholesale")]);
@@ -331,11 +330,6 @@ export default async function HomePage() {
               <Link href="/wholesale">
                 <Button variant="secondary" className={styles.wholesaleBannerPrimary}>
                   {c("ctaWholesale")}
-                </Button>
-              </Link>
-              <Link href="/stockists">
-                <Button variant="outline" className={styles.wholesaleBannerOutline}>
-                  {tNav("stockists")}
                 </Button>
               </Link>
             </div>

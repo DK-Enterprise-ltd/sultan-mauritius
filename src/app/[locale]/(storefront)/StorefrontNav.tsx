@@ -47,7 +47,6 @@ export default function StorefrontNav() {
     <>
       <Link href="/products" onClick={() => setMenuOpen(false)}>{t("shop")}</Link>
       <Link href="/about" onClick={() => setMenuOpen(false)}>{t("about")}</Link>
-      <Link href="/stockists" onClick={() => setMenuOpen(false)}>{t("stockists")}</Link>
       <Link href="/wholesale" onClick={() => setMenuOpen(false)}>{t("wholesale")}</Link>
       <Link href="/contact" onClick={() => setMenuOpen(false)}>{t("contact")}</Link>
     </>

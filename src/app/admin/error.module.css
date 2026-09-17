@@ -1,0 +1,28 @@
+.message {
+  color: var(--neutral-600);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  white-space: pre-wrap;
+}
+
+.digest {
+  color: var(--neutral-500);
+  font-size: 0.78rem;
+  font-family: monospace;
+  margin-bottom: 1.25rem;
+}
+
+.retryButton {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--sultan-teal);
+  background: var(--sultan-teal);
+  color: white;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  opacity: 0.85;
+}
