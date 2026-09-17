@@ -121,3 +121,30 @@ export async function setProductActive(productId: string, isActive: boolean) {
   revalidatePath("/admin");
   return { ok: true as const };
 }
+
+/** Admin-only: permanently deletes a product. OrderItem/StockMovement both
+ * reference Product without onDelete: Cascade on purpose (see
+ * schema.prisma) so past orders/invoices/stock history stay intact — that
+ * makes this a hard block (Prisma P2003) for any product that has ever been
+ * ordered or had stock movements, not just a risk to warn about. Deactivate
+ * (setProductActive) is the correct way to retire a product that has
+ * history; this is only for a product that was never actually used. */
+export async function deleteProduct(productId: string) {
+  if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
+
+  try {
+    await prisma.product.delete({ where: { id: productId } });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
+      return {
+        ok: false as const,
+        error: "This product has order or stock history and can't be deleted. Deactivate it instead.",
+      };
+    }
+    throw error;
+  }
+
+  revalidatePath("/admin/inventory");
+  revalidatePath("/admin");
+  return { ok: true as const };
+}

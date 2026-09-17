@@ -75,6 +75,38 @@
   cursor: default;
 }
 
+.deleteCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.deleteButton {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+  background: white;
+  color: #b91c1c;
+  cursor: pointer;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.deleteError {
+  font-size: 0.75rem;
+  color: #b91c1c;
+  max-width: 220px;
+}
+
 .nameLink {
   font-weight: 600;
   color: var(--neutral-900);

@@ -7,6 +7,7 @@ import { isAdmin } from "@/lib/auth";
 import pageStyles from "../../page.module.css";
 import StockAdjuster from "../StockAdjuster";
 import ProductStatusToggle from "../ProductStatusToggle";
+import DeleteProductButton from "../DeleteProductButton";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -87,6 +88,7 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
           <div className={styles.controlsRow}>
             <StockAdjuster productId={product.id} quantity={product.stockQuantity} />
             <ProductStatusToggle productId={product.id} isActive={product.isActive} isLowStock={low} />
+            <DeleteProductButton productId={product.id} productName={product.name} />
           </div>
         </div>
       </div>
