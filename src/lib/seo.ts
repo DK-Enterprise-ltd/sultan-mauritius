@@ -32,7 +32,16 @@ export function pageMetadata({ locale, path, title, description, noindex, image 
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      // HTTP-header hreflang was already correct (see next-intl middleware);
+      // this adds the same signal as an HTML <link> tag, since some
+      // crawlers/tools only check the head and miss header-only hreflang.
+      languages: {
+        en: `${SITE_URL}/en${path}`,
+        fr: `${SITE_URL}/fr${path}`,
+      },
+    },
     robots: noindex ? { index: false, follow: false } : undefined,
     openGraph: {
       title,

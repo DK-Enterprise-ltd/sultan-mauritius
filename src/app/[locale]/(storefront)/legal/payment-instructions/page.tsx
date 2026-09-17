@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function PaymentInstructionsPage() {
       <h2>Payment queries</h2>
       <p>
         If you have a question about payment on an order, contact us at{" "}
-        <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> or +230 5 000 0000 with your order number.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> or {CONTACT_PHONE_DISPLAY} with your order number.
       </p>
     </>
   );

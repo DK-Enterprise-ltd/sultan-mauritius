@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { CartProvider } from "@/lib/cart-context";
 import { Link } from "@/i18n/navigation";
+import { CONTACT_ADDRESS_FULL, CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
 import PageTransition from "@/components/PageTransition/PageTransition";
@@ -43,14 +44,13 @@ function Footer() {
           <span className={styles.colHeading}>{t("tradeHeading")}</span>
           <Link href="/about">{tNav("about")}</Link>
           <Link href="/wholesale">{tNav("wholesale")}</Link>
-          <Link href="/stockists">{tNav("stockists")}</Link>
           <Link href="/contact">{tNav("contact")}</Link>
         </div>
         <div className={styles.footerCol}>
           <span className={styles.colHeading}>{t("contactHeading")}</span>
-          <span>Port Louis, Mauritius</span>
-          <span>+230 5 000 0000</span>
-          <span>hello@sultan.mu</span>
+          <span>{CONTACT_ADDRESS_FULL}</span>
+          <span>{CONTACT_PHONE_DISPLAY}</span>
+          <span>{CONTACT_EMAIL}</span>
           <a href="https://www.instagram.com/sultan_mauritius/" target="_blank" rel="noreferrer" className={styles.social}>
             Instagram
           </a>

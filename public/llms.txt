@@ -12,8 +12,8 @@ The site is bilingual: English at `/en`, French at `/fr`.
 
 ## Pages
 
-- [Shop](https://sultan-mauritius.vercel.app/en/products): the full sparkling and still product range, with B2C and wholesale pricing.
-- [About](https://sultan-mauritius.vercel.app/en/about): company history and water quality data.
-- [Wholesale](https://sultan-mauritius.vercel.app/en/wholesale): B2B account setup for restaurants, shops, and events.
-- [Stockists](https://sultan-mauritius.vercel.app/en/stockists): where to buy in stores across Mauritius.
-- [Contact](https://sultan-mauritius.vercel.app/en/contact): general enquiries.
+- [Shop](https://sultanmauritius.com/en/products): the full sparkling and still product range, with B2C and wholesale pricing.
+- [About](https://sultanmauritius.com/en/about): company history and water quality data.
+- [Wholesale](https://sultanmauritius.com/en/wholesale): B2B account setup for restaurants, shops, and events.
+- [Stockists](https://sultanmauritius.com/en/stockists): where to buy in stores across Mauritius.
+- [Contact](https://sultanmauritius.com/en/contact): general enquiries.

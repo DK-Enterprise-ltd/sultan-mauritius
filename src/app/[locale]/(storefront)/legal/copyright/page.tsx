@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_EMAIL } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ export default function CopyrightPage() {
       <h2>Reporting infringement</h2>
       <p>
         If you believe content on this site infringes your rights, contact{" "}
-        <a href="mailto:hello@sultan.mu">hello@sultan.mu</a>.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
     </>
   );

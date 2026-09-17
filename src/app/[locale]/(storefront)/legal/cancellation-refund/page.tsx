@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export default function CancellationRefundPage() {
       <h3>Cancellation before dispatch</h3>
       <p>
         You may cancel your order at no cost any time before it is dispatched, by contacting{" "}
-        <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> with your order number.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your order number.
       </p>
       <h3>Inspect your goods on delivery</h3>
       <p>
@@ -52,8 +53,8 @@ export default function CancellationRefundPage() {
 
       <h2>How to report a problem</h2>
       <p>
-        Email <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> or call +230 5 000 0000 with your order
-        number and details of the issue.
+        Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> or call {CONTACT_PHONE_DISPLAY} with your
+        order number and details of the issue.
       </p>
     </>
   );

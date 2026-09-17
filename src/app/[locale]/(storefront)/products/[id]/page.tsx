@@ -9,6 +9,7 @@ import { resolvePrice } from "@/lib/pricing";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor, localizeProductName } from "@/lib/catalog-i18n";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
+import { B2C_DELIVERY_FEE_MUR } from "@/lib/delivery";
 import type { Locale } from "@/i18n/routing";
 import AddToCartButton from "@/components/ProductCard/AddToCartButton";
 import styles from "./page.module.css";
@@ -88,13 +89,44 @@ export default async function ProductDetailPage({
     description: flavor ? `${name}, ${flavor}, ${product.sizeMl}ml` : `${name}, ${product.sizeMl}ml`,
     image: product.imageUrl ? `${SITE_URL}${product.imageUrl}` : undefined,
     sku: product.sku,
+    brand: { "@type": "Brand", name: "Sultan" },
     offers: {
       "@type": "Offer",
       priceCurrency: "MUR",
       price: price.toString(),
       availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       url: `${SITE_URL}/${locale}/products/${product.id}`,
+      // Real delivery terms (src/lib/delivery.ts): flat B2C fee within the
+      // standard delivery areas, Mauritius only.
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: { "@type": "MonetaryAmount", value: B2C_DELIVERY_FEE_MUR, currency: "MUR" },
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "MU" },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          transitTime: { "@type": "QuantitativeValue", minValue: 2, maxValue: 4, unitCode: "d" },
+        },
+      },
+      // Real policy (src/app/[locale]/(storefront)/legal/cancellation-refund):
+      // damage/shortage must be reported at the point of delivery; no
+      // change-of-mind returns once a delivery is inspected and accepted.
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "MU",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+        merchantReturnLink: `${SITE_URL}/${locale}/legal/cancellation-refund`,
+      },
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/${locale}` },
+      { "@type": "ListItem", position: 2, name: tProduct(isSparkling ? "sparkling" : "still"), item: `${SITE_URL}/${locale}/products` },
+      { "@type": "ListItem", position: 3, name, item: `${SITE_URL}/${locale}/products/${product.id}` },
+    ],
   };
 
   return (
@@ -103,6 +135,11 @@ export default async function ProductDetailPage({
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Link href="/products" className={styles.back}>
         {t("back")}
@@ -118,6 +155,7 @@ export default async function ProductDetailPage({
               draggable={false}
               sizes="(max-width: 860px) 100vw, 480px"
               className={styles.image}
+              priority
             />
           ) : (
             <span className={styles.mediaLabel}>{product.sizeMl}ml</span>

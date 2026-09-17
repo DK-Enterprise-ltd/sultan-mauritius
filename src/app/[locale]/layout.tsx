@@ -5,6 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { CONTACT_EMAIL } from "@/lib/contact-info";
 import { sora, inter } from "../fonts";
 import "../globals.css";
 
@@ -35,6 +36,11 @@ export async function generateMetadata({
   };
 }
 
+// address/sameAs are the real registered-office and social data (matches
+// the legal notice page and site footer) — no telephone field: the phone
+// number shown on the site today is a placeholder, not a real line, and a
+// fake number in structured data is worse than no number. Add `telephone`
+// here once a real one exists (see CONTACT_PHONE in src/lib/contact-info.ts).
 const ORGANIZATION_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -44,6 +50,26 @@ const ORGANIZATION_JSON_LD = {
   description:
     "Official distributor of Sultan natural spring water and Sultan flavoured sparkling waters in Mauritius since March 2021.",
   areaServed: "MU",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "95, La Paix Street",
+    addressLocality: "Port Louis",
+    addressCountry: "MU",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: CONTACT_EMAIL,
+    contactType: "customer service",
+    areaServed: "MU",
+  },
+  sameAs: ["https://www.instagram.com/sultan_mauritius/", "https://www.facebook.com/sultandrinkmauritius/"],
+};
+
+const WEBSITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
 };
 
 export default async function LocaleLayout({
@@ -72,6 +98,11 @@ export default async function LocaleLayout({
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+        />
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
         />
       </head>
       <body className={`${sora.variable} ${inter.variable}`}>

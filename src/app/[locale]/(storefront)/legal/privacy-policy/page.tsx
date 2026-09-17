@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function PrivacyPolicyPage() {
       <p>
         Grignoti Ltd, trading as Sultan Mauritius, registered office 95, La Paix Street, Port Louis, Mauritius,
         Business Registration Number C25226789. Contact:{" "}
-        <a href="mailto:hello@sultan.mu">hello@sultan.mu</a>, +230 5 000 0000.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, {CONTACT_PHONE_DISPLAY}.
       </p>
 
       <h2>A. Consumer (B2C) data</h2>
@@ -86,7 +87,7 @@ export default function PrivacyPolicyPage() {
         <li>Stop using your data for direct marketing</li>
       </ul>
       <p>
-        To exercise any of these rights, contact <a href="mailto:hello@sultan.mu">hello@sultan.mu</a>. You may also
+        To exercise any of these rights, contact <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. You may also
         lodge a complaint with the Data Protection Office of Mauritius.
       </p>
 

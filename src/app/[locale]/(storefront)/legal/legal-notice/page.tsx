@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_ADDRESS_FULL, CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -27,9 +28,9 @@ export default function LegalNoticePage() {
 
       <h2>Contact</h2>
       <ul>
-        <li>Email: <a href="mailto:hello@sultan.mu">hello@sultan.mu</a></li>
-        <li>Phone: +230 5 000 0000</li>
-        <li>Address: Port Louis, Mauritius</li>
+        <li>Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
+        <li>Phone: {CONTACT_PHONE_DISPLAY}</li>
+        <li>Address: {CONTACT_ADDRESS_FULL}</li>
       </ul>
 
       <h2>Regulatory</h2>

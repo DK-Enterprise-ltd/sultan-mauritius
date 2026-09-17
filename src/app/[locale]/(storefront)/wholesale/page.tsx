@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import InquiryForm from "@/components/InquiryForm/InquiryForm";
 import Reveal from "@/components/Reveal/Reveal";
 import { pageMetadata } from "@/lib/seo";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact-info";
 import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
 import styles from "./page.module.css";
@@ -33,7 +34,8 @@ export default async function WholesalePage() {
         <InquiryForm wholesale />
         <p className={styles.talk}>
           {c("talkPrefix")}{" "}
-          <a href="tel:+23050000000">+230 5 000 0000</a> {c("talkOr")} <a href="mailto:hello@sultan.mu">hello@sultan.mu</a>
+          <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a> {c("talkOr")}{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
       </Reveal>
     </>

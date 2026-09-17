@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LAST_UPDATED } from "@/lib/legal-pages";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
@@ -71,8 +72,8 @@ export default function TermsConsumerPage() {
 
       <h2>8. Complaints</h2>
       <p>
-        Contact us first at <a href="mailto:hello@sultan.mu">hello@sultan.mu</a> or +230 5 000 0000. If we cannot
-        resolve a complaint between us, you may refer it to the relevant Mauritius consumer-protection body.
+        Contact us first at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> or {CONTACT_PHONE_DISPLAY}. If we
+        cannot resolve a complaint between us, you may refer it to the relevant Mauritius consumer-protection body.
       </p>
 
       <h2>9. Governing law</h2>
