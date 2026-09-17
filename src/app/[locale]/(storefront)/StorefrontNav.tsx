@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useCart } from "@/lib/cart-context";
+import { registerNavClick } from "@/lib/easter-egg";
 import { Link, usePathname } from "@/i18n/navigation";
 import styles from "./StorefrontNav.module.css";
 
@@ -61,11 +62,21 @@ export default function StorefrontNav() {
       <nav className={styles.links}>{navLinks}</nav>
       <div className={styles.right}>
         <div className={styles.langSwitch}>
-          <Link href={pathname} locale="en" className={locale === "en" ? styles.langActive : undefined}>
+          <Link
+            href={pathname}
+            locale="en"
+            className={locale === "en" ? styles.langActive : undefined}
+            onClick={() => registerNavClick("en")}
+          >
             EN
           </Link>
           <span aria-hidden>/</span>
-          <Link href={pathname} locale="fr" className={locale === "fr" ? styles.langActive : undefined}>
+          <Link
+            href={pathname}
+            locale="fr"
+            className={locale === "fr" ? styles.langActive : undefined}
+            onClick={() => registerNavClick("fr")}
+          >
             FR
           </Link>
         </div>
