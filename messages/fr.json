@@ -64,7 +64,10 @@
     "chooseOption": "Choisir une option",
     "quantity": "Quantité",
     "viewDetails": "Voir tous les détails",
-    "close": "Fermer"
+    "close": "Fermer",
+    "previousPhoto": "Photo précédente",
+    "nextPhoto": "Photo suivante",
+    "goToPhoto": "Photo {index}"
   },
   "products": {
     "title": "Boutique",

@@ -84,6 +84,7 @@ export function productVariants(product: Product, allProducts: Product[], viewer
       sizeMl: v.sizeMl,
       packCount: v.packCount,
       imageUrl: v.imageUrl,
+      imageUrl2: v.imageUrl2,
       displayPrice: resolvePrice(v, viewer),
       stockQuantity: v.stockQuantity,
     }));

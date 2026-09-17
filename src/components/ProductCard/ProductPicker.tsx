@@ -17,6 +17,7 @@ export type Variant = {
   sizeMl: number;
   packCount: number;
   imageUrl: string | null;
+  imageUrl2: string | null;
   displayPrice: number;
   stockQuantity: number;
 };
@@ -48,13 +49,20 @@ export default function ProductPicker({
   );
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
+  // Front photo first, back photo (if this variant has one) second — most
+  // variants only have imageUrl, so photos.length is 1 and no gallery UI shows.
+  const photos = [selected?.imageUrl ?? imageUrl, selected?.imageUrl2].filter(
+    (src): src is string => !!src
+  );
 
   const close = () => {
     setOpen(false);
     setQuantity(1);
     setAdded(false);
+    setPhotoIndex(0);
   };
 
   return (
@@ -73,15 +81,46 @@ export default function ProductPicker({
               </button>
 
               <div className={styles.media}>
-                {(selected?.imageUrl ?? imageUrl) ? (
+                {photos[photoIndex] && (
                   <Image
-                    src={selected?.imageUrl ?? imageUrl!}
+                    src={photos[photoIndex]}
                     alt={displayName}
                     fill
                     sizes="240px"
                     className={styles.image}
                   />
-                ) : null}
+                )}
+                {photos.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      className={`${styles.photoNav} ${styles.photoNavPrev}`}
+                      aria-label={t("previousPhoto")}
+                      onClick={() => setPhotoIndex((i) => (i - 1 + photos.length) % photos.length)}
+                    >
+                      ‹
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.photoNav} ${styles.photoNavNext}`}
+                      aria-label={t("nextPhoto")}
+                      onClick={() => setPhotoIndex((i) => (i + 1) % photos.length)}
+                    >
+                      ›
+                    </button>
+                    <div className={styles.photoDots}>
+                      {photos.map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`${styles.photoDot} ${i === photoIndex ? styles.photoDotActive : ""}`}
+                          aria-label={t("goToPhoto", { index: i + 1 })}
+                          onClick={() => setPhotoIndex(i)}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className={styles.body}>
@@ -97,7 +136,10 @@ export default function ProductPicker({
                         type="button"
                         disabled={outOfStock}
                         className={`${styles.option} ${v.id === selectedId ? styles.optionActive : ""}`}
-                        onClick={() => setSelectedId(v.id)}
+                        onClick={() => {
+                          setSelectedId(v.id);
+                          setPhotoIndex(0);
+                        }}
                       >
                         <span>{variantLabel(t, v.packCount)}</span>
                         <span className={styles.optionPrice}>

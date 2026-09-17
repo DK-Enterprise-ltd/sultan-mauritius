@@ -64,7 +64,10 @@
     "chooseOption": "Choose an option",
     "quantity": "Quantity",
     "viewDetails": "View full details",
-    "close": "Close"
+    "close": "Close",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "goToPhoto": "Photo {index}"
   },
   "products": {
     "title": "Shop",
