@@ -21,6 +21,16 @@ const nextConfig = {
     // Admin-uploaded product photos live in Vercel Blob, not /public.
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
+  experimental: {
+    // Server Actions default to a 1MB request body limit, well under the
+    // 5MB product-photo cap (MAX_IMAGE_BYTES) enforced in
+    // src/app/actions/inventory.ts — without this, any photo over ~1MB
+    // gets rejected by Next itself before createProduct/updateProduct
+    // ever runs, surfacing as an opaque "Something went wrong".
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
