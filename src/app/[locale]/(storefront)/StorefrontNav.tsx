@@ -61,7 +61,7 @@ export default function StorefrontNav() {
       </Link>
       <nav className={styles.links}>{navLinks}</nav>
       <div className={styles.right}>
-        <div className={styles.langSwitch}>
+        <div className={styles.langSwitch} data-egg-skip>
           <Link
             href={pathname}
             locale="en"

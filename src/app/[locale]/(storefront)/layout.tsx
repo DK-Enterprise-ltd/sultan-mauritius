@@ -6,7 +6,7 @@ import { CONTACT_ADDRESS_FULL, CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/li
 import StorefrontNav from "./StorefrontNav";
 import CartDrawer from "@/components/CartDrawer/CartDrawer";
 import PageTransition from "@/components/PageTransition/PageTransition";
-import EasterEggOverlay from "@/components/EasterEgg/EasterEggOverlay";
+import EasterEggTakeover from "@/components/EasterEgg/EasterEggTakeover";
 import styles from "./layout.module.css";
 
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +20,7 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
         <Footer />
       </div>
       <CartDrawer />
-      <EasterEggOverlay />
+      <EasterEggTakeover />
     </CartProvider>
   );
 }
