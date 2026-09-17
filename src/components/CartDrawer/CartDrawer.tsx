@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useCart } from "@/lib/cart-context";
@@ -31,6 +32,11 @@ export default function CartDrawer() {
           ) : (
             items.map((item) => (
               <div key={item.productId} className={styles.row}>
+                {item.imageUrl ? (
+                  <Image src={item.imageUrl} alt={item.name} width={56} height={56} className={styles.thumb} />
+                ) : (
+                  <span className={styles.thumbPlaceholder} aria-hidden />
+                )}
                 <div className={styles.info}>
                   <p className={styles.name}>{item.name}</p>
                   {item.flavor && <p className={styles.meta}>{localizeFlavor(item.flavor, locale)}</p>}

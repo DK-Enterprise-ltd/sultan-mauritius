@@ -10,6 +10,7 @@ type Props = {
   name: string;
   flavor: string | null;
   sizeMl: number;
+  imageUrl: string | null;
   unitPrice: number;
   quantity?: number;
 };

@@ -181,6 +181,7 @@ export default function ProductPicker({
                             name: selected.name,
                             flavor: selected.flavor,
                             sizeMl: selected.sizeMl,
+                            imageUrl: selected.imageUrl ?? imageUrl,
                             unitPrice: selected.displayPrice,
                           },
                           quantity

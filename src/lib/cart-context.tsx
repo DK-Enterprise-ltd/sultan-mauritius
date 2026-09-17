@@ -7,6 +7,7 @@ export type CartItem = {
   name: string;
   flavor: string | null;
   sizeMl: number;
+  imageUrl: string | null;
   unitPrice: number; // retail or wholesale, resolved at add-to-cart time
   quantity: number;
 };

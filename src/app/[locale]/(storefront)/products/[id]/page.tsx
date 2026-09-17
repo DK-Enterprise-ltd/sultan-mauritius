@@ -180,6 +180,7 @@ export default async function ProductDetailPage({
                 name={product.name}
                 flavor={product.flavor}
                 sizeMl={product.sizeMl}
+                imageUrl={product.imageUrl}
                 unitPrice={price}
               />
             )}
