@@ -164,7 +164,9 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           <View style={styles.headerRow}>
             <View style={styles.brandCol}>
               <SultanLogoMark />
-              <Text style={[styles.addressLine, { marginTop: 8 }]}>Grignoti Ltd · BRN C25226789 · VAT 28451792</Text>
+              <Text style={[styles.addressLine, { marginTop: 8 }]}>Grignoti Ltd</Text>
+              <Text style={styles.addressLine}>BRN C25226789</Text>
+              <Text style={styles.addressLine}>VAT 28451792</Text>
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.invoiceTitle}>VAT Invoice</Text>
@@ -179,7 +181,7 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           {/* Customer / Company & Meta Section */}
           <View style={styles.addressSection}>
             <View style={styles.companyCol}>
-              <Text style={styles.companyName}>Sultan Mauritius (Grignoti Ltd)</Text>
+              <Text style={styles.companyName}>Grignoti Ltd</Text>
               <Text style={styles.addressLine}>95, La Paix Street</Text>
               <Text style={styles.addressLine}>Port Louis, Mauritius</Text>
               <Text style={styles.addressLine}>{CONTACT_PHONE_DISPLAY}</Text>
