@@ -63,9 +63,9 @@ export default async function ProductDetailPage({
   const variantLabel = (packCount: number) =>
     packCount === 1 ? t("packSingle") : packCount === 24 ? tProduct("caseLabel", { count: 24 }) : tProduct("packLabel", { count: packCount });
 
-  // Sanity-edited copy (by SKU) wins when present; the type-level static
-  // copy below is the fallback — see the ponytail note on ProductCopy in
-  // prisma/schema.prisma for why this isn't per-flavor.
+  // DB-stored copy (ProductCopy table, by SKU) wins when present; the
+  // type-level static copy below is the fallback — see the ponytail note
+  // on ProductCopy in prisma/schema.prisma for why this isn't per-flavor.
   const copy = await getProductCopyBySku(product.sku);
   const isFr = locale === "fr";
   const tasteNote =

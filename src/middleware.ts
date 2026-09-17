@@ -6,27 +6,22 @@ import { rateLimit } from "@/lib/rate-limit";
 const intlMiddleware = createMiddleware(routing);
 
 // General browsing limit (page loads), plus a tighter limit for mutating
-// requests: admin login, Sanity webhooks, checkout/contact/wholesale form
-// submissions, all POSTed as either an API route or a server action to
-// the current page. ponytail: two flat buckets, not per-route tuning.
-// Split further if one route needs its own ceiling.
+// requests: admin login, checkout/contact/wholesale form submissions, all
+// POSTed as either an API route or a server action to the current page.
+// ponytail: two flat buckets, not per-route tuning. Split further if one
+// route needs its own ceiling.
 const GENERAL = { limit: 120, windowMs: 60_000 };
 const SENSITIVE = { limit: 10, windowMs: 60_000 };
 
 function isSensitive(pathname: string, method: string, isServerAction: boolean): boolean {
-  return (
-    method === "POST" &&
-    (pathname.startsWith("/api/") || pathname === "/admin" || pathname.startsWith("/studio") || isServerAction)
-  );
+  return method === "POST" && (pathname.startsWith("/api/") || pathname === "/admin" || isServerAction);
 }
 
 // Only third-party origins actually referenced by the app (Fontshare CSS/
-// fonts, Sanity's asset CDN for productCopy.imageUrl overrides, Behold's
-// Instagram widget on the homepage social section). Keep this list in sync
-// with layout.tsx <head> tags, page.tsx's <Script> tags, and any
-// Sanity/Behold-hosted image src.
+// fonts, Behold's Instagram widget on the homepage social section). Keep
+// this list in sync with layout.tsx <head> tags, page.tsx's <Script> tags,
+// and any Behold-hosted image src.
 const CSP_FONT_ORIGIN = "https://api.fontshare.com https://cdn.fontshare.com";
-const CSP_IMAGE_ORIGIN = "https://cdn.sanity.io";
 // Behold's Instagram widget (../page.tsx) spans three separate vendor
 // domains, confirmed by fetching its actual loader script and feed JSON
 // rather than guessing: w.behold.so serves the widget.js loader,
@@ -68,7 +63,7 @@ function buildCsp(pathname: string): string {
     scriptSrc,
     `style-src 'self' 'unsafe-inline' ${CSP_FONT_ORIGIN}`,
     `font-src 'self' ${CSP_FONT_ORIGIN}`,
-    `img-src 'self' data: blob: ${CSP_IMAGE_ORIGIN} ${CSP_BEHOLD_IMAGES} ${CSP_INSTAGRAM_CDN}`,
+    `img-src 'self' data: blob: ${CSP_BEHOLD_IMAGES} ${CSP_INSTAGRAM_CDN}`,
     `media-src 'self' ${CSP_INSTAGRAM_CDN}`,
     `connect-src 'self' ${CSP_BEHOLD_FEED}`,
     "object-src 'none'",
@@ -101,7 +96,7 @@ export default function middleware(req: NextRequest) {
     });
   }
 
-  const isAdminOrApi = pathname.startsWith("/api/") || pathname.startsWith("/admin") || pathname.startsWith("/studio");
+  const isAdminOrApi = pathname.startsWith("/api/") || pathname.startsWith("/admin");
   const response = isAdminOrApi ? NextResponse.next() : intlMiddleware(req);
   response.headers.set("Content-Security-Policy", buildCsp(pathname));
   return response;

@@ -46,7 +46,9 @@ const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scal
 
 const STILL_TASTE: Record<number, { en: string; fr: string }> = {
   250: { en: "Light and crisp, sized for sharing at any gathering.", fr: "Légère et vive, un format fait pour être partagé." },
+  400: { en: "A step up for the desk or the gym bag, without losing that clean taste.", fr: "Un format généreux pour le bureau ou le sport, sans perdre ce goût pur." },
   500: { en: "The everyday size, clean and refreshing from first sip to last.", fr: "Le format du quotidien, pur et rafraîchissant jusqu'à la dernière gorgée." },
+  800: { en: "Built for a long day, the same light taste in a bottle that lasts.", fr: "Pensée pour toute la journée, le même goût léger dans une bouteille qui dure." },
   1500: { en: "Smooth and neutral, big enough for the whole table.", fr: "Douce et neutre, assez grande pour toute la table." },
 };
 
@@ -68,8 +70,8 @@ export default async function HomePage() {
   const locale = await getLocale();
   const isFr = locale === "fr";
   const [content, wholesaleContent] = await Promise.all([getSiteContent("home"), getSiteContent("wholesale")]);
-  // Sanity-edited copy wins when present; messages.json is the fallback
-  // for a field nobody's touched in Studio yet (see src/lib/site-content.ts).
+  // DB-stored copy (SiteContent table) wins when present; messages.json is
+  // the fallback for a field nobody's set in the DB yet (see src/lib/site-content.ts).
   const c = (key: string) => pick(content, key, locale, t(key));
   const cWholesale = (key: string) => pick(wholesaleContent, key, locale, tWholesale(key));
   const viewer = getViewer();
@@ -78,11 +80,12 @@ export default async function HomePage() {
   const bySku = new Map(allProducts.map((p) => [p.sku, p]));
   const featured = FEATURED_SKUS.map((sku) => bySku.get(sku)).filter((p): p is NonNullable<typeof p> => !!p);
 
-  // packCount === 1 only: the showcase is one taste card per flavor, not
-  // a full catalog listing, so the 6-pack/24-case SKUs are excluded here.
+  // packCount === 1 only: the showcase is one taste card per size, not
+  // a full catalog listing, so 6-pack/24-case/12-pack SKUs are excluded
+  // here (Prime's own 12-pack SKU included — see prisma/seed.js).
   const sparklingFlavors = allProducts.filter((p) => p.type === "SPARKLING" && p.flavor && p.packCount === 1);
   const coreStillProducts = allProducts
-    .filter((p) => p.type === "STILL" && p.name !== "Sultan Prime")
+    .filter((p) => p.type === "STILL" && p.packCount === 1)
     .sort((a, b) => a.sizeMl - b.sizeMl);
 
   const waterFacts = [

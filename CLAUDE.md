@@ -116,8 +116,8 @@ src/middleware.ts                   next-intl locale routing AND: rate
                                      for POST/server-action/API traffic,
                                      keyed off Vercel's trusted req.ip) AND
                                      the Content-Security-Policy header for
-                                     every response. Admin/api/studio paths
-                                     skip next-intl but still get both.
+                                     every response. Admin/api paths skip
+                                     next-intl but still get both.
 prisma/schema.prisma                source of truth for the data model
 prisma/seed.js                      plain CommonJS seed (no ts-node), run
                                      directly with `node prisma/seed.js` —
@@ -227,137 +227,44 @@ docs/security-checklist.md          project-specific security audit
   pages carry a leftover "Grignoti" watermark from the source template;
   ignore it, it isn't part of the Sultan brand.
 
-## Sanity CMS
+## Content model
 
-Editorial content (things a non-developer should be able to change without
-a deploy) is authored in a standalone Sanity Studio and synced one-way into
-Postgres, which is what the site actually renders from — a Sanity outage
-never breaks a page load, and it keeps `createOrder`'s money-path discipline
-intact (price/stock stay Prisma-only, Sanity never touches them).
+Editorial content (things a non-developer should ideally be able to change
+without a deploy) lives entirely in Postgres — there is no live CMS. This
+used to sync one-way from a Sanity Studio; that integration was removed
+(the business decided Postgres + `/admin` was the content system going
+forward, not Sanity), and it was only ever the write path anyway — nothing
+in `src/` ever reads from Sanity. Removing it changed nothing about how
+pages render.
 
 ```
-../studio/                          standalone Sanity Studio (its own app,
-                                     sibling to this folder, its own git repo).
-                                     Run: cd ../studio && npm run dev
-                                     (localhost:3333). Source of truth for the
-                                     schema.
-src/app/studio/[[...tool]]/         Studio embedded in this Next.js app too
-                                     (deployed with the site, at /studio) via
-                                     next-sanity's NextStudio — same project/
-                                     dataset as ../studio. src/sanity/ holds
-                                     its config + a COPY of the schema (see
-                                     the ponytail comment in
-                                     src/sanity/schemaTypes/index.ts): Vercel
-                                     only builds this repo, not the sibling
-                                     ../studio folder, so the schema can't be
-                                     imported across the two — keep both in
-                                     sync by hand when the content model
-                                     changes. sanity.config.ts is marked
-                                     'use client': without it, Next bundles
-                                     the Studio's import chain under React
-                                     Server Component conditions at build
-                                     time and the build fails with
-                                     "createContext is not a function".
-../studio/schemaTypes/              stockist, productCopy (by SKU, incl. an
-                                     optional photo override per SKU), and
-                                     six page-copy singletons: homeContent,
-                                     aboutContent, productsContent,
-                                     wholesaleContent, stockistsContent,
-                                     contactContent. Each singleton covers
-                                     that page's marketing copy (kickers,
-                                     titles, bodies, CTA labels) — not every
-                                     UI string (button microcopy, filter chip
-                                     labels, lab-measured water parameter
-                                     values stay code-only). productsContent
-                                     also carries `favoriteSkus`, the SKU
-                                     list for the Shop page's "Mauritian
-                                     Favorites" strip.
-src/app/api/sanity/webhook/route.ts single combined webhook (this project's
-                                     plan caps webhooks at 2); dispatches by
-                                     `_type`: stockist/productCopy go to
-                                     syncStockist/syncProductCopy, all six
-                                     page-copy singletons go through the one
-                                     generic syncSiteContent(key, doc) (see
-                                     SITE_CONTENT_KEY_BY_TYPE in the route for
-                                     the _type -> SiteContent.key map), all in
-                                     src/lib/sanity-sync.ts, after verifying
-                                     SANITY_WEBHOOK_SECRET via
-                                     next-sanity/webhook. The older per-type
-                                     routes (src/app/api/sanity/{stockist,
-                                     product-copy,home-content}/route.ts)
-                                     still work but are unused while on that
-                                     plan.
 prisma/schema.prisma                Stockist, ProductCopy (with imageUrl),
-                                     SiteContent models (see the "CMS
-                                     content" section) — the tables pages
+                                     SiteContent models — the tables pages
                                      actually query
-src/lib/site-content.ts             pick(): Sanity-synced copy wins, falls
-                                     back to messages/*.json if a field was
-                                     never authored in Studio. Every
-                                     storefront page (home, about, products,
-                                     wholesale, stockists, contact) fetches
-                                     its own getSiteContent(key) and wraps it
-                                     in a local c() = (k) => pick(...) helper
-                                     — see page.tsx for the pattern.
-src/lib/catalog.ts                  withCopyImage(): a Studio-set
-                                     productCopy.imageUrl (by sku) overrides
-                                     Product.imageUrl at the getActiveProducts
-                                     / getProductById read boundary, so a
-                                     photo swap in Studio doesn't need a
-                                     deploy. Price/stock still never flow
-                                     through Sanity — only the photo.
-scripts/sanity-seed-content.js      one-off: pushed the site's existing copy
-                                     into Sanity as starting content.
-                                     seedHomeContent/seedProductCopy already
-                                     ran — re-running them would overwrite
-                                     any edits already made in Studio with
-                                     the messages.json snapshot, so don't.
-                                     seedAboutContent/seedWholesaleContent/
-                                     seedContactContent/seedStockistsContent/
-                                     seedProductsContent are new and safe to
-                                     run once, before those documents exist.
-scripts/sanity-backfill.js          one-off: re-pull all Sanity content into
-                                     Postgres by hand (webhook down/missed events)
+src/lib/site-content.ts             pick(): DB-stored copy (SiteContent
+                                     table, keyed by page) wins when
+                                     present, falls back to messages/*.json
+                                     if a field was never set in the DB.
+                                     Every storefront page (home, about,
+                                     products, wholesale, stockists,
+                                     contact) fetches its own
+                                     getSiteContent(key) and wraps it in a
+                                     local c() = (k) => pick(...) helper —
+                                     see page.tsx for the pattern.
+src/lib/catalog.ts                  withCopyImage(): a ProductCopy.imageUrl
+                                     row (by sku) overrides Product.imageUrl
+                                     at the getActiveProducts /
+                                     getProductById read boundary. Price/
+                                     stock never flow through this path,
+                                     only the photo — same discipline as
+                                     the money path in orders.ts.
 ```
 
-**Sanity project:** `ftdxoig2` ("Sultan Mauritius", DK Enterprise org) /
-dataset `production`. Credentials live in `.env.local` (`SANITY_API_KEY`,
-`SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_WEBHOOK_SECRET`, plus
-`NEXT_PUBLIC_SANITY_PROJECT_ID`/`NEXT_PUBLIC_SANITY_DATASET` for the
-embedded Studio, which runs in the browser). There was a second, unrelated
-Sanity project (`w7su6qgi`, "Sultan Mauritius CMS") briefly set up under a
-different org — `.env.local` pointed at it for a while, with its own working
-webhook + CORS. That was never the project `../studio` or CLAUDE.md used, so
-it's abandoned now; `ftdxoig2` is the one project going forward. If a
-Sanity-related MCP tool ever reports "project not found" or an authorization
-error for `ftdxoig2`, that's expected unless it's authenticated as an
-account with access to the DK Enterprise org.
-
-**Webhook setup (manual, one-time, needs a public URL):** in Sanity Manage
-(`npx sanity manage` from `../studio`, or sanity.io/manage) → `ftdxoig2` →
-API → Webhooks, create one webhook:
-
-| Name | Filter | URL | HTTP method |
-|---|---|---|---|
-| Content sync | `_type in ["stockist", "productCopy", "homeContent", "aboutContent", "productsContent", "wholesaleContent", "stockistsContent", "contactContent"]` | `/api/sanity/webhook` | POST |
-
-If the webhook was created before the five page-copy singletons existed
-(aboutContent/productsContent/wholesaleContent/stockistsContent/
-contactContent), its filter needs updating in Sanity Manage to the list
-above, or edits to those pages in Studio won't reach the site.
-
-No projection (send the whole document). Use the same secret as
-`SANITY_WEBHOOK_SECRET` in `.env.local`. Also add the deployed site's origin
-(`https://sultan-mauritius.vercel.app`) under API → CORS origins, with
-credentials not required, so the embedded `/studio` route and the app's own
-requests are allowed.
-
-Until the webhook is created (or while developing against `localhost`, which
-Sanity can't reach), edits made in Studio don't reach the site — run
-`node scripts/sanity-backfill.js` after editing to sync by hand.
-
-Stockists start empty (no fabricated data); the business fills the region/
-town/address for each shop directly in Studio.
+For now, editing `SiteContent`/`ProductCopy`/`Stockist` rows means a direct
+DB/Prisma script (`prisma/seed.js`-style — `require("dotenv").config({path:
+".env.local"})` then `PrismaPg`/`PrismaClient`), the same way `prisma/
+seed.js` pushes `Product.imageUrl`. There's no admin UI for this content
+yet; building one is future work, not something broken today.
 
 ## Running locally
 

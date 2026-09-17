@@ -1,6 +1,6 @@
-// Read helper for CMS copy synced from Sanity (see sanity-sync.ts). Every
-// call site keeps its messages.json string as a fallback, so a page never
-// breaks just because a Sanity doc hasn't been authored/synced yet.
+// Read helper for marketing copy stored in the SiteContent table (Postgres).
+// Every call site keeps its messages.json string as a fallback, so a page
+// never breaks just because a field hasn't been populated in the DB yet.
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 

@@ -25,8 +25,8 @@ export default async function AboutPage() {
   const tp = await getTranslations("productDetail");
   const locale = await getLocale();
   const [content, homeContent] = await Promise.all([getSiteContent("about"), getSiteContent("home")]);
-  // Sanity-edited copy wins when present; messages.json is the fallback
-  // for a field nobody's touched in Studio yet (see src/lib/site-content.ts).
+  // DB-stored copy (SiteContent table) wins when present; messages.json is
+  // the fallback for a field nobody's set in the DB yet (see src/lib/site-content.ts).
   const c = (key: string) => pick(content, key, locale, t(key));
   // Legacy section is homeContent (shared with the homepage), not aboutContent.
   const cHome = (key: string) => pick(homeContent, key, locale, tHome(key));
