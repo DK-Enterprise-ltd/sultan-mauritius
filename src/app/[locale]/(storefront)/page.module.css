@@ -148,16 +148,22 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
+/* ponytail: !important here isn't decorative — Button.module.css's
+   .secondary and this override are separate CSS Modules with equal
+   selector specificity, so whichever chunk Next.js happens to load last
+   wins the cascade. That order isn't stable across builds (it flipped
+   once already, making this button render transparent in production),
+   so the override has to win outright rather than rely on source order. */
 .heroPrimary {
-  background: #fff;
-  color: var(--sultan-navy);
-  border-color: #fff;
+  background: #fff !important;
+  color: var(--sultan-navy) !important;
+  border-color: #fff !important;
 }
 
 .heroPrimary:hover {
-  background: var(--sultan-sky);
-  border-color: var(--sultan-sky);
-  color: #fff;
+  background: var(--sultan-sky) !important;
+  border-color: var(--sultan-sky) !important;
+  color: #fff !important;
 }
 
 .wave {

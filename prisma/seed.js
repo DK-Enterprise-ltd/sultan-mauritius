@@ -31,8 +31,12 @@ const SPARKLING_FLAVORS = [
   { code: "CEX", flavor: "C-Extra", retail: 48, single: "Bottle/Normal/C-extra-sultan su.png", bigPack: "Big packs/24`lü C-extra.png" },
   { code: "MOJ", flavor: "Mojito", retail: 45, single: "Bottle/Normal/Nane limon - 200ml mockup tr.png", sixPack: "Small packs/Nane limon .png", bigPack: "Big packs/24_lü Nane limon .png" },
   { code: "BMC", flavor: "Black Mulberry & Blackcurrant", retail: 45, single: "Bottle/Normal/Karadut-Frenk Üzümü-sultan su.png", sixPack: "Small packs/karadut.png", bigPack: "Big packs/24`lü Karadut.png" },
-  // No single-bottle photo exists for this flavor, only the 6-pack shot — reused for both.
-  { code: "BER", flavor: "Berry & Hibiscus", retail: 45, single: "Small packs/Berry Hibiscus - Shrink Mockup .png", sixPack: "Small packs/Berry Hibiscus - Shrink Mockup .png" },
+  // No single-bottle photo exists for this flavor, only the 6-pack shrink
+  // shot: leave the single SKU's imageUrl unset (null) rather than show a
+  // 6-pack photo on a one-bottle product — ProductCard already falls back
+  // to a plain "200ml" label when imageUrl is null. Swap in a real
+  // single-bottle photo once the business supplies one.
+  { code: "BER", flavor: "Berry & Hibiscus", retail: 45, single: null, sixPack: "Small packs/Berry Hibiscus - Shrink Mockup .png" },
   { code: "WMS", flavor: "Watermelon Strawberry", retail: 45, single: "Bottle/Normal/Karpuz-Çilek-sultan su.png", sixPack: "Small packs/karpuz çilek .png", bigPack: "Big packs/24`lü Karpuz Çilek.png" },
 ];
 
@@ -50,7 +54,7 @@ const sparklingProducts = SPARKLING_FLAVORS.flatMap((f) => {
       wholesalePrice: wholesale(f.retail),
       stockQuantity: 180,
       lowStockThreshold: 40,
-      imageUrl: `${SPARKLING_ASSET_DIR}/${f.single}`,
+      imageUrl: f.single ? `${SPARKLING_ASSET_DIR}/${f.single}` : null,
     },
   ];
   if (f.sixPack) {
@@ -92,14 +96,16 @@ async function main() {
   const products = await Promise.all(
     [
       // Still line — real bottle photography from the customer's official
-      // upload (../reference/Customer upload/water). 400/800ml (Prime) have
-      // no clean single-bottle shot in that set, only the 12-pack shrink
-      // photo, so that's what's used for those two.
+      // upload (../reference/Customer upload/water). 400/800ml (Prime) use
+      // the "arka" (back-label) shot: the only single-bottle photo in that
+      // set is the front "şişe" file, which is horizontally mirrored in the
+      // source photography (2026-09-17) — the back label reads correctly
+      // and isn't a shrink-wrapped pack, unlike the previous imageUrl here.
       { sku: "SUL-STL-250", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 250, packCount: 1, retailPrice: "15.00", wholesalePrice: "10.50", stockQuantity: 600, lowStockThreshold: 120, imageUrl: "/Assets/Products/Still/0.25/25lik-yeni-şişe-etiket.png" },
       { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, packCount: 1, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/0.5/0.5.png" },
       { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, packCount: 1, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/1.5/1,5.png" },
-      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/0.4/0,40l -  1250x1250.png" },
-      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/0.8/0,80l -  1250x1250 shirink.png" },
+      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/0.4/0,40l - şişe arka  1250x1250.png" },
+      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/0.8/0,80l -  1250x1250 - arka.png" },
 
       // Sparkling line — all eleven real flavours, confirmed against the
       // customer's official bottle/pack photography (labels read 200ml,

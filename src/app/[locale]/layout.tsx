@@ -5,7 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
-import { CONTACT_EMAIL } from "@/lib/contact-info";
+import { CONTACT_EMAIL, CONTACT_PHONE_TEL } from "@/lib/contact-info";
 import { sora, inter } from "../fonts";
 import "../globals.css";
 
@@ -37,10 +37,7 @@ export async function generateMetadata({
 }
 
 // address/sameAs are the real registered-office and social data (matches
-// the legal notice page and site footer) — no telephone field: the phone
-// number shown on the site today is a placeholder, not a real line, and a
-// fake number in structured data is worse than no number. Add `telephone`
-// here once a real one exists (see CONTACT_PHONE in src/lib/contact-info.ts).
+// the legal notice page and site footer).
 const ORGANIZATION_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -59,6 +56,7 @@ const ORGANIZATION_JSON_LD = {
   contactPoint: {
     "@type": "ContactPoint",
     email: CONTACT_EMAIL,
+    telephone: CONTACT_PHONE_TEL,
     contactType: "customer service",
     areaServed: "MU",
   },

@@ -60,7 +60,14 @@ export default function ProductCard({
         </div>
         <div className={styles.body}>
           <h3 className={styles.name}>{name}</h3>
-          {flavor && <p className={styles.flavor}>{flavor}</p>}
+          {flavor ? (
+            <p className={styles.flavor}>{flavor}</p>
+          ) : (
+            // Still SKUs share a name across sizes (e.g. two "Sultan Prime"
+            // rows at 400ml/800ml) with no flavor text to tell them apart,
+            // so show the size here instead.
+            <p className={styles.flavor}>{product.sizeMl}ml</p>
+          )}
           <div className={styles.footer}>
             <span className={styles.price}>{formatMur(product.displayPrice)}</span>
             {allOutOfStock ? (

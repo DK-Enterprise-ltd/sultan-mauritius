@@ -4,11 +4,8 @@
 // inconsistent (full placeholder in some places, a shortened address in
 // others) despite meaning the same thing everywhere.
 
-// ponytail: still a placeholder ("5 000 0000" is a dummy pattern, not a
-// real Mauritius line). Replace with the business's real number and drop
-// this comment; nothing else needs to change, every page reads from here.
-export const CONTACT_PHONE_DISPLAY = "+230 5 000 0000";
-export const CONTACT_PHONE_TEL = "+23050000000";
+export const CONTACT_PHONE_DISPLAY = "+230 5793 4986";
+export const CONTACT_PHONE_TEL = "+23057934986";
 // contact@ on the site's own domain, not the sultan.mu domain the site used
 // to show (a mismatch between the displayed email and the site's own
 // domain was itself flagged as a trust signal issue). Same Resend domain

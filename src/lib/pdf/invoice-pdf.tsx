@@ -1,5 +1,6 @@
 import { Document, Page, Text, View, Svg, Path, StyleSheet } from "@react-pdf/renderer";
 import type { Invoice, Order, OrderItem, Product, Customer } from "@prisma/client";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
 
 // Sultan wordmark, traced from public/Assets/Logo/logo.svg (viewBox 0 0 142.38 36.18).
 // react-pdf's <Image> can't render an .svg file directly, so the path data is
@@ -44,12 +45,14 @@ const RULE = "#e2e8f0";
 const DARK_BG = "#333333";
 
 const styles = StyleSheet.create({
-  page: { padding: 36, fontSize: 9, color: INK, fontFamily: "Helvetica", backgroundColor: "#ffffff" },
+  // paddingBottom is taller than the top/side padding to reserve room for
+  // the fixed footer (~60pt including its border/margin) so normal content
+  // flow stops above it instead of running underneath it.
+  page: { paddingTop: 36, paddingHorizontal: 36, paddingBottom: 96, fontSize: 9, color: INK, fontFamily: "Helvetica", backgroundColor: "#ffffff" },
 
   headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 28 },
 
   brandCol: { flex: 1 },
-  brandTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a", marginTop: 8, marginBottom: 2 },
 
   headerRight: { alignItems: "flex-end" },
   invoiceTitle: { fontSize: 24, fontWeight: 400, color: "#0f172a", marginBottom: 4 },
@@ -156,13 +159,12 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
   return (
     <Document title={`Invoice ${invoice.invoiceNumber}`}>
       <Page size="A4" style={styles.page}>
-        <View wrap={false}>
+        <View>
           {/* Header */}
           <View style={styles.headerRow}>
             <View style={styles.brandCol}>
               <SultanLogoMark />
-              <Text style={styles.brandTitle}>Sultan Mauritius</Text>
-              <Text style={styles.addressLine}>Grignoti Ltd · BRN C25226789 · VAT 28451792</Text>
+              <Text style={[styles.addressLine, { marginTop: 8 }]}>Grignoti Ltd · BRN C25226789 · VAT 28451792</Text>
             </View>
             <View style={styles.headerRight}>
               <Text style={styles.invoiceTitle}>VAT Invoice</Text>
@@ -180,8 +182,8 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
               <Text style={styles.companyName}>Sultan Mauritius (Grignoti Ltd)</Text>
               <Text style={styles.addressLine}>95, La Paix Street</Text>
               <Text style={styles.addressLine}>Port Louis, Mauritius</Text>
-              <Text style={styles.addressLine}>+230 5 792 4340</Text>
-              <Text style={styles.addressLine}>contact@sultanmauritius.mu</Text>
+              <Text style={styles.addressLine}>{CONTACT_PHONE_DISPLAY}</Text>
+              <Text style={styles.addressLine}>{CONTACT_EMAIL}</Text>
             </View>
 
             <View style={styles.clientCol}>
@@ -267,13 +269,15 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
           <Text style={styles.disclaimer}>
             We reserve the right if necessary, to recover any unpaid claims or part thereof through our attorney at law. In such case the attorney&apos;s commission of 10% shall be payable by the client.
           </Text>
+        </View>
 
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Sultan Mauritius (Grignoti Ltd) · Premium Natural Mineral Water
-            </Text>
-          </View>
+        {/* Footer: `fixed` renders this once per page at a position
+            independent of content flow, so it can't be pushed into or
+            overlapped by the invoice body above. */}
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>
+            Sultan Mauritius (Grignoti Ltd) · Premium Natural Mineral Water
+          </Text>
         </View>
       </Page>
     </Document>
