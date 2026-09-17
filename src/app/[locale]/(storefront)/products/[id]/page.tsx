@@ -31,7 +31,7 @@ export async function generateMetadata({
     locale,
     path: `/products/${params.id}`,
     title,
-    description: `${title}, ${product.sizeMl}ml. Sultan mineral water, sourced from Uludağ, Turkey, delivered across Mauritius.`,
+    description: `${title}, ${product.sizeMl}ml. Sultan mineral water, sourced from Turkey, delivered across Mauritius.`,
     image: product.imageUrl ? { url: `${SITE_URL}${product.imageUrl}`, width: 1200, height: 1200 } : undefined,
   });
 }

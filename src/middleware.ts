@@ -21,10 +21,24 @@ function isSensitive(pathname: string, method: string, isServerAction: boolean):
 }
 
 // Only third-party origins actually referenced by the app (Fontshare CSS/
-// fonts, Sanity's asset CDN for productCopy.imageUrl overrides). Keep this
-// list in sync with layout.tsx <head> tags and any Sanity-hosted image src.
+// fonts, Sanity's asset CDN for productCopy.imageUrl overrides, Behold's
+// Instagram widget on the homepage social section). Keep this list in sync
+// with layout.tsx <head> tags, page.tsx's <Script> tags, and any
+// Sanity/Behold-hosted image src.
 const CSP_FONT_ORIGIN = "https://api.fontshare.com https://cdn.fontshare.com";
 const CSP_IMAGE_ORIGIN = "https://cdn.sanity.io";
+// Behold's Instagram widget (../page.tsx) spans three separate vendor
+// domains, confirmed by fetching its actual loader script and feed JSON
+// rather than guessing: w.behold.so serves the widget.js loader,
+// feeds.behold.so is the feed API it calls, and behold.pictures (note:
+// a different apex domain, not a behold.so subdomain) is where it proxies
+// resized photos. Video reels aren't proxied — the feed's mediaUrl/
+// thumbnailUrl for those point straight at Instagram's own edge CDN, whose
+// subdomain (scontent-<region>-<n>.cdninstagram.com) varies per request.
+const CSP_BEHOLD_SCRIPT = "https://w.behold.so";
+const CSP_BEHOLD_FEED = "https://feeds.behold.so";
+const CSP_BEHOLD_IMAGES = "https://behold.pictures https://*.behold.pictures";
+const CSP_INSTAGRAM_CDN = "https://*.cdninstagram.com";
 
 // ponytail: script-src stays 'unsafe-inline' rather than per-request
 // nonces. A nonce needs to reach both Next's own hydration scripts and the
@@ -46,14 +60,17 @@ function buildCsp(pathname: string): string {
   // that's a dev-server implementation detail, never shipped in a
   // production build, so the relaxation is scoped to development only.
   const scriptSrc =
-    process.env.NODE_ENV === "development" ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'" : "script-src 'self' 'unsafe-inline'";
+    process.env.NODE_ENV === "development"
+      ? `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${CSP_BEHOLD_SCRIPT}`
+      : `script-src 'self' 'unsafe-inline' ${CSP_BEHOLD_SCRIPT}`;
   return [
     "default-src 'self'",
     scriptSrc,
     `style-src 'self' 'unsafe-inline' ${CSP_FONT_ORIGIN}`,
     `font-src 'self' ${CSP_FONT_ORIGIN}`,
-    `img-src 'self' data: blob: ${CSP_IMAGE_ORIGIN}`,
-    "connect-src 'self'",
+    `img-src 'self' data: blob: ${CSP_IMAGE_ORIGIN} ${CSP_BEHOLD_IMAGES} ${CSP_INSTAGRAM_CDN}`,
+    `media-src 'self' ${CSP_INSTAGRAM_CDN}`,
+    `connect-src 'self' ${CSP_BEHOLD_FEED}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

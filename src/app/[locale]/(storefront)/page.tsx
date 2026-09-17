@@ -1,4 +1,5 @@
 import Image, { getImageProps } from "next/image";
+import Script from "next/script";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getActiveProducts, getProductCopyBySku, productVariants } from "@/lib/catalog";
@@ -287,26 +288,9 @@ export default async function HomePage() {
             </div>
             <h2 className={styles.socialTitle}>{c("socialTitle")}</h2>
             <div className={styles.socialGrid}>
-              {SOCIAL_IMAGES.map((img, i) => (
-                <Reveal
-                  key={img.src}
-                  delay={(i % 6) * 60}
-                  className={styles.socialTile}
-                  style={{ flexBasis: img.width }}
-                >
-                  <Image src={img.src} alt="" fill sizes="(max-width: 640px) 60vw, 420px" className={styles.socialImg} />
-                  <svg className={styles.socialBadge} width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"
-                      stroke="#fff"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Reveal>
-              ))}
+              <behold-widget feed-id="BRas6U2a6hkw5o9PVXNn" />
             </div>
+            <Script src="https://w.behold.so/widget.js" strategy="lazyOnload" type="module" />
             <a
               href="https://instagram.com/sultan_mauritius"
               target="_blank"
@@ -340,7 +324,7 @@ export default async function HomePage() {
   );
 }
 
-// "From Uludağ to your table" — literal port of the canvas's 3-step origin
+// "From Turkey to your table" — literal port of the canvas's 3-step origin
 // story, same images (matterhorn/dolum-tesisi/ig-12), same beats.
 const ORIGIN_STEPS = [
   { img: "/Assets/Origin/matterhorn-alps-mountains.jpg", titleKey: "origin1Title", bodyKey: "origin1Body" },
@@ -352,11 +336,3 @@ function formatLiters(ml: number): string {
   const liters = ml / 1000;
   return liters >= 1 ? `${liters}L` : `${liters.toFixed(2)}L`;
 }
-
-// Same four "in the wild" shots as the canvas, same varied widths.
-const SOCIAL_IMAGES = [
-  { src: "/Assets/Lifestyle/ig-11.jpg", width: "420px" },
-  { src: "/Assets/Lifestyle/ig-13.jpg", width: "340px" },
-  { src: "/Assets/Lifestyle/ig-27.jpg", width: "380px" },
-  { src: "/Assets/Lifestyle/ig-03.jpg", width: "420px" },
-];

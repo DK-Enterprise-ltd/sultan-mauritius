@@ -318,6 +318,44 @@ structured data is included.
 
 ---
 
+## 13. Shop page — revert to single-unit-only grid (conflicts with §2)
+
+**[code, not yet implemented]** `src/app/[locale]/(storefront)/products/page.tsx`
+
+2026-09-17: requested that the shop grid show single-unit products only;
+a shopper picks pack size (6-pack, 24-case) after opening a product, not
+from a second grid of pack cards. This is the *opposite* of §2 above ("Shop
+page — Units vs Packs sections"), which is already implemented — the shop
+page currently renders two sections, `#units` and `#packs`, each with its
+own product cards, per a documented client brief
+(`Sultan_Website_Feedback_Updated_SEO.pdf`). Confirm with the client before
+reverting §2's work: dropping the `#packs` section removes a section they
+specifically asked for.
+
+If reverted: drop the `packs` grid/section and its jump link in
+`products/page.tsx`, and let `ProductCard`'s existing `ProductPicker`
+modal (`src/components/ProductCard/ProductPicker.tsx`) carry all pack-size
+selection — it already lists every `productVariants()` sibling (single,
+6-pack, 24-case) as a click-to-select option with its own price and stock,
+so no new picker UI is needed, only removing the now-redundant standalone
+pack cards.
+
+**Homepage carousel, for reference**: the `FlavorShowcase` strips
+(`page.tsx:94-140`, one card per flavor) already pull live from
+`getActiveProducts()` (Prisma, `packCount === 1` only) with no hardcoded
+SKU list — a new sparkling flavor or still size added as `isActive: true`
+in `/admin/inventory` shows up there automatically on the next request (the
+catalog cache revalidates every 60s, `src/lib/catalog.ts:52-56`). The
+separate homepage **"Featured"** strip and the shop page's **"Mauritian
+Favorites"** strip are different: both are still a hardcoded SKU list
+(`FEATURED_SKUS`/`FAVORITE_SKUS`), not admin-managed, unless Sanity's
+`favoriteSkus` field is set (§3 above covers making that fully
+business-editable).
+
+Effort: small (page-level removal), pending client confirmation.
+
+---
+
 ## Suggested order of work
 
 1. Copy fixes (items 4, 5, 7-intro, 11/12 meta strings) — no risk, no design

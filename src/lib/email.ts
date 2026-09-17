@@ -65,7 +65,7 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
           <tr>
             <td style="background-color: #f8fafc; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;">
               <p style="margin: 0 0 4px 0;"><strong>Sultan Mauritius</strong>, a brand of Grignoti Ltd</p>
-              <p style="margin: 0;">Premium Mineral Water Sourced from Uludağ</p>
+              <p style="margin: 0;">Premium Mineral Water Sourced from Turkey</p>
             </td>
           </tr>
         </table>
