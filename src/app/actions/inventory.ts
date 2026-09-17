@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { put } from "@vercel/blob";
 import { Prisma, ProductType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -39,6 +39,7 @@ export async function adjustStock(productId: string, delta: number) {
   revalidatePath("/admin/inventory");
   revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
+  revalidateTag("products");
   return { ok: true as const };
 }
 
@@ -107,6 +108,7 @@ export async function createProduct(formData: FormData) {
     });
     revalidatePath("/admin/inventory");
     revalidatePath("/admin");
+    revalidateTag("products");
     redirect(`/admin/inventory/${product.id}`);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
@@ -204,6 +206,7 @@ export async function updateProduct(productId: string, formData: FormData) {
   revalidatePath("/admin/inventory");
   revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
+  revalidateTag("products");
   redirect(`/admin/inventory/${productId}`);
 }
 
@@ -220,6 +223,25 @@ export async function setProductActive(productId: string, isActive: boolean) {
   revalidatePath("/admin/inventory");
   revalidatePath(`/admin/inventory/${productId}`);
   revalidatePath("/admin");
+  revalidateTag("products");
+  return { ok: true as const };
+}
+
+/** Admin-only: sets whether a product appears in the homepage "Featured"
+ * strip (src/app/[locale]/(storefront)/page.tsx). Purely curatorial — has
+ * no effect on the storefront catalog listing, which already shows every
+ * active product regardless of this flag. */
+export async function setProductFeatured(productId: string, isFeatured: boolean) {
+  if (!isAdmin()) return { ok: false as const, error: "Not authorized." };
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: { isFeatured },
+  });
+
+  revalidatePath("/admin/inventory");
+  revalidatePath(`/admin/inventory/${productId}`);
+  revalidateTag("products");
   return { ok: true as const };
 }
 
@@ -237,7 +259,15 @@ export async function deleteProduct(productId: string) {
     await prisma.product.delete({ where: { id: productId } });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2003") {
+      // P2003 is Prisma's own FK-violation code; the pg driver adapter
+      // (Prisma 7 + @prisma/adapter-pg, see src/lib/prisma.ts) instead
+      // surfaces the raw Postgres RESTRICT violation as P2039 with the
+      // constraint name in the message — checking the message too covers
+      // both, since which code shows up isn't stable across Prisma/adapter
+      // versions.
+      const isForeignKeyViolation =
+        error.code === "P2003" || error.code === "P2039" || /foreign key constraint/i.test(error.message);
+      if (isForeignKeyViolation) {
         return {
           ok: false as const,
           error: "This product has order or stock history and can't be deleted. Deactivate it instead.",
@@ -249,6 +279,7 @@ export async function deleteProduct(productId: string) {
       if (error.code === "P2025") {
         revalidatePath("/admin/inventory");
         revalidatePath("/admin");
+        revalidateTag("products");
         return { ok: true as const };
       }
     }
@@ -257,5 +288,6 @@ export async function deleteProduct(productId: string) {
 
   revalidatePath("/admin/inventory");
   revalidatePath("/admin");
+  revalidateTag("products");
   return { ok: true as const };
 }

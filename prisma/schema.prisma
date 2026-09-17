@@ -87,6 +87,7 @@ model Product {
   stockQuantity     Int      @default(0)
   lowStockThreshold Int      @default(20)
   isActive          Boolean  @default(true)
+  isFeatured        Boolean  @default(false) // shown in the homepage "Featured" strip when true — see FEATURED_SKUS removal in [locale]/(storefront)/page.tsx
   imageUrl          String? // primary/front photo
   imageUrl2         String? // optional second photo (e.g. back label) — shown as a small gallery when set, front photo first
   createdAt         DateTime @default(now())

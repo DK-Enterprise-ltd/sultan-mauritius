@@ -9,6 +9,7 @@ import styles from "../page.module.css";
 import rowStyles from "./page.module.css";
 import StockAdjuster from "./StockAdjuster";
 import ProductStatusToggle from "./ProductStatusToggle";
+import FeaturedToggle from "./FeaturedToggle";
 import DeleteProductButton from "./DeleteProductButton";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,7 @@ export default async function AdminInventoryPage({
               <th>Threshold</th>
               <th>Retail price</th>
               <th>Status</th>
+              <th>Featured</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -92,6 +94,9 @@ export default async function AdminInventoryPage({
                     <ProductStatusToggle productId={p.id} isActive={p.isActive} isLowStock={low} />
                   </td>
                   <td>
+                    <FeaturedToggle productId={p.id} isFeatured={p.isFeatured} />
+                  </td>
+                  <td>
                     <DeleteProductButton productId={p.id} productName={p.name} />
                   </td>
                 </tr>
@@ -99,7 +104,7 @@ export default async function AdminInventoryPage({
             })}
             {products.length === 0 && (
               <tr>
-                <td colSpan={9} className={styles.empty}>No products yet.</td>
+                <td colSpan={10} className={styles.empty}>No products yet.</td>
               </tr>
             )}
           </tbody>

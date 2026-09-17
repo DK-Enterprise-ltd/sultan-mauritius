@@ -52,17 +52,6 @@ const STILL_TASTE: Record<number, { en: string; fr: string }> = {
   1500: { en: "Smooth and neutral, big enough for the whole table.", fr: "Douce et neutre, assez grande pour toute la table." },
 };
 
-// Curated selection, matching the design canvas's featured picks 1:1
-// (st-025, sp-mango, st-prime-040, sp-c-extra, st-15, sp-mojito).
-const FEATURED_SKUS = [
-  "SUL-STL-250",
-  "SUL-SPK-MAP-200",
-  "SUL-STL-PRIME-400",
-  "SUL-SPK-CEX-200",
-  "SUL-STL-1500",
-  "SUL-SPK-MOJ-200",
-];
-
 export default async function HomePage() {
   const t = await getTranslations("home");
   const tDetail = await getTranslations("productDetail");
@@ -77,8 +66,9 @@ export default async function HomePage() {
   const viewer = getViewer();
 
   const allProducts = await getActiveProducts();
-  const bySku = new Map(allProducts.map((p) => [p.sku, p]));
-  const featured = FEATURED_SKUS.map((sku) => bySku.get(sku)).filter((p): p is NonNullable<typeof p> => !!p);
+  // Curated by the admin (Inventory list's "Featured" toggle → Product.isFeatured),
+  // not a hardcoded SKU list — see setProductFeatured in src/app/actions/inventory.ts.
+  const featured = allProducts.filter((p) => p.isFeatured);
 
   // packCount === 1 only: the showcase is one taste card per size, not
   // a full catalog listing, so 6-pack/24-case/12-pack SKUs are excluded
@@ -238,6 +228,7 @@ export default async function HomePage() {
         </section>
       </Reveal>
 
+      {featured.length > 0 && (
       <Reveal>
         <section className={styles.featured}>
           <h2 className={styles.featuredTitle}>{t("featured")}</h2>
@@ -268,6 +259,7 @@ export default async function HomePage() {
           </div>
         </section>
       </Reveal>
+      )}
 
       <Reveal>
         <section className={styles.social}>
