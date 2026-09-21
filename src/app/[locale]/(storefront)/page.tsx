@@ -27,7 +27,7 @@ const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scal
   "Mango & Pineapple": { en: "Tropical and golden, sweet mango layered over tangy pineapple.", fr: "Tropicale et dorée, mangue sucrée relevée d'ananas acidulé.", color: "#e8b93a" },
   "C-Extra": { en: "Bright lemon with a boost of vitamin C.", fr: "Citron vif avec un supplément de vitamine C.", color: "#a8c23a" },
   Mojito: { en: "Cool mint and lime, crisp enough to feel like a garden terrace.", fr: "Menthe fraîche et citron vert, aussi vive qu'une terrasse ombragée.", color: "#7fa84a" },
-  "Black Mulberry & Blackcurrant": { en: "Dark, jammy fruit with a bold, wine-like depth.", fr: "Fruits noirs confiturés, avec une profondeur presque vineuse.", color: "#6e1746" },
+  "Black Mulberry & Blackcurrant": { en: "Dark and rich, packed with bold berry flavor.", fr: "Sombre et intense, avec une saveur de baies affirmée.", color: "#6e1746" },
   "Berry & Hibiscus": {
     en: "Tart mixed berries lifted by floral hibiscus notes.",
     fr: "Baies acidulées relevées de notes florales d'hibiscus.",
@@ -45,7 +45,7 @@ const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scal
 };
 
 const STILL_TASTE: Record<number, { en: string; fr: string }> = {
-  250: { en: "Light and crisp, sized for sharing at any gathering.", fr: "Légère et vive, un format fait pour être partagé." },
+  250: { en: "Light and portable, sized for sharing at any gathering.", fr: "Légère et portable, un format fait pour être partagé." },
   400: { en: "A step up for the desk or the gym bag, without losing that clean taste.", fr: "Un format généreux pour le bureau ou le sport, sans perdre ce goût pur." },
   500: { en: "The everyday size, clean and refreshing from first sip to last.", fr: "Le format du quotidien, pur et rafraîchissant jusqu'à la dernière gorgée." },
   800: { en: "Built for a long day, the same light taste in a bottle that lasts.", fr: "Pensée pour toute la journée, le même goût léger dans une bouteille qui dure." },
@@ -74,8 +74,12 @@ export default async function HomePage() {
   // a full catalog listing, so 6-pack/24-case/12-pack SKUs are excluded
   // here (Prime's own 12-pack SKU included — see prisma/seed.js).
   const sparklingFlavors = allProducts.filter((p) => p.type === "SPARKLING" && p.flavor && p.packCount === 1);
+  const isPrime = (sku: string) => sku.startsWith("SUL-STL-PRIME");
   const coreStillProducts = allProducts
-    .filter((p) => p.type === "STILL" && p.packCount === 1)
+    .filter((p) => p.type === "STILL" && p.packCount === 1 && !isPrime(p.sku))
+    .sort((a, b) => a.sizeMl - b.sizeMl);
+  const primeProducts = allProducts
+    .filter((p) => p.type === "STILL" && p.packCount === 1 && isPrime(p.sku))
     .sort((a, b) => a.sizeMl - b.sizeMl);
 
   const waterFacts = [
@@ -123,6 +127,27 @@ export default async function HomePage() {
         factsLabel: tDetail("waterQualityHeading"),
         facts: waterFacts,
         color: "#1b9aae",
+        imageUrl: p.imageUrl,
+      };
+    })
+  );
+
+  const primeShowcase: ShowcaseItem[] = await Promise.all(
+    primeProducts.map(async (p): Promise<ShowcaseItem> => {
+      const copy = await getProductCopyBySku(p.sku);
+      const invented = STILL_TASTE[p.sizeMl] || null;
+      return {
+        id: p.id,
+        name: formatLiters(p.sizeMl),
+        subtitle: t("linesPrimeKicker"),
+        description: c("primeBody"),
+        taste: (isFr ? copy?.tasteNoteFr : copy?.tasteNote) || invented?.[isFr ? "fr" : "en"] || tDetail("tasteStill"),
+        bestServedLabel: tDetail("bestServedHeading"),
+        bestServed: (isFr ? copy?.bestServedNoteFr : copy?.bestServedNote) || tDetail("bestServedStill"),
+        tasteLabel: tDetail("tasteHeading"),
+        factsLabel: tDetail("waterQualityHeading"),
+        facts: waterFacts,
+        color: "#e8963a",
         imageUrl: p.imageUrl,
       };
     })
@@ -184,6 +209,12 @@ export default async function HomePage() {
         prevLabel={t("showcasePrev")}
         nextLabel={t("showcaseNext")}
       />
+      <FlavorShowcase
+        items={primeShowcase}
+        sectionTitle={c("primeTitle")}
+        prevLabel={t("showcasePrev")}
+        nextLabel={t("showcaseNext")}
+      />
 
       <div className={styles.wave} aria-hidden>
         <svg viewBox="0 0 1440 88" preserveAspectRatio="none">
@@ -216,7 +247,13 @@ export default async function HomePage() {
           <div className={styles.originGrid}>
             {ORIGIN_STEPS.map((step, i) => (
               <Reveal key={step.img} delay={i * 100} className={styles.originStep}>
-                <Image src={step.img} alt="" width={400} height={210} className={styles.originImg} />
+                <Image
+                  src={step.img}
+                  alt=""
+                  width={400}
+                  height={210}
+                  className={`${styles.originImg} ${"logoFocus" in step && step.logoFocus ? styles.originImgLogo : ""}`}
+                />
                 <div className={`${styles.originConnector} ${i === ORIGIN_STEPS.length - 1 ? styles.originConnectorLast : ""}`}>
                   <span className={styles.originDot} />
                   <h3 className={styles.originTitle}>{t(step.titleKey)}</h3>
@@ -322,9 +359,9 @@ export default async function HomePage() {
 // "From Turkey to your table" — literal port of the canvas's 3-step origin
 // story, same images (matterhorn/dolum-tesisi/ig-12), same beats.
 const ORIGIN_STEPS = [
-  { img: "/Assets/Origin/matterhorn-alps-mountains.jpg", titleKey: "origin1Title", bodyKey: "origin1Body" },
+  { img: "/Assets/Origin/alpine-valley-waterfall.jpg", titleKey: "origin1Title", bodyKey: "origin1Body" },
   { img: "/Assets/Origin/dolum-tesisi.jpg", titleKey: "origin2Title", bodyKey: "origin2Body" },
-  { img: "/Assets/Lifestyle/ig-12.jpg", titleKey: "origin3Title", bodyKey: "origin3Body" },
+  { img: "/Assets/Origin/sultan-limon-wildflowers.jpg", titleKey: "origin3Title", bodyKey: "origin3Body", logoFocus: true },
 ] as const;
 
 function formatLiters(ml: number): string {

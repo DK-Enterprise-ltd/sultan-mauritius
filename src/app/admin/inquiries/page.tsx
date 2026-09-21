@@ -119,6 +119,13 @@ export default async function AdminInquiriesPage({
                 </td>
                 <td>
                   {inquiry.companyName ? <div><strong>{inquiry.companyName}</strong></div> : "—"}
+                  {(inquiry.brn || inquiry.vatNumber) && (
+                    <div style={{ fontSize: "0.8rem", color: "#64748b" }}>
+                      {inquiry.brn && <>BRN: {inquiry.brn}</>}
+                      {inquiry.brn && inquiry.vatNumber && " · "}
+                      {inquiry.vatNumber && <>VAT: {inquiry.vatNumber}</>}
+                    </div>
+                  )}
                   {inquiry.estimatedVolume && (
                     <div style={{ fontSize: "0.8rem", color: "#64748b" }}>
                       Vol: {inquiry.estimatedVolume}

@@ -11,6 +11,8 @@ type InquiryInput = {
   email: string;
   phone?: string;
   companyName?: string;
+  brn?: string;
+  vatNumber?: string;
   estimatedVolume?: string;
   message: string;
   /** Hidden form field: real visitors never fill it in, bots filling every
@@ -40,6 +42,8 @@ export async function submitInquiry(input: InquiryInput): Promise<{ ok: true } |
       email,
       phone: input.phone ? cleanStr(input.phone, 40) : undefined,
       companyName: input.companyName ? cleanStr(input.companyName, 200) : undefined,
+      brn: input.brn ? cleanStr(input.brn, 50) : undefined,
+      vatNumber: input.vatNumber ? cleanStr(input.vatNumber, 50) : undefined,
       estimatedVolume: input.estimatedVolume ? cleanStr(input.estimatedVolume, 100) : undefined,
       message,
     },

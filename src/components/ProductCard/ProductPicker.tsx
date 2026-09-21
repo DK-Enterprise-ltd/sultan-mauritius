@@ -135,13 +135,17 @@ export default function ProductPicker({
                         key={v.id}
                         type="button"
                         disabled={outOfStock}
+                        aria-pressed={v.id === selectedId}
                         className={`${styles.option} ${v.id === selectedId ? styles.optionActive : ""}`}
                         onClick={() => {
                           setSelectedId(v.id);
                           setPhotoIndex(0);
                         }}
                       >
-                        <span>{variantLabel(t, v.packCount)}</span>
+                        <span className={styles.optionLabel}>
+                          <span className={styles.optionRadio} aria-hidden />
+                          {variantLabel(t, v.packCount)}
+                        </span>
                         <span className={styles.optionPrice}>
                           {outOfStock ? t("outOfStock") : formatMur(v.displayPrice)}
                         </span>

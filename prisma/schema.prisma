@@ -211,6 +211,8 @@ model ContactInquiry {
   email           String
   phone           String?
   companyName     String? // WHOLESALE only
+  brn             String? // WHOLESALE only — Business Registration Number
+  vatNumber       String? // WHOLESALE only — VAT registration number
   estimatedVolume String? // WHOLESALE only — free text, e.g. "50 cases/month"
   message         String
   handled         Boolean     @default(false)
