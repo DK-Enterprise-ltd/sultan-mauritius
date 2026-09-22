@@ -32,14 +32,6 @@ const FLAVOR_TASTE: Record<string, { en: string; fr: string; color: string; scal
     en: "Tart mixed berries lifted by floral hibiscus notes.",
     fr: "Baies acidulées relevées de notes florales d'hibiscus.",
     color: "#c93b4e",
-    // ponytail: no single-bottle shot of this flavor exists in the
-    // reference photos, only the 6-pack shrink mockup, which is landscape
-    // (1.48:1) instead of portrait like every other bottle photo here. The
-    // showcase box is height-bound under object-fit: contain, so a
-    // landscape source renders shorter than the rest; scale compensates
-    // partway without overflowing the box. Swap for a real single-bottle
-    // photo when one exists and drop this.
-    scale: 1.25,
   },
   "Watermelon Strawberry": { en: "Juicy summer watermelon rounded out by sweet strawberry.", fr: "Pastèque juteuse d'été, adoucie par la fraise.", color: "#e2607a" },
 };
@@ -149,6 +141,14 @@ export default async function HomePage() {
         facts: waterFacts,
         color: "#e8963a",
         imageUrl: p.imageUrl,
+        // Prime's bottle cap sits almost flush with the top edge of its
+        // source canvas (unlike the other bottle photos, which carry more
+        // headroom above the cap) — on mobile, where the showcase reorders
+        // the bottle above the section-title text, that leaves barely any
+        // gap and the cap visually clips into the title. Scaling down
+        // slightly restores the headroom without noticeably shrinking the
+        // bottle.
+        imageScale: 0.88,
       };
     })
   );

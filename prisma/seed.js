@@ -31,12 +31,7 @@ const SPARKLING_FLAVORS = [
   { code: "CEX", flavor: "C-Extra", retail: 48, single: "Bottle/Normal/C-extra-sultan su.png", bigPack: "Big packs/24`lü C-extra.png" },
   { code: "MOJ", flavor: "Mojito", retail: 45, single: "Bottle/Normal/Nane limon - 200ml mockup tr.png", sixPack: "Small packs/Nane limon .png", bigPack: "Big packs/24_lü Nane limon .png" },
   { code: "BMC", flavor: "Black Mulberry & Blackcurrant", retail: 45, single: "Bottle/Normal/Karadut-Frenk Üzümü-sultan su.png", sixPack: "Small packs/karadut.png", bigPack: "Big packs/24`lü Karadut.png" },
-  // No single-bottle photo exists for this flavor, only the 6-pack shrink
-  // shot: leave the single SKU's imageUrl unset (null) rather than show a
-  // 6-pack photo on a one-bottle product — ProductCard already falls back
-  // to a plain "200ml" label when imageUrl is null. Swap in a real
-  // single-bottle photo once the business supplies one.
-  { code: "BER", flavor: "Berry & Hibiscus", retail: 45, single: null, sixPack: "Small packs/Berry Hibiscus - Shrink Mockup .png" },
+  { code: "BER", flavor: "Berry & Hibiscus", retail: 45, single: "Bottle/Normal/Kirmizi Heyve-sultan su.png", sixPack: "Small packs/Berry Hibiscus - Shrink Mockup .png" },
   { code: "WMS", flavor: "Watermelon Strawberry", retail: 45, single: "Bottle/Normal/Karpuz-Çilek-sultan su.png", sixPack: "Small packs/karpuz çilek .png", bigPack: "Big packs/24`lü Karpuz Çilek.png" },
 ];
 
