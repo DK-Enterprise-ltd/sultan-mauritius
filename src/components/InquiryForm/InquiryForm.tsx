@@ -32,6 +32,8 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
       email: String(form.get("email") || ""),
       phone: String(form.get("phone") || "") || undefined,
       companyName: String(form.get("companyName") || "") || undefined,
+      brn: String(form.get("brn") || "") || undefined,
+      vatNumber: String(form.get("vatNumber") || "") || undefined,
       estimatedVolume: String(form.get("estimatedVolume") || "") || undefined,
       message,
       website: String(form.get("website") || "") || undefined,
@@ -62,10 +64,22 @@ export default function InquiryForm({ wholesale = false }: { wholesale?: boolean
         className={styles.honeypot}
       />
       {wholesale && (
-        <label className={styles.field}>
-          {t("companyName")} *
-          <input name="companyName" required />
-        </label>
+        <>
+          <label className={styles.field}>
+            {t("companyName")} *
+            <input name="companyName" required />
+          </label>
+          <div className={styles.row}>
+            <label className={styles.field}>
+              {t("brn")}
+              <input name="brn" />
+            </label>
+            <label className={styles.field}>
+              {t("vatNumber")}
+              <input name="vatNumber" />
+            </label>
+          </div>
+        </>
       )}
       <div className={styles.row}>
         <label className={styles.field}>

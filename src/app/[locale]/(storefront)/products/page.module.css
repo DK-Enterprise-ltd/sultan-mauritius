@@ -80,7 +80,19 @@
 
 .lane {
   padding: 1.6rem 1.75rem;
-  transition: background 0.2s ease, color 0.2s ease;
+  position: relative;
+  z-index: 0;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lane:hover {
+  z-index: 1;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(20, 24, 31, 0.12);
+}
+
+.lane:active {
+  transform: translateY(-1px) scale(0.99);
 }
 
 .laneSparkling {
@@ -88,9 +100,17 @@
   color: #8a5314;
 }
 
+.laneSparkling:hover {
+  background: color-mix(in srgb, var(--wash-sparkling) 70%, var(--sultan-plum) 30%);
+}
+
 .laneSparkling.laneActive {
   background: var(--sultan-plum);
   color: #fff;
+}
+
+.laneSparkling.laneActive:hover {
+  background: color-mix(in srgb, var(--sultan-plum) 85%, #000 15%);
 }
 
 .laneStill {
@@ -98,9 +118,17 @@
   color: #0e5c6b;
 }
 
+.laneStill:hover {
+  background: color-mix(in srgb, var(--wash-still) 70%, var(--sultan-teal) 30%);
+}
+
 .laneStill.laneActive {
   background: var(--sultan-teal);
   color: #fff;
+}
+
+.laneStill.laneActive:hover {
+  background: color-mix(in srgb, var(--sultan-teal) 85%, #000 15%);
 }
 
 .laneTitle {
@@ -174,6 +202,18 @@
   border: 1px solid rgba(27, 42, 74, 0.2);
   background: transparent;
   color: #3e434c;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--sultan-navy);
+  background: rgba(27, 42, 74, 0.06);
+  color: var(--sultan-navy);
+  transform: translateY(-1px);
+}
+
+.chip:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .chipActiveSparkling {
@@ -182,9 +222,21 @@
   color: #fff;
 }
 
+.chipActiveSparkling:hover {
+  border-color: var(--sultan-plum);
+  background: color-mix(in srgb, var(--sultan-plum) 85%, #000 15%);
+  color: #fff;
+}
+
 .chipActiveStill {
   border-color: var(--sultan-teal);
   background: var(--sultan-teal);
+  color: #fff;
+}
+
+.chipActiveStill:hover {
+  border-color: var(--sultan-teal);
+  background: color-mix(in srgb, var(--sultan-teal) 85%, #000 15%);
   color: #fff;
 }
 

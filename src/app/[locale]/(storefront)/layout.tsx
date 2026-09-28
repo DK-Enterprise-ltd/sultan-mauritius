@@ -59,6 +59,9 @@ function Footer() {
           <a href="https://www.facebook.com/sultandrinkmauritius/" target="_blank" rel="noreferrer" className={styles.social}>
             Facebook
           </a>
+          <a href="https://www.tiktok.com/@sultandrinkmauritius" target="_blank" rel="noreferrer" className={styles.social}>
+            TikTok
+          </a>
         </div>
       </div>
       <div className={styles.footerBottom}>

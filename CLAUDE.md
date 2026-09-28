@@ -30,6 +30,13 @@ product photography, no glossy gradient hero blocks.
 No em dashes anywhere: not in UI copy, not in code comments, not in
 responses. Use a period, comma, or colon instead.
 
+## Git
+
+Commits and PRs made in this repo, including by Claude Code, must not carry
+any Claude/Anthropic attribution: no `Co-Authored-By: Claude ...` trailer,
+no "Generated with Claude Code" line, nothing identifying an AI tool as a
+contributor. Author commits as the human operator only.
+
 ## Stack
 
 - Next.js 14 (App Router), React 18, TypeScript
