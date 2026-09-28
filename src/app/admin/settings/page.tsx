@@ -1,9 +1,15 @@
 import { isAdmin } from "@/lib/auth";
+import { getBulkDiscountPercent } from "@/lib/pricing";
 import ChangePasswordForm from "./ChangePasswordForm";
+import BulkDiscountForm from "./BulkDiscountForm";
 import pageStyles from "../page.module.css";
 
-export default function AdminSettingsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminSettingsPage() {
   if (!isAdmin()) return null;
+
+  const bulkDiscountPercent = await getBulkDiscountPercent();
 
   return (
     <div>
@@ -11,6 +17,10 @@ export default function AdminSettingsPage() {
       <div className={pageStyles.section} style={{ maxWidth: 360 }}>
         <h2 className={pageStyles.sectionTitle}>Change password</h2>
         <ChangePasswordForm />
+      </div>
+      <div className={pageStyles.section} style={{ maxWidth: 360 }}>
+        <h2 className={pageStyles.sectionTitle}>Bulk discount</h2>
+        <BulkDiscountForm currentPercent={bulkDiscountPercent.toString()} />
       </div>
     </div>
   );

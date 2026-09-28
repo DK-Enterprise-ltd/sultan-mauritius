@@ -6,29 +6,38 @@ import { isAdmin } from "@/lib/auth";
 import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
 import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
+import filterStyles from "../orders/page.module.css";
 import ownStyles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
+const TYPES = ["INDIVIDUAL", "BUSINESS"] as const;
+
 export default async function AdminCustomersPage({
   searchParams,
 }: {
-  searchParams: { q?: string; page?: string };
+  searchParams: { q?: string; type?: string; page?: string };
 }) {
   if (!isAdmin()) return null;
 
   const q = searchParams.q?.trim();
+  const type = TYPES.includes(searchParams.type as (typeof TYPES)[number])
+    ? (searchParams.type as (typeof TYPES)[number])
+    : undefined;
   const page = parsePage(searchParams.page);
   const customerRows = await prisma.customer.findMany({
-    where: q
-      ? {
-          OR: [
-            { name: { contains: q, mode: "insensitive" } },
-            { email: { contains: q, mode: "insensitive" } },
-            { companyName: { contains: q, mode: "insensitive" } },
-          ],
-        }
-      : undefined,
+    where: {
+      ...(type ? { type } : {}),
+      ...(q
+        ? {
+            OR: [
+              { name: { contains: q, mode: "insensitive" } },
+              { email: { contains: q, mode: "insensitive" } },
+              { companyName: { contains: q, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
     orderBy: { createdAt: "desc" },
     skip: (page - 1) * ADMIN_PAGE_SIZE,
     take: ADMIN_PAGE_SIZE + 1,
@@ -55,7 +64,26 @@ export default async function AdminCustomersPage({
     <div>
       <h1 className={styles.title}>Customers</h1>
 
+      <div className={filterStyles.filters}>
+        <Link
+          href={q ? `/admin/customers?q=${encodeURIComponent(q)}` : "/admin/customers"}
+          className={`${filterStyles.filter} ${!type ? filterStyles.filterActive : ""}`}
+        >
+          All
+        </Link>
+        {TYPES.map((t) => (
+          <Link
+            key={t}
+            href={`/admin/customers?type=${t}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={`${filterStyles.filter} ${type === t ? filterStyles.filterActive : ""}`}
+          >
+            {t === "BUSINESS" ? "B2B" : "B2C"}
+          </Link>
+        ))}
+      </div>
+
       <form className={ownStyles.searchForm}>
+        {type && <input type="hidden" name="type" value={type} />}
         <input
           type="text"
           name="q"
@@ -87,7 +115,11 @@ export default async function AdminCustomersPage({
               const lifetimeSpend = spendByCustomer.get(c.id) ?? new Prisma.Decimal(0);
               return (
                 <tr key={c.id}>
-                  <td>{c.name}</td>
+                  <td>
+                    <Link href={`/admin/customers/${c.id}`} className={styles.rowLink}>
+                      {c.name}
+                    </Link>
+                  </td>
                   <td>{c.companyName || "—"}</td>
                   <td>
                     <span

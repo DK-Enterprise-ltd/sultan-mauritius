@@ -6,10 +6,17 @@ const { PrismaPg } = require("@prisma/adapter-pg");
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
-// ponytail: pack pricing is computed off the single-unit price rather than
-// hand-typed, so a flavor's 6-pack/24-case price can't drift out of sync
-// with its unit price by a typo. 7% off for a 6-pack, 12% off for a
-// 24-case — a round, defensible multi-buy discount, not a real quoted rate.
+// Pack rows (packCount > 1) are seeded isActive: false — the client asked
+// to stop selling/tracking bottles and packs as separate inventory items;
+// the storefront now shows only the single-bottle price and applies an
+// automatic bulk discount at checkout instead (src/lib/pricing.ts,
+// BULK_DISCOUNT_MIN_QTY / PricingSetting.bulkDiscountPercent). These rows
+// are kept (not deleted) only so past orders/invoices that reference them
+// still resolve. packPrice() below is legacy: it fixes the price these
+// inactive rows still carry, computed off the single-unit price so it
+// can't drift out of sync by a typo. 7% off for a 6-pack, 9% for a 12-pack,
+// 12% off for a 24-case — round, defensible multi-buy discounts, not real
+// quoted rates.
 function packPrice(unitPrice, count, discount) {
   const raw = unitPrice * count * (1 - discount);
   return (Math.round(raw / 5) * 5).toFixed(2);
@@ -71,6 +78,7 @@ const sparklingProducts = SPARKLING_FLAVORS.flatMap((f) => {
       stockQuantity: 60,
       lowStockThreshold: 15,
       imageUrl: `${SPARKLING_ASSET_DIR}/${f.sixPack}`,
+      isActive: false,
     });
   }
   if (f.bigPack) {
@@ -87,6 +95,7 @@ const sparklingProducts = SPARKLING_FLAVORS.flatMap((f) => {
       stockQuantity: 20,
       lowStockThreshold: 5,
       imageUrl: `${SPARKLING_ASSET_DIR}/${f.bigPack}`,
+      isActive: false,
     });
   }
   return rows;
@@ -107,9 +116,9 @@ async function main() {
       { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, packCount: 1, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/0.5/0.5.png" },
       { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, packCount: 1, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/1.5/1,5.png" },
       { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/Prime 0.4/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.4/back.png" },
-      { sku: "SUL-STL-PRIME-400-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 400, packCount: 12, retailPrice: packPrice(40, 12, 0.09), wholesalePrice: packPrice(28, 12, 0.09), stockQuantity: 40, lowStockThreshold: 10, imageUrl: "/Assets/Products/Still/Prime 0.4/12_pack.png" },
+      { sku: "SUL-STL-PRIME-400-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 400, packCount: 12, retailPrice: packPrice(40, 12, 0.09), wholesalePrice: packPrice(28, 12, 0.09), stockQuantity: 40, lowStockThreshold: 10, imageUrl: "/Assets/Products/Still/Prime 0.4/12_pack.png", isActive: false },
       { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/Prime 0.8/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.8/back.png" },
-      { sku: "SUL-STL-PRIME-800-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 800, packCount: 12, retailPrice: packPrice(60, 12, 0.09), wholesalePrice: packPrice(42, 12, 0.09), stockQuantity: 25, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png" },
+      { sku: "SUL-STL-PRIME-800-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 800, packCount: 12, retailPrice: packPrice(60, 12, 0.09), wholesalePrice: packPrice(42, 12, 0.09), stockQuantity: 25, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png", isActive: false },
 
       // Sparkling line — all eleven real flavours, confirmed against the
       // customer's official bottle/pack photography (labels read 200ml,
@@ -118,11 +127,26 @@ async function main() {
       // dropped: no such Sultan flavors exist in the reference photos.
       // "Sade" (plain, unflavored) and "C-Extra" (lemon + vitamin C) are
       // real flavors that were missing from this lineup; added in their
-      // place. 6-pack and 24-case SKUs (SPARKLING_FLAVORS above) are
-      // separate purchasable products, not just display images on the
-      // single-bottle SKU.
+      // place. 6-pack and 24-case SKUs (SPARKLING_FLAVORS above) still
+      // exist as rows (order history references them) but are seeded
+      // isActive: false — see the packPrice() comment above.
       ...sparklingProducts,
-    ].map((p) => prisma.product.upsert({ where: { sku: p.sku }, update: { imageUrl: p.imageUrl, imageUrl2: p.imageUrl2 ?? null, sizeMl: p.sizeMl, packCount: p.packCount, retailPrice: p.retailPrice, wholesalePrice: p.wholesalePrice, name: p.name }, create: p }))
+    ].map((p) =>
+      prisma.product.upsert({
+        where: { sku: p.sku },
+        update: {
+          imageUrl: p.imageUrl,
+          imageUrl2: p.imageUrl2 ?? null,
+          sizeMl: p.sizeMl,
+          packCount: p.packCount,
+          retailPrice: p.retailPrice,
+          wholesalePrice: p.wholesalePrice,
+          name: p.name,
+          isActive: p.isActive ?? true,
+        },
+        create: p,
+      })
+    )
   );
 
   const individual = await prisma.customer.upsert({

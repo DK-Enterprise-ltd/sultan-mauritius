@@ -81,10 +81,7 @@
     "resultOne": "produit",
     "resultMany": "produits",
     "favoritesTitle": "Favoris mauriciens",
-    "unitsLabel": "À l'unité",
-    "packsLabel": "Packs",
-    "unitsSectionTitle": "À l'unité",
-    "packsSectionTitle": "Packs"
+    "bulkDiscountNote": "Achetez {min}+ de la même boisson et économisez {percent}%"
   },
   "stockists": {
     "title": "Où acheter",

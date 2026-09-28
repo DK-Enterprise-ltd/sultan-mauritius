@@ -1,12 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { renderToBuffer } from "@react-pdf/renderer";
 import { Prisma, type InvoiceStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
-import { sendInvoiceEmail } from "@/lib/email";
-import { InvoicePdfDocument } from "@/lib/pdf/invoice-pdf";
+import { createDraftInvoiceForOrder, emailInvoice } from "@/lib/invoice-service";
 
 type ActionResult = { ok: true } | { ok: false; error: string };
 type GenerateInvoiceResult = { ok: true; invoiceId: string } | { ok: false; error: string };
@@ -14,41 +12,19 @@ type GenerateInvoiceResult = { ok: true; invoiceId: string } | { ok: false; erro
 const INVOICE_STATUSES: InvoiceStatus[] = ["DRAFT", "ISSUED", "PAID"];
 
 /** Admin-only: creates a draft invoice for an order that doesn't have one
- * yet — editable, not yet sent to the customer. Due date defaults from the
- * customer's credit terms (0 days — due immediately — when unset, matching
- * the schema's "null means pay-before-fulfillment" convention) but stays
- * editable before it's actually sent. */
+ * yet — editable, not yet sent to the customer. See
+ * src/lib/invoice-service.ts for the shared logic (also used to
+ * auto-generate an invoice at order creation, src/app/actions/orders.ts). */
 export async function generateInvoiceForOrder(orderId: string): Promise<GenerateInvoiceResult> {
   if (!isAdmin()) return { ok: false, error: "Not authorized." };
 
-  const existing = await prisma.invoice.findUnique({ where: { orderId } });
-  if (existing) return { ok: true, invoiceId: existing.id };
-
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: { customer: true },
-  });
-  if (!order) return { ok: false, error: "Order not found." };
-
-  const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + (order.customer.creditTermsDays ?? 0));
-
-  const invoice = await prisma.invoice.create({
-    data: {
-      orderId: order.id,
-      status: "DRAFT",
-      issuedAt: null,
-      dueDate,
-      amountPaid: 0,
-      balanceDue: order.total,
-    },
-  });
-
-  revalidatePath(`/admin/orders/${orderId}`);
-  revalidatePath("/admin/invoices");
-  revalidatePath(`/admin/invoices/${invoice.id}`);
-
-  return { ok: true, invoiceId: invoice.id };
+  const result = await createDraftInvoiceForOrder(orderId);
+  if (result.ok) {
+    revalidatePath(`/admin/orders/${orderId}`);
+    revalidatePath("/admin/invoices");
+    revalidatePath(`/admin/invoices/${result.invoiceId}`);
+  }
+  return result;
 }
 
 type UpdateInvoiceInput = {
@@ -106,46 +82,18 @@ export async function updateInvoice(invoiceId: string, input: UpdateInvoiceInput
 /** Admin-only: emails the invoice PDF to the customer and marks it ISSUED.
  * Unlike order-status emails, a failed send is reported back to the admin
  * instead of swallowed — the whole point of this action is the email, so
- * silently "succeeding" without sending would be misleading. */
+ * silently "succeeding" without sending would be misleading. See
+ * src/lib/invoice-service.ts for the shared logic (also used to
+ * auto-send an invoice on fulfillment, src/app/actions/orders.ts). */
 export async function sendInvoice(invoiceId: string): Promise<ActionResult> {
   if (!isAdmin()) return { ok: false, error: "Not authorized." };
 
-  const invoice = await prisma.invoice.findUnique({
-    where: { id: invoiceId },
-    include: {
-      order: {
-        include: { customer: true, items: { include: { product: true } } },
-      },
-    },
-  });
-  if (!invoice) return { ok: false, error: "Invoice not found." };
-
-  const pdfBuffer = await renderToBuffer(<InvoicePdfDocument invoice={invoice} />);
-
-  try {
-    await sendInvoiceEmail({
-      invoiceNumber: invoice.invoiceNumber,
-      orderNumber: invoice.order.orderNumber,
-      dueDate: invoice.dueDate,
-      balanceDue: invoice.balanceDue,
-      customer: invoice.order.customer,
-      pdfBuffer,
-    });
-  } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : "Could not send the invoice email." };
-  }
-
-  await prisma.invoice.update({
-    where: { id: invoiceId },
-    data: {
-      status: invoice.status === "DRAFT" ? "ISSUED" : invoice.status,
-      issuedAt: invoice.issuedAt ?? new Date(),
-    },
-  });
+  const result = await emailInvoice(invoiceId);
+  if (!result.ok) return result;
 
   revalidatePath(`/admin/invoices/${invoiceId}`);
   revalidatePath("/admin/invoices");
-  revalidatePath(`/admin/orders/${invoice.order.id}`);
+  revalidatePath(`/admin/orders/${result.orderId}`);
 
   return { ok: true };
 }

@@ -77,10 +77,8 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
   `.trim();
 }
 
-// ponytail: only 2 customer emails in the real flow (received, fulfilled).
-// CANCELLED stays as the one exception worth a notice; CONFIRMED (admin
-// approves + sets an ETA) is silent by design — no online payment, so
-// there's no payment-details email to send at that step.
+// ponytail: 3 customer emails in the real flow (received, confirmed,
+// fulfilled). CANCELLED stays as the one exception worth a notice.
 const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNumber: number) => string; htmlBody?: (orderNumber: number) => string }>> = {
   PENDING: {
     subject: "We've received your order",
@@ -90,6 +88,15 @@ const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNu
     htmlBody: (n) =>
       `<p>We've received order <strong>#${n}</strong> and it is currently awaiting confirmation.</p>` +
       `<p>No online payment is taken: pay on delivery or collection, as agreed once your order is confirmed.</p>`,
+  },
+  CONFIRMED: {
+    subject: "Your order is confirmed",
+    body: (n) =>
+      `Order #${n} is confirmed and is now being processed.\n\n` +
+      `No online payment is taken: pay on delivery or collection, as agreed.`,
+    htmlBody: (n) =>
+      `<p>Order <strong>#${n}</strong> is confirmed and is now being processed.</p>` +
+      `<p>No online payment is taken: pay on delivery or collection, as agreed.</p>`,
   },
   FULFILLED: {
     subject: "Your order has been delivered",

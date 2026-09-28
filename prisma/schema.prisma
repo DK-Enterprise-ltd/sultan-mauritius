@@ -243,6 +243,17 @@ model AdminCredential {
   updatedAt    DateTime @updatedAt
 }
 
+// Single row, same singleton pattern as AdminCredential. bulkDiscountPercent
+// backs the automatic multi-buy discount applied at order time (see
+// src/lib/pricing.ts) — replaces the old per-pack Product rows (6-pack,
+// 24-case, etc.), which forced a second, easily-out-of-sync stock count for
+// the same physical bottles.
+model PricingSetting {
+  id                  String   @id @default("singleton")
+  bulkDiscountPercent Decimal  @default(0) @db.Decimal(5, 2)
+  updatedAt           DateTime @updatedAt
+}
+
 // ---------------------------------------------------------------------------
 // CMS content — synced one-way from Sanity Studio via /api/sanity/* webhooks
 // (src/app/api/sanity/). Sanity is the authoring surface (for the business,

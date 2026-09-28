@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getActiveProducts, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
-import { resolvePrice } from "@/lib/pricing";
+import { resolvePrice, getBulkDiscountPercent, BULK_DISCOUNT_MIN_QTY } from "@/lib/pricing";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteContent, pick } from "@/lib/site-content";
 import type { Locale } from "@/i18n/routing";
@@ -54,16 +54,17 @@ export default async function ProductsPage({
   const flavor = searchParams.flavor;
 
   const allProducts = await getActiveProducts();
-  // Units and Packs are the same catalogue split into two sections on this
-  // page (see the Units/Packs jump nav below), not two separate routes.
+  const bulkDiscountPercent = await getBulkDiscountPercent();
+  // Packs (6-pack, 24-case, etc.) are no longer separate purchasable
+  // products — they're deactivated Product rows kept only for past order
+  // history. The bulk discount (src/lib/pricing.ts) replaces them
+  // automatically at checkout, so this page only ever lists single bottles.
   const singles = allProducts.filter((p) => p.packCount === 1);
   const inLine = singles.filter((p) => !type || p.type === type);
 
   let products = inLine;
   if (size) products = products.filter((p) => formatSize(p.sizeMl) === size);
   if (flavor) products = products.filter((p) => p.flavor === flavor);
-
-  const packs = allProducts.filter((p) => p.packCount > 1 && (!type || p.type === type));
 
   // Studio-set favoriteSkus (productsContent) wins over the developer
   // default when the business has picked their own list.
@@ -122,6 +123,11 @@ export default async function ProductsPage({
       <div className={styles.header}>
         <h1 className={styles.title}>{c("title")}</h1>
         {viewer.isB2B && <p className={styles.wholesaleNote}>{c("wholesaleNote")}</p>}
+        {bulkDiscountPercent.greaterThan(0) && (
+          <p className={styles.wholesaleNote}>
+            {t("bulkDiscountNote", { min: BULK_DISCOUNT_MIN_QTY, percent: bulkDiscountPercent.toString() })}
+          </p>
+        )}
       </div>
 
       {favorites.length > 0 && (
@@ -132,15 +138,6 @@ export default async function ProductsPage({
           </section>
         </Reveal>
       )}
-
-      <div className={styles.jumpNav}>
-        <a href="#units" className={styles.jumpBtn}>
-          {c("unitsLabel")}
-        </a>
-        <a href="#packs" className={styles.jumpBtn}>
-          {c("packsLabel")}
-        </a>
-      </div>
 
       <div className={styles.lanes}>
         <Link
@@ -206,21 +203,11 @@ export default async function ProductsPage({
         </Link>
       )}
 
-      <section id="units" className={styles.section}>
-        <h2 className={styles.sectionTitle}>{c("unitsSectionTitle")}</h2>
+      <section className={styles.section}>
         {products.length === 0 ? (
           <p className={styles.empty}>{c("empty")}</p>
         ) : (
           <div className={styles.grid}>{products.map((product, index) => renderCard(product, index))}</div>
-        )}
-      </section>
-
-      <section id="packs" className={styles.section}>
-        <h2 className={styles.sectionTitle}>{c("packsSectionTitle")}</h2>
-        {packs.length === 0 ? (
-          <p className={styles.empty}>{c("empty")}</p>
-        ) : (
-          <div className={styles.grid}>{packs.map((product, index) => renderCard(product, index))}</div>
         )}
       </section>
     </div>

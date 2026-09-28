@@ -7,6 +7,8 @@ import { getViewer, isAdmin } from "@/lib/auth";
 import { sendOrderStatusEmail, sendNewOrderAdminNotification } from "@/lib/email";
 import { cleanStr, isValidEmail } from "@/lib/validate";
 import { calculateDeliveryFee, fulfillmentMethodFor, MIN_B2C_ORDER_MUR } from "@/lib/delivery";
+import { createDraftInvoiceForOrder, emailInvoice } from "@/lib/invoice-service";
+import { applyBulkDiscount, getBulkDiscountPercent } from "@/lib/pricing";
 
 const MAX_QUANTITY_PER_LINE = 500;
 
@@ -73,10 +75,12 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     }
   }
 
+  const bulkDiscountPercent = await getBulkDiscountPercent();
   const lineItems = input.items.map((item) => {
     const product = byId.get(item.productId)!;
-    const unitPrice =
+    const baseUnitPrice =
       viewer.isB2B && product.wholesalePrice ? product.wholesalePrice : product.retailPrice;
+    const unitPrice = applyBulkDiscount(baseUnitPrice, item.quantity, bulkDiscountPercent);
     return {
       productId: product.id,
       quantity: item.quantity,
@@ -186,6 +190,15 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     customer: { name: input.customer.name, email: input.customer.email },
   });
 
+  // Best-effort: an admin can still generate the invoice by hand from the
+  // order detail page if this fails, so a hiccup here shouldn't fail the
+  // order the customer just placed.
+  try {
+    await createDraftInvoiceForOrder(order.id);
+  } catch (error) {
+    console.error(`Failed to auto-generate invoice for order #${order.orderNumber}:`, error);
+  }
+
   return { ok: true, orderNumber: order.orderNumber, id: order.id };
 }
 
@@ -200,11 +213,26 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus, es
   const order = await prisma.order.update({
     where: { id: orderId },
     data: { status, ...(status === "CONFIRMED" && estimatedDeliveryAt ? { estimatedDeliveryAt } : {}) },
-    include: { customer: true },
+    include: { customer: true, invoice: true },
   });
   revalidatePath("/admin/orders");
   revalidatePath("/admin");
 
   await sendOrderStatusEmail(order);
+
+  // Fulfillment is the point an invoice should actually reach the
+  // customer — best-effort, like the email above: an admin can still send
+  // it by hand from the invoice detail page if this fails.
+  if (status === "FULFILLED" && order.invoice) {
+    try {
+      const result = await emailInvoice(order.invoice.id);
+      if (!result.ok) console.error(`Failed to auto-send invoice for order #${order.orderNumber}: ${result.error}`);
+      revalidatePath(`/admin/invoices/${order.invoice.id}`);
+      revalidatePath("/admin/invoices");
+    } catch (error) {
+      console.error(`Failed to auto-send invoice for order #${order.orderNumber}:`, error);
+    }
+  }
+
   return { ok: true as const };
 }

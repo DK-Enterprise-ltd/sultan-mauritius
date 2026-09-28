@@ -81,10 +81,7 @@
     "resultOne": "product",
     "resultMany": "products",
     "favoritesTitle": "Mauritian Favorites",
-    "unitsLabel": "Units",
-    "packsLabel": "Packs",
-    "unitsSectionTitle": "Units",
-    "packsSectionTitle": "Packs"
+    "bulkDiscountNote": "Buy {min}+ of the same drink and save {percent}%"
   },
   "stockists": {
     "title": "Where to buy",
