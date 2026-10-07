@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { useCart } from "@/lib/cart-context";
 import { formatMur } from "@/lib/format";
 import Button from "@/components/Button/Button";
+import type { PackPhoto } from "@/lib/catalog";
 import styles from "./ProductPicker.module.css";
 
 export type Variant = {
@@ -18,9 +19,13 @@ export type Variant = {
   packCount: number;
   imageUrl: string | null;
   imageUrl2: string | null;
+  packPhotos: PackPhoto[];
   displayPrice: number;
   stockQuantity: number;
 };
+
+// Horizontal drag distance (px) that counts as a swipe rather than a tap.
+const SWIPE_THRESHOLD_PX = 40;
 
 function variantLabel(t: ReturnType<typeof useTranslations>, packCount: number): string {
   if (packCount === 1) return t("single");
@@ -50,13 +55,27 @@ export default function ProductPicker({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
-  // Front photo first, back photo (if this variant has one) second — most
-  // variants only have imageUrl, so photos.length is 1 and no gallery UI shows.
-  const photos = [selected?.imageUrl ?? imageUrl, selected?.imageUrl2].filter(
-    (src): src is string => !!src
-  );
+  // Front photo, back photo (if any), then pack shots. Each photo carries
+  // the bottle count it shows, so moving through the carousel sets the
+  // quantity: 1 on a bottle photo, 6/12/24 on a pack photo. Packs are bought
+  // as that many single bottles; the bulk discount applies at checkout.
+  const photos = [
+    ...[selected?.imageUrl ?? imageUrl, selected?.imageUrl2]
+      .filter((src): src is string => !!src)
+      .map((src) => ({ src, count: 1 })),
+    ...(selected?.packPhotos ?? []).map((p) => ({ src: p.url, count: p.count })),
+  ];
+  const currentPhoto = photos[photoIndex];
+
+  const goToPhoto = (index: number) => {
+    const next = (index + photos.length) % photos.length;
+    setPhotoIndex(next);
+    setQuantity(photos[next].count);
+    setAdded(false);
+  };
 
   const close = () => {
     setOpen(false);
@@ -80,15 +99,28 @@ export default function ProductPicker({
                 ✕
               </button>
 
-              <div className={styles.media}>
-                {photos[photoIndex] && (
+              <div
+                className={styles.media}
+                onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+                onTouchEnd={(e) => {
+                  if (touchStartX === null || photos.length < 2) return;
+                  const dx = e.changedTouches[0].clientX - touchStartX;
+                  setTouchStartX(null);
+                  if (Math.abs(dx) >= SWIPE_THRESHOLD_PX) goToPhoto(photoIndex + (dx < 0 ? 1 : -1));
+                }}
+              >
+                {currentPhoto && (
                   <Image
-                    src={photos[photoIndex]}
+                    key={currentPhoto.src}
+                    src={currentPhoto.src}
                     alt={displayName}
                     fill
                     sizes="240px"
                     className={styles.image}
                   />
+                )}
+                {currentPhoto && currentPhoto.count > 1 && (
+                  <span className={styles.photoCaption}>{variantLabel(t, currentPhoto.count)}</span>
                 )}
                 {photos.length > 1 && (
                   <>
@@ -96,7 +128,7 @@ export default function ProductPicker({
                       type="button"
                       className={`${styles.photoNav} ${styles.photoNavPrev}`}
                       aria-label={t("previousPhoto")}
-                      onClick={() => setPhotoIndex((i) => (i - 1 + photos.length) % photos.length)}
+                      onClick={() => goToPhoto(photoIndex - 1)}
                     >
                       ‹
                     </button>
@@ -104,7 +136,7 @@ export default function ProductPicker({
                       type="button"
                       className={`${styles.photoNav} ${styles.photoNavNext}`}
                       aria-label={t("nextPhoto")}
-                      onClick={() => setPhotoIndex((i) => (i + 1) % photos.length)}
+                      onClick={() => goToPhoto(photoIndex + 1)}
                     >
                       ›
                     </button>
@@ -115,7 +147,7 @@ export default function ProductPicker({
                           type="button"
                           className={`${styles.photoDot} ${i === photoIndex ? styles.photoDotActive : ""}`}
                           aria-label={t("goToPhoto", { index: i + 1 })}
-                          onClick={() => setPhotoIndex(i)}
+                          onClick={() => goToPhoto(i)}
                         />
                       ))}
                     </div>

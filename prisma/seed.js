@@ -30,7 +30,7 @@ const SPARKLING_ASSET_DIR = "/Assets/Products/Sparkling";
 // the other, so those SKUs simply aren't created below.
 const SPARKLING_FLAVORS = [
   { code: "LEM", flavor: "Lemon", retail: 45, single: "Bottle/Normal/Limon-sultan su.png", sixPack: "Small packs/limon.png", bigPack: "Big packs/24`lü Limon.png" },
-  { code: "APP", flavor: "Apple", retail: 45, single: "Bottle/Normal/Elma-sultan su.png", bigPack: "Big packs/24`lü Elma_2.png" },
+  { code: "APP", flavor: "Apple", retail: 45, single: "Bottle/Normal/Elma-sultan su.png", sixPack: "Small packs/elma.png", bigPack: "Big packs/24`lü Elma_2.png" },
   { code: "MAN", flavor: "Mandarin", retail: 45, single: "Bottle/Normal/Mandalina-sultan su.png", sixPack: "Small packs/mandalina.png", bigPack: "Big packs/24`lü Mandalina.png" },
   { code: "SADE", flavor: "Sade", retail: 42, single: "Bottle/Normal/Sade_Teneke-Kapak-sultan su.png", bigPack: "Big packs/24`lü Sade.png" },
   { code: "GAZ", flavor: "Gazoz", retail: 42, single: "Bottle/Normal/Gazoz-sultan su 2 TR.png", sixPack: "Small packs/gazoz .png", bigPack: "Big packs/24`lü Gazoz.png" },
@@ -57,6 +57,10 @@ const sparklingProducts = SPARKLING_FLAVORS.flatMap((f) => {
       stockQuantity: 180,
       lowStockThreshold: 40,
       imageUrl: f.single ? `${SPARKLING_ASSET_DIR}/${f.single}` : null,
+      packPhotos: [
+        f.sixPack && { count: 6, url: `${SPARKLING_ASSET_DIR}/${f.sixPack}` },
+        f.bigPack && { count: 24, url: `${SPARKLING_ASSET_DIR}/${f.bigPack}` },
+      ].filter(Boolean),
     },
   ];
   if (f.sixPack) {
@@ -107,15 +111,15 @@ async function main() {
       // with sharp .flop() into front-corrected.png (2026-09-18). Both
       // sizes also come as a real 12-pack (shrink-wrap photo confirms the
       // count) — no separate bigger case exists in the photography.
-      { sku: "SUL-STL-250", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 250, packCount: 1, retailPrice: "15.00", wholesalePrice: "10.50", stockQuantity: 600, lowStockThreshold: 120, imageUrl: "/Assets/Products/Still/0.25/25lik-yeni-şişe-etiket.png" },
+      { sku: "SUL-STL-250", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 250, packCount: 1, retailPrice: "15.00", wholesalePrice: "10.50", stockQuantity: 600, lowStockThreshold: 120, imageUrl: "/Assets/Products/Still/0.25/25lik-yeni-şişe-etiket.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/0.25/0,25 Litre.png" }] },
       { sku: "SUL-STL-250-12PK", name: "Sultan Spring Water 12-Pack", type: "STILL", flavor: null, sizeMl: 250, packCount: 12, retailPrice: packPrice(15, 12, 0.09), wholesalePrice: packPrice(10.5, 12, 0.09), stockQuantity: 50, lowStockThreshold: 12, imageUrl: "/Assets/Products/Still/0.25/0,25 Litre.png", isActive: false },
-      { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, packCount: 1, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/0.5/0.5.png" },
+      { sku: "SUL-STL-500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 500, packCount: 1, retailPrice: "30.00", wholesalePrice: "21.00", stockQuantity: 500, lowStockThreshold: 100, imageUrl: "/Assets/Products/Still/0.5/0.5.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/0.5/0,5 Litre.png" }] },
       { sku: "SUL-STL-500-12PK", name: "Sultan Spring Water 12-Pack", type: "STILL", flavor: null, sizeMl: 500, packCount: 12, retailPrice: packPrice(30, 12, 0.09), wholesalePrice: packPrice(21, 12, 0.09), stockQuantity: 45, lowStockThreshold: 12, imageUrl: "/Assets/Products/Still/0.5/0,5 Litre.png", isActive: false },
-      { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, packCount: 1, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/1.5/1,5.png" },
+      { sku: "SUL-STL-1500", name: "Sultan Spring Water", type: "STILL", flavor: null, sizeMl: 1500, packCount: 1, retailPrice: "45.00", wholesalePrice: "31.50", stockQuantity: 120, lowStockThreshold: 50, imageUrl: "/Assets/Products/Still/1.5/1,5.png", packPhotos: [{ count: 6, url: "/Assets/Products/Still/1.5/1,5 Litre.png" }] },
       { sku: "SUL-STL-1500-6PK", name: "Sultan Spring Water 6-Pack", type: "STILL", flavor: null, sizeMl: 1500, packCount: 6, retailPrice: packPrice(45, 6, 0.07), wholesalePrice: packPrice(31.5, 6, 0.07), stockQuantity: 30, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/1.5/1,5 Litre.png", isActive: false },
-      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/Prime 0.4/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.4/back.png" },
+      { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/Prime 0.4/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.4/back.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/Prime 0.4/12_pack.png" }] },
       { sku: "SUL-STL-PRIME-400-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 400, packCount: 12, retailPrice: packPrice(40, 12, 0.09), wholesalePrice: packPrice(28, 12, 0.09), stockQuantity: 40, lowStockThreshold: 10, imageUrl: "/Assets/Products/Still/Prime 0.4/12_pack.png", isActive: false },
-      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/Prime 0.8/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.8/back.png" },
+      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/Prime 0.8/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.8/back.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png" }] },
       { sku: "SUL-STL-PRIME-800-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 800, packCount: 12, retailPrice: packPrice(60, 12, 0.09), wholesalePrice: packPrice(42, 12, 0.09), stockQuantity: 25, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png", isActive: false },
 
       // Sparkling line — all eleven real flavours, confirmed against the
@@ -135,6 +139,7 @@ async function main() {
         update: {
           imageUrl: p.imageUrl,
           imageUrl2: p.imageUrl2 ?? null,
+          packPhotos: p.packPhotos ?? [],
           sizeMl: p.sizeMl,
           packCount: p.packCount,
           retailPrice: p.retailPrice,

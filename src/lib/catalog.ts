@@ -70,6 +70,21 @@ export async function getProductById(id: string) {
   return withImage;
 }
 
+export type PackPhoto = { count: number; url: string };
+
+// Product.packPhotos is untyped JSON in the DB; keep only well-formed
+// entries so a hand-edited row can't break the shop's picker.
+export function parsePackPhotos(value: Prisma.JsonValue): PackPhoto[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((entry) => {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) return [];
+    const { count, url } = entry as Record<string, unknown>;
+    if (typeof url !== "string" || !url) return [];
+    if (typeof count !== "number" || !Number.isInteger(count) || count < 2) return [];
+    return [{ count, url }];
+  });
+}
+
 // Single bottle plus its pre-packed multi-buys (6-pack, 24-case) are
 // separate Product rows sharing type/flavor/size; group them here so a
 // card's variant picker can offer pack sizes without a second query.
@@ -85,6 +100,7 @@ export function productVariants(product: Product, allProducts: Product[], viewer
       packCount: v.packCount,
       imageUrl: v.imageUrl,
       imageUrl2: v.imageUrl2,
+      packPhotos: parsePackPhotos(v.packPhotos),
       displayPrice: resolvePrice(v, viewer),
       stockQuantity: v.stockQuantity,
     }));

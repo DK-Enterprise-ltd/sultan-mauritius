@@ -90,6 +90,7 @@ model Product {
   isFeatured        Boolean  @default(false) // shown in the homepage "Featured" strip when true — see FEATURED_SKUS removal in [locale]/(storefront)/page.tsx
   imageUrl          String? // primary/front photo
   imageUrl2         String? // optional second photo (e.g. back label) — shown as a small gallery when set, front photo first
+  packPhotos        Json     @default("[]") // [{ count, url }]: shrink-wrap/case shots shown after the bottle photos in the shop's picker; swiping to one sets quantity to count. Packs aren't separate products any more (see scripts/deactivate-pack-products.js), so this is display only
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
