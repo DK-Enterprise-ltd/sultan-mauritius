@@ -105,8 +105,8 @@ async function main() {
     [
       // Still line — real bottle photography from the customer's official
       // upload (../reference/Customer upload/water). 400/800ml (Prime)
-      // single bottles show the front label first (imageUrl), then the
-      // back label (imageUrl2) as a small gallery on the shop's picker —
+      // single bottles show two photos on the shop's picker (imageUrl, then
+      // imageUrl2): 400ml leads with the front, 800ml with the back label
       // both source front shots were horizontally mirrored, corrected
       // with sharp .flop() into front-corrected.png (2026-09-18). Both
       // sizes also come as a real 12-pack (shrink-wrap photo confirms the
@@ -119,7 +119,7 @@ async function main() {
       { sku: "SUL-STL-1500-6PK", name: "Sultan Spring Water 6-Pack", type: "STILL", flavor: null, sizeMl: 1500, packCount: 6, retailPrice: packPrice(45, 6, 0.07), wholesalePrice: packPrice(31.5, 6, 0.07), stockQuantity: 30, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/1.5/1,5 Litre.png", isActive: false },
       { sku: "SUL-STL-PRIME-400", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 400, packCount: 1, retailPrice: "40.00", wholesalePrice: "28.00", stockQuantity: 200, lowStockThreshold: 40, imageUrl: "/Assets/Products/Still/Prime 0.4/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.4/back.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/Prime 0.4/12_pack.png" }] },
       { sku: "SUL-STL-PRIME-400-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 400, packCount: 12, retailPrice: packPrice(40, 12, 0.09), wholesalePrice: packPrice(28, 12, 0.09), stockQuantity: 40, lowStockThreshold: 10, imageUrl: "/Assets/Products/Still/Prime 0.4/12_pack.png", isActive: false },
-      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/Prime 0.8/front-corrected.png", imageUrl2: "/Assets/Products/Still/Prime 0.8/back.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png" }] },
+      { sku: "SUL-STL-PRIME-800", name: "Sultan Prime", type: "STILL", flavor: null, sizeMl: 800, packCount: 1, retailPrice: "60.00", wholesalePrice: "42.00", stockQuantity: 90, lowStockThreshold: 30, imageUrl: "/Assets/Products/Still/Prime 0.8/back.png", imageUrl2: "/Assets/Products/Still/Prime 0.8/front-corrected.png", packPhotos: [{ count: 12, url: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png" }] },
       { sku: "SUL-STL-PRIME-800-12PK", name: "Sultan Prime 12-Pack", type: "STILL", flavor: null, sizeMl: 800, packCount: 12, retailPrice: packPrice(60, 12, 0.09), wholesalePrice: packPrice(42, 12, 0.09), stockQuantity: 25, lowStockThreshold: 8, imageUrl: "/Assets/Products/Still/Prime 0.8/12_pack_shrink.png", isActive: false },
 
       // Sparkling line — all eleven real flavours, confirmed against the
