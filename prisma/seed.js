@@ -106,8 +106,8 @@ async function main() {
       // Still line — real bottle photography from the customer's official
       // upload (../reference/Customer upload/water). 400/800ml (Prime)
       // single bottles show two photos on the shop's picker (imageUrl, then
-      // imageUrl2): 400ml leads with the front, 800ml with the back label
-      // both source front shots were horizontally mirrored, corrected
+      // imageUrl2): 400ml leads with the front, 800ml with the back label.
+      // Both source front shots were horizontally mirrored, corrected
       // with sharp .flop() into front-corrected.png (2026-09-18). Both
       // sizes also come as a real 12-pack (shrink-wrap photo confirms the
       // count) — no separate bigger case exists in the photography.
