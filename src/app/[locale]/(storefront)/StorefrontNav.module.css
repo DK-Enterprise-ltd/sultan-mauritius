@@ -194,12 +194,19 @@
   background: var(--sultan-navy);
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 1.25rem 1.5rem;
-  gap: 1rem;
+  padding: 0.25rem 1.25rem 1.25rem;
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
   box-shadow: 0 12px 24px rgba(20, 24, 31, 0.18);
+}
+
+/* Each link is a full 44px row (the minimum comfortable tap target) rather
+   than 22px of text separated by a gap that wasn't tappable. */
+.mobileMenu a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .mobileMenu a:hover {
