@@ -1,6 +1,7 @@
 import { Document, Page, Text, View, Svg, Path, StyleSheet } from "@react-pdf/renderer";
 import type { Invoice, Order, OrderItem, Product, Customer } from "@prisma/client";
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact-info";
+import { taglineForOrder } from "@/lib/product-lines";
 
 // Sultan wordmark, traced from public/Assets/Logo/logo.svg (viewBox 0 0 142.38 36.18).
 // react-pdf's <Image> can't render an .svg file directly, so the path data is
@@ -278,7 +279,7 @@ export function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfData }) {
             overlapped by the invoice body above. */}
         <View style={styles.footer} fixed>
           <Text style={styles.footerText}>
-            Sultan Mauritius (Grignoti Ltd) · Premium Natural Mineral Water
+            Sultan Mauritius (Grignoti Ltd) · {taglineForOrder(order.items.map((item) => item.product.type)).long}
           </Text>
         </View>
       </Page>

@@ -182,12 +182,14 @@ export async function createOrder(input: OrderInput): Promise<OrderResult> {
     status: "PENDING",
     total: order.total,
     customer: { name: input.customer.name, email: input.customer.email },
+    productTypes: products.map((p) => p.type),
   });
   await sendNewOrderAdminNotification({
     orderNumber: order.orderNumber,
     total: order.total,
     orderId: order.id,
     customer: { name: input.customer.name, email: input.customer.email },
+    productTypes: products.map((p) => p.type),
   });
 
   // Best-effort: an admin can still generate the invoice by hand from the
@@ -213,12 +215,12 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus, es
   const order = await prisma.order.update({
     where: { id: orderId },
     data: { status, ...(status === "CONFIRMED" && estimatedDeliveryAt ? { estimatedDeliveryAt } : {}) },
-    include: { customer: true, invoice: true },
+    include: { customer: true, invoice: true, items: { select: { product: { select: { type: true } } } } },
   });
   revalidatePath("/admin/orders");
   revalidatePath("/admin");
 
-  await sendOrderStatusEmail(order);
+  await sendOrderStatusEmail({ ...order, productTypes: order.items.map((item) => item.product.type) });
 
   // Fulfillment is the point an invoice should actually reach the
   // customer — best-effort, like the email above: an admin can still send

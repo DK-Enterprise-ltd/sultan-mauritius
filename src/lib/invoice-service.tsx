@@ -68,6 +68,7 @@ export async function emailInvoice(invoiceId: string): Promise<EmailInvoiceResul
       dueDate: invoice.dueDate,
       balanceDue: invoice.balanceDue,
       customer: invoice.order.customer,
+      productTypes: invoice.order.items.map((item) => item.product.type),
       pdfBuffer,
     });
   } catch (error) {

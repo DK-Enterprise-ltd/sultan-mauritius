@@ -1,7 +1,8 @@
 import { Resend } from "resend";
-import type { OrderStatus } from "@prisma/client";
+import type { OrderStatus, ProductType } from "@prisma/client";
 import { formatMur } from "@/lib/format";
 import { SITE_URL } from "@/lib/seo";
+import { taglineForOrder, type OrderTagline } from "@/lib/product-lines";
 
 // Lazy: `new Resend(undefined)` throws synchronously at construction, not
 // just on send. Since this whole module is imported by createOrder (via
@@ -37,7 +38,7 @@ export function getEmailDiagnostics() {
   };
 }
 
-function wrapHtmlEmail(title: string, bodyHtml: string) {
+function wrapHtmlEmail(title: string, bodyHtml: string, tagline: OrderTagline = taglineForOrder()) {
   return `
 <!DOCTYPE html>
 <html>
@@ -54,7 +55,7 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
           <tr>
             <td style="background-color: #1b2a4a; padding: 24px; text-align: center;">
               <h1 style="color: #ffffff; font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.5px; font-family: Georgia, serif;">Sultan Mauritius</h1>
-              <p style="color: #4fb8d6; font-size: 12px; margin: 4px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">Natural Mineral Water</p>
+              <p style="color: #4fb8d6; font-size: 12px; margin: 4px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">${tagline.short}</p>
             </td>
           </tr>
           <tr>
@@ -65,7 +66,7 @@ function wrapHtmlEmail(title: string, bodyHtml: string) {
           <tr>
             <td style="background-color: #f8fafc; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b;">
               <p style="margin: 0 0 4px 0;"><strong>Sultan Mauritius</strong>, a brand of Grignoti Ltd</p>
-              <p style="margin: 0;">Premium Mineral Water Sourced from Turkey</p>
+              <p style="margin: 0;">${tagline.long}</p>
             </td>
           </tr>
         </table>
@@ -111,6 +112,7 @@ const STATUS_COPY: Partial<Record<OrderStatus, { subject: string; body: (orderNu
 };
 
 type StatusEmailOrder = {
+  productTypes?: ProductType[]; // what was ordered, picks the tagline (see taglineForOrder)
   orderNumber: number;
   status: OrderStatus;
   total: Parameters<typeof formatMur>[0];
@@ -118,6 +120,7 @@ type StatusEmailOrder = {
 };
 
 type InvoiceEmailPayload = {
+  productTypes?: ProductType[]; // what was ordered, picks the tagline (see taglineForOrder)
   invoiceNumber: number;
   orderNumber: number;
   dueDate: Date | null;
@@ -147,7 +150,8 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailPayload): Promise<vo
       `<p style="margin: 0; font-size: 16px; font-weight: 600; color: #1b2a4a;">Balance due: ${formatMur(invoice.balanceDue)}</p>` +
       `<p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">${dueLine}</p>` +
       `</div>` +
-      `<p>Thank you,<br/>Sultan Mauritius Team</p>`
+      `<p>Thank you,<br/>Sultan Mauritius Team</p>`,
+    taglineForOrder(invoice.productTypes)
   );
 
   await getResend().emails.send({
@@ -172,6 +176,7 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailPayload): Promise<vo
 const ADMIN_NOTIFICATION_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || "hello@sultan.mu";
 
 type NewOrderNotification = {
+  productTypes?: ProductType[]; // what was ordered, picks the tagline (see taglineForOrder)
   orderNumber: number;
   orderId: string;
   total: Parameters<typeof formatMur>[0];
@@ -190,7 +195,8 @@ export async function sendNewOrderAdminNotification(order: NewOrderNotification)
     `New order #${order.orderNumber}`,
     `<h2 style="margin-top: 0; color: #1b2a4a; font-size: 18px;">New order #${order.orderNumber}</h2>` +
       `<p>${order.customer.name} (${order.customer.email}) just placed an order for ${formatMur(order.total)}.</p>` +
-      `<p><a href="${orderUrl}">Review it in the admin panel</a> to confirm and set a delivery ETA.</p>`
+      `<p><a href="${orderUrl}">Review it in the admin panel</a> to confirm and set a delivery ETA.</p>`,
+    taglineForOrder(order.productTypes)
   );
 
   try {
@@ -229,7 +235,8 @@ export async function sendOrderStatusEmail(order: StatusEmailOrder) {
       `<p>Hi ${order.customer.name},</p>` +
       `${innerHtml}` +
       `<p style="margin-top: 20px; font-weight: 600; color: #1b2a4a;">Order Total: ${formatMur(order.total)}</p>` +
-      `<p>Thank you,<br/>Sultan Mauritius Team</p>`
+      `<p>Thank you,<br/>Sultan Mauritius Team</p>`,
+    taglineForOrder(order.productTypes)
   );
 
   try {
