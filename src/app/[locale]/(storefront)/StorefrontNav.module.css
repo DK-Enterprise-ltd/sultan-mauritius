@@ -229,6 +229,42 @@
   }
 }
 
+/* Small phones (320-400px): logo, EN/FR, cart and menu button don't fit at
+   the 640px sizes, and the menu button got pushed past the right edge
+   (worst in French, where "Panier" plus a count badge is wider). */
+@media (max-width: 400px) {
+  .nav {
+    padding: 0 0.875rem;
+    gap: 0.5rem;
+  }
+  .logo {
+    flex-shrink: 0;
+  }
+  .logoImg {
+    height: 24px;
+  }
+  .logoTag {
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+  }
+  .right {
+    gap: 0.55rem;
+  }
+  .langSwitch {
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
+  .cart {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.75rem;
+  }
+  .menuToggle {
+    /* keep the 44px tap target, but let its empty padding sit in the
+       nav's own edge padding instead of taking row width */
+    margin-right: -0.5rem;
+  }
+}
+
 /* Grignoti Store link: a small orange dot (the Grignoti logo color) marks
    it as a separate shop from the Sultan water pages. */
 .grignotiLink {
