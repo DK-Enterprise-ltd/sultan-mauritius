@@ -16,6 +16,16 @@ Mauritius since March 2021). Two product lines:
   "Prime" line at 400ml/800ml; 0.25L is called out in the catalogue as the
   format Mauritians favor for gatherings/events.
 
+A second, separately branded shop, the **Grignoti Store** (`/grignoti`,
+orange palette from its logo at `public/Assets/Logo/grignoti-logo.png`),
+sells drinks, snacks and misc items. It is not a second system: its
+products are ordinary `Product` rows with type `DRINK`/`SNACK`/`MISC`
+(`src/lib/product-lines.ts`), so they share stock, the admin add/edit form,
+the cart and checkout with the Sultan water. Sultan pages read through
+`getActiveSultanProducts()`, the Grignoti page through
+`getActiveGrignotiProducts()` (`src/lib/catalog.ts`). Grignoti items have
+no `/products/[id]` detail page, and `sizeMl` is optional for them.
+
 Sells both **B2C** (individuals) and **B2B** (restaurants, supermarkets,
 wholesale) with separate pricing. No online payment: bank transfer or
 cash on delivery only.
@@ -232,7 +242,8 @@ docs/security-checklist.md          project-specific security audit
   brand catalogue. Useful for brand story and flavor range, but the local
   Mauritius SKU lineup actually sold is `prisma/seed.js`. Some catalogue
   pages carry a leftover "Grignoti" watermark from the source template;
-  ignore it, it isn't part of the Sultan brand.
+  ignore it there. (Grignoti is now also the client's separate snack store,
+  see above, but the catalogue watermark is unrelated.)
 
 ## Content model
 

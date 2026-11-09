@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getActiveProducts, getProductById, getProductCopyBySku } from "@/lib/catalog";
+import { getActiveSultanProducts, getProductById, getProductCopyBySku, isSultanProduct } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { formatMur } from "@/lib/format";
@@ -21,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = params.locale as Locale;
   const product = await getProductById(params.id);
-  if (!product) return {};
+  if (!product || !isSultanProduct(product)) return {};
 
   const name = localizeProductName(product.name, locale);
   const flavor = localizeFlavor(product.flavor, locale);
@@ -45,7 +45,9 @@ export default async function ProductDetailPage({
   const tProduct = await getTranslations("product");
   const viewer = getViewer();
   const product = await getProductById(params.id);
-  if (!product || !product.isActive) notFound();
+  // Grignoti Store items have no detail page of their own (their cards on
+  // /grignoti add straight to cart), so this page is Sultan water only.
+  if (!product || !product.isActive || !isSultanProduct(product)) notFound();
 
   const locale = params.locale as Locale;
   const name = localizeProductName(product.name, locale);
@@ -57,7 +59,7 @@ export default async function ProductDetailPage({
   // Single bottle and its pre-packed multi-buys (6-pack, 24-case) are
   // separate Product rows sharing type/flavor/size; group them here as
   // variants of one page instead of listing packs as their own shop entries.
-  const variants = (await getActiveProducts())
+  const variants = (await getActiveSultanProducts())
     .filter((p) => p.type === product.type && p.flavor === product.flavor && p.sizeMl === product.sizeMl)
     .sort((a, b) => a.packCount - b.packCount);
   const variantLabel = (packCount: number) =>

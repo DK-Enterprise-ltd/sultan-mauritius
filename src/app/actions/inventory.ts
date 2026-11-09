@@ -7,8 +7,21 @@ import { Prisma, ProductType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
 import { cleanStr } from "@/lib/validate";
+import { isSultanType } from "@/lib/product-lines";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+/** Sultan water lines need a volume; Grignoti Store items (snacks, misc)
+ * may leave it blank. Returns the parsed size, or an error message. */
+function parseSizeMl(raw: FormDataEntryValue | null, type: ProductType): { sizeMl: number | null } | { error: string } {
+  const text = String(raw ?? "").trim();
+  if (!text) {
+    return isSultanType(type) ? { error: "Size (ml) is required for Sultan water products." } : { sizeMl: null };
+  }
+  const sizeMl = Number(text);
+  if (!Number.isInteger(sizeMl) || sizeMl <= 0) return { error: "Size (ml) must be a positive whole number." };
+  return { sizeMl };
+}
 
 /** Admin-only: adjusts a product's stock up or down and logs a
  * StockMovement for it. Stock never goes below 0 — delta is clamped to the
@@ -54,7 +67,6 @@ export async function createProduct(formData: FormData) {
   const name = cleanStr(String(formData.get("name") ?? ""), 120);
   const type = String(formData.get("type") ?? "");
   const flavor = cleanStr(String(formData.get("flavor") ?? ""), 60) || null;
-  const sizeMl = Number(formData.get("sizeMl"));
   const packCount = Number(formData.get("packCount") || 1);
   const retailPrice = Number(formData.get("retailPrice"));
   const wholesalePriceRaw = String(formData.get("wholesalePrice") ?? "").trim();
@@ -66,7 +78,9 @@ export async function createProduct(formData: FormData) {
 
   if (!sku || !name) return fail("SKU and name are required.");
   if (!Object.values(ProductType).includes(type as ProductType)) return fail("Choose a product type.");
-  if (!Number.isInteger(sizeMl) || sizeMl <= 0) return fail("Size (ml) must be a positive whole number.");
+  const size = parseSizeMl(formData.get("sizeMl"), type as ProductType);
+  if ("error" in size) return fail(size.error);
+  const { sizeMl } = size;
   if (!Number.isInteger(packCount) || packCount <= 0) return fail("Pack count must be a positive whole number.");
   if (!Number.isFinite(retailPrice) || retailPrice <= 0) return fail("Retail price must be a positive number.");
   if (!Number.isInteger(stockQuantity) || stockQuantity < 0) return fail("Starting stock must be a whole number.");
@@ -130,7 +144,6 @@ export async function updateProduct(productId: string, formData: FormData) {
   const name = cleanStr(String(formData.get("name") ?? ""), 120);
   const type = String(formData.get("type") ?? "");
   const flavor = cleanStr(String(formData.get("flavor") ?? ""), 60) || null;
-  const sizeMl = Number(formData.get("sizeMl"));
   const packCount = Number(formData.get("packCount") || 1);
   const retailPrice = Number(formData.get("retailPrice"));
   const wholesalePriceRaw = String(formData.get("wholesalePrice") ?? "").trim();
@@ -145,7 +158,9 @@ export async function updateProduct(productId: string, formData: FormData) {
 
   if (!sku || !name) return fail("SKU and name are required.");
   if (!Object.values(ProductType).includes(type as ProductType)) return fail("Choose a product type.");
-  if (!Number.isInteger(sizeMl) || sizeMl <= 0) return fail("Size (ml) must be a positive whole number.");
+  const size = parseSizeMl(formData.get("sizeMl"), type as ProductType);
+  if ("error" in size) return fail(size.error);
+  const { sizeMl } = size;
   if (!Number.isInteger(packCount) || packCount <= 0) return fail("Pack count must be a positive whole number.");
   if (!Number.isFinite(retailPrice) || retailPrice <= 0) return fail("Retail price must be a positive number.");
   if (!Number.isInteger(lowStockThreshold) || lowStockThreshold < 0) return fail("Low stock threshold must be a whole number.");

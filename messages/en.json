@@ -6,7 +6,8 @@
     "wholesale": "Wholesale",
     "contact": "Contact",
     "cart": "Cart",
-    "menu": "Menu"
+    "menu": "Menu",
+    "grignoti": "Grignoti"
   },
   "home": {
     "heroKicker": "Pure. Elegant. Timeless.",
@@ -258,12 +259,29 @@
     "stockistsDescription": "Find Sultan mineral water at supermarkets, restaurants, and mini shops across Mauritius.",
     "productTitle": "{name}",
     "cartTitle": "Your Cart",
-    "checkoutTitle": "Order Review"
+    "checkoutTitle": "Order Review",
+    "grignotiTitle": "Grignoti Store: Drinks, Snacks & More",
+    "grignotiDescription": "Drinks, snacks and little extras from the Grignoti Store, delivered across Mauritius alongside your Sultan order."
   },
   "notFound": {
     "title": "Page not found",
     "body": "The page you're looking for doesn't exist, or may have moved.",
     "cta": "Back to shop",
     "ctaHome": "Go home"
+  },
+  "grignoti": {
+    "title": "Grignoti Store",
+    "tagline": "Drinks, snacks and little extras. Add them to the same cart as your Sultan order.",
+    "all": "All",
+    "drinks": "Drinks",
+    "snacks": "Snacks",
+    "misc": "Misc",
+    "empty": "Nothing here yet. Check back soon.",
+    "addToCart": "Add to cart",
+    "added": "Added",
+    "outOfStock": "Out of stock",
+    "resultOne": "item",
+    "resultMany": "items",
+    "categories": "Categories"
   }
 }

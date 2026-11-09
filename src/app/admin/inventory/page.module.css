@@ -198,3 +198,28 @@
   font-size: 0.75rem;
   white-space: normal;
 }
+
+.storeFilter {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.storeFilterLink {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3f3f46;
+}
+
+.storeFilterLink:hover {
+  border-color: #71717a;
+}
+
+.storeFilterActive {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}

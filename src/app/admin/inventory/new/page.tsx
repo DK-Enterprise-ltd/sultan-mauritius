@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { createProduct } from "@/app/actions/inventory";
+import ProductTypeOptions from "../ProductTypeOptions";
 import pageStyles from "../../page.module.css";
 import styles from "./page.module.css";
 
@@ -33,17 +34,16 @@ export default function NewProductPage({ searchParams }: { searchParams: { error
               <option value="" disabled>
                 Choose type
               </option>
-              <option value="STILL">Still</option>
-              <option value="SPARKLING">Sparkling</option>
+              <ProductTypeOptions />
             </select>
           </label>
           <label className={styles.field}>
-            Flavor
-            <input name="flavor" maxLength={60} placeholder="Sparkling only, e.g. Mojito" />
+            Flavor / variant
+            <input name="flavor" maxLength={60} placeholder="e.g. Mojito, or Salt & Vinegar" />
           </label>
           <label className={styles.field}>
-            Size (ml) *
-            <input name="sizeMl" type="number" min="1" required />
+            Size (ml)
+            <input name="sizeMl" type="number" min="1" placeholder="Required for Sultan water" />
           </label>
           <label className={styles.field}>
             Pack count

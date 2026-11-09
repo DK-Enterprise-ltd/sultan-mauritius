@@ -1,0 +1,186 @@
+/* Grignoti Store palette, sampled from the Grignoti logo. Scoped to this
+   page's wrapper so the Sultan pages keep their own tokens. */
+.page {
+  --gri-orange: #ed7c38;
+  --gri-orange-soft: #f29457;
+  --gri-orange-deep: #c9561f;
+  --gri-cream: #fff6ec;
+  --gri-cream-deep: #fde7d2;
+  --gri-ink: #3a1f0f;
+  --gri-ink-soft: #7a5440;
+  --gri-line: #f3d5bd;
+
+  background: var(--gri-cream);
+  min-height: 100vh;
+  padding-bottom: 6rem;
+}
+
+.hero {
+  background: var(--gri-orange);
+  /* Light speckle, like the paper texture behind the logo. */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.6px);
+  background-size: 22px 22px;
+  border-bottom: 6px solid var(--gri-orange-deep);
+  padding: 2.75rem 2.5rem 3.25rem;
+}
+
+.heroInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  box-shadow: 0 8px 0 var(--gri-orange-deep);
+}
+
+.heroText {
+  color: #fff;
+}
+
+.title {
+  font-family: var(--font-grignoti), var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 4px 0 var(--gri-orange-deep);
+}
+
+.tagline {
+  margin-top: 0.85rem;
+  max-width: 36rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.5rem 2.5rem 0;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  border: 2px solid var(--gri-orange);
+  background: #fff;
+  color: var(--gri-orange-deep);
+  font-family: var(--font-grignoti), var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.tab:hover {
+  background: var(--gri-cream-deep);
+}
+
+.tab:focus-visible {
+  outline: 3px solid var(--gri-ink);
+  outline-offset: 2px;
+}
+
+.tabActive,
+.tabActive:hover {
+  background: var(--gri-orange);
+  color: #fff;
+  box-shadow: 0 3px 0 var(--gri-orange-deep);
+}
+
+.tabCount {
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--gri-cream-deep);
+  color: var(--gri-orange-deep);
+  text-align: center;
+}
+
+.tabActive .tabCount {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.resultCount {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--gri-ink-soft);
+}
+
+.grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty {
+  margin-top: 3rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border: 2px dashed var(--gri-line);
+  border-radius: 22px;
+  color: var(--gri-ink-soft);
+  font-family: var(--font-grignoti), var(--font-display), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 1.75rem 1rem 2.25rem;
+  }
+  .heroInner {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .logo {
+    width: 120px;
+    height: 120px;
+  }
+  .tagline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .content {
+    padding: 1.75rem 1rem 0;
+  }
+  .resultCount {
+    width: 100%;
+    margin-left: 0;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

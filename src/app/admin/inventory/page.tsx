@@ -3,6 +3,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
 import { isAdmin } from "@/lib/auth";
+import { GRIGNOTI_TYPES, PRODUCT_TYPE_LABELS, SULTAN_TYPES } from "@/lib/product-lines";
 import { ADMIN_PAGE_SIZE, parsePage, paginateRows } from "@/lib/pagination";
 import PaginationControls from "../PaginationControls";
 import styles from "../page.module.css";
@@ -17,12 +18,16 @@ export const dynamic = "force-dynamic";
 export default async function AdminInventoryPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: { page?: string; store?: string };
 }) {
   if (!isAdmin()) return null;
 
   const page = parsePage(searchParams.page);
+  const store = searchParams.store === "sultan" || searchParams.store === "grignoti" ? searchParams.store : undefined;
+  const typeFilter =
+    store === "sultan" ? { type: { in: [...SULTAN_TYPES] } } : store === "grignoti" ? { type: { in: [...GRIGNOTI_TYPES] } } : {};
   const productRows = await prisma.product.findMany({
+    where: typeFilter,
     orderBy: { name: "asc" },
     skip: (page - 1) * ADMIN_PAGE_SIZE,
     take: ADMIN_PAGE_SIZE + 1,
@@ -37,6 +42,22 @@ export default async function AdminInventoryPage({
           + Add product
         </Link>
       </div>
+
+      <nav className={rowStyles.storeFilter} aria-label="Filter by store">
+        {[
+          { key: undefined, label: "All" },
+          { key: "sultan", label: "Sultan water" },
+          { key: "grignoti", label: "Grignoti Store" },
+        ].map(({ key, label }) => (
+          <Link
+            key={label}
+            href={key ? `/admin/inventory?store=${key}` : "/admin/inventory"}
+            className={`${rowStyles.storeFilterLink} ${store === key ? rowStyles.storeFilterActive : ""}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
 
       <div className={styles.section}>
         <table className={styles.table}>
@@ -84,7 +105,7 @@ export default async function AdminInventoryPage({
                       {p.name}
                     </Link>
                   </td>
-                  <td>{p.type}</td>
+                  <td>{PRODUCT_TYPE_LABELS[p.type]}</td>
                   <td className={low ? rowStyles.lowValue : undefined}>
                     <StockAdjuster productId={p.id} quantity={p.stockQuantity} />
                   </td>

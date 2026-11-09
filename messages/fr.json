@@ -6,7 +6,8 @@
     "wholesale": "Grossiste",
     "contact": "Contact",
     "cart": "Panier",
-    "menu": "Menu"
+    "menu": "Menu",
+    "grignoti": "Grignoti"
   },
   "home": {
     "heroKicker": "Pure. Élégante. Intemporelle.",
@@ -258,12 +259,29 @@
     "stockistsDescription": "Retrouvez l'eau minérale Sultan dans les supermarchés, restaurants et petites boutiques à travers l'île Maurice.",
     "productTitle": "{name}",
     "cartTitle": "Votre panier",
-    "checkoutTitle": "Récapitulatif de commande"
+    "checkoutTitle": "Récapitulatif de commande",
+    "grignotiTitle": "Grignoti Store : boissons, snacks et plus",
+    "grignotiDescription": "Boissons, snacks et petits extras du Grignoti Store, livrés partout à Maurice avec votre commande Sultan."
   },
   "notFound": {
     "title": "Page introuvable",
     "body": "La page que vous cherchez n'existe pas, ou a peut-être été déplacée.",
     "cta": "Voir la boutique",
     "ctaHome": "Retour à l'accueil"
+  },
+  "grignoti": {
+    "title": "Grignoti Store",
+    "tagline": "Boissons, snacks et petits extras. Ajoutez-les au même panier que votre commande Sultan.",
+    "all": "Tout",
+    "drinks": "Boissons",
+    "snacks": "Snacks",
+    "misc": "Divers",
+    "empty": "Rien pour l'instant. Revenez bientôt.",
+    "addToCart": "Ajouter au panier",
+    "added": "Ajouté",
+    "outOfStock": "Rupture de stock",
+    "resultOne": "article",
+    "resultMany": "articles",
+    "categories": "Catégories"
   }
 }

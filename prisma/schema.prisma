@@ -17,9 +17,16 @@ datasource db {
 // Enums
 // ---------------------------------------------------------------------------
 
+// STILL/SPARKLING are the Sultan water lines (/products). DRINK/SNACK/MISC
+// are the Grignoti Store's categories (/grignoti): same Product table, same
+// stock, cart, checkout and admin form, just listed on their own page. See
+// src/lib/product-lines.ts for which type belongs to which store.
 enum ProductType {
   STILL
   SPARKLING
+  DRINK
+  SNACK
+  MISC
 }
 
 enum CustomerType {
@@ -80,7 +87,7 @@ model Product {
   name              String
   type              ProductType
   flavor            String? // e.g. "Watermelon Strawberry" — sparkling line only
-  sizeMl            Int
+  sizeMl            Int? // required for Sultan water lines; optional for Grignoti items (a snack has no volume)
   packCount         Int      @default(1) // bottles per unit sold: 1 = single, 6/24 = pre-packed multi-buy
   retailPrice       Decimal  @db.Decimal(10, 2) // B2C unit price, MUR
   wholesalePrice    Decimal? @db.Decimal(10, 2) // B2B unit price, MUR — null falls back to retail

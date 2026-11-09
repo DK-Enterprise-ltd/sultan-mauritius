@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/auth";
+import ProductTypeOptions from "../../ProductTypeOptions";
 import { updateProduct } from "@/app/actions/inventory";
 import pageStyles from "../../../page.module.css";
 import formStyles from "../../new/page.module.css";
@@ -49,22 +50,27 @@ export default async function EditProductPage({
           <label className={formStyles.field}>
             Type *
             <select name="type" required defaultValue={product.type}>
-              <option value="STILL">Still</option>
-              <option value="SPARKLING">Sparkling</option>
+              <ProductTypeOptions />
             </select>
           </label>
           <label className={formStyles.field}>
-            Flavor
+            Flavor / variant
             <input
               name="flavor"
               maxLength={60}
               defaultValue={product.flavor ?? ""}
-              placeholder="Sparkling only, e.g. Mojito"
+              placeholder="e.g. Mojito, or Salt & Vinegar"
             />
           </label>
           <label className={formStyles.field}>
-            Size (ml) *
-            <input name="sizeMl" type="number" min="1" required defaultValue={product.sizeMl} />
+            Size (ml)
+            <input
+              name="sizeMl"
+              type="number"
+              min="1"
+              placeholder="Required for Sultan water"
+              defaultValue={product.sizeMl ?? ""}
+            />
           </label>
           <label className={formStyles.field}>
             Pack count

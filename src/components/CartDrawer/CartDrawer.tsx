@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { useCart } from "@/lib/cart-context";
 import { formatMur } from "@/lib/format";
 import { localizeFlavor } from "@/lib/catalog-i18n";
+import { formatSizeMl } from "@/lib/product-lines";
 import type { Locale } from "@/i18n/routing";
 import styles from "./CartDrawer.module.css";
 
@@ -40,7 +41,7 @@ export default function CartDrawer() {
                 <div className={styles.info}>
                   <p className={styles.name}>{item.name}</p>
                   {item.flavor && <p className={styles.meta}>{localizeFlavor(item.flavor, locale)}</p>}
-                  <p className={styles.meta}>{item.sizeMl}ml</p>
+                  {item.sizeMl ? <p className={styles.meta}>{formatSizeMl(item.sizeMl)}</p> : null}
                   <div className={styles.qty}>
                     <button
                       type="button"

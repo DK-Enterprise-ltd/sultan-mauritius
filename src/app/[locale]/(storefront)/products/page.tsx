@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getActiveProducts, productVariants } from "@/lib/catalog";
+import { getActiveSultanProducts, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice, getBulkDiscountPercent, BULK_DISCOUNT_MIN_QTY } from "@/lib/pricing";
 import { pageMetadata } from "@/lib/seo";
@@ -53,7 +53,9 @@ export default async function ProductsPage({
   const size = searchParams.size;
   const flavor = searchParams.flavor;
 
-  const allProducts = await getActiveProducts();
+  // Sultan water only: Grignoti Store items share the Product table but
+  // are listed on /grignoti, not here (see src/lib/product-lines.ts).
+  const allProducts = await getActiveSultanProducts();
   const bulkDiscountPercent = await getBulkDiscountPercent();
   // Packs (6-pack, 24-case, etc.) are no longer separate purchasable
   // products — they're deactivated Product rows kept only for past order

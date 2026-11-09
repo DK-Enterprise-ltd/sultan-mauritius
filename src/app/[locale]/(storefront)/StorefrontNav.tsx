@@ -47,6 +47,9 @@ export default function StorefrontNav() {
   const navLinks = (
     <>
       <Link href="/products" onClick={() => setMenuOpen(false)}>{t("shop")}</Link>
+      <Link href="/grignoti" className={styles.grignotiLink} onClick={() => setMenuOpen(false)}>
+        {t("grignoti")}
+      </Link>
       <Link href="/about" onClick={() => setMenuOpen(false)}>{t("about")}</Link>
       <Link href="/wholesale" onClick={() => setMenuOpen(false)}>{t("wholesale")}</Link>
       <Link href="/contact" onClick={() => setMenuOpen(false)}>{t("contact")}</Link>

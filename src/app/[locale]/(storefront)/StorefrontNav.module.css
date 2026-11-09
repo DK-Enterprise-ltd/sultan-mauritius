@@ -228,3 +228,19 @@
     font-size: 0.8rem;
   }
 }
+
+/* Grignoti Store link: a small orange dot (the Grignoti logo color) marks
+   it as a separate shop from the Sultan water pages. */
+.grignotiLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.grignotiLink::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #ed7c38;
+}

@@ -2,7 +2,7 @@ import Image, { getImageProps } from "next/image";
 import Script from "next/script";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getActiveProducts, getProductCopyBySku, productVariants } from "@/lib/catalog";
+import { getActiveSultanProducts, getProductCopyBySku, productVariants } from "@/lib/catalog";
 import { getViewer } from "@/lib/auth";
 import { resolvePrice } from "@/lib/pricing";
 import { getSiteContent, pick } from "@/lib/site-content";
@@ -57,7 +57,9 @@ export default async function HomePage() {
   const cWholesale = (key: string) => pick(wholesaleContent, key, locale, tWholesale(key));
   const viewer = getViewer();
 
-  const allProducts = await getActiveProducts();
+  // Sultan water only: Grignoti Store items share the Product table but
+  // are listed on /grignoti, not here (see src/lib/product-lines.ts).
+  const allProducts = await getActiveSultanProducts();
   // Curated by the admin (Inventory list's "Featured" toggle → Product.isFeatured),
   // not a hardcoded SKU list — see setProductFeatured in src/app/actions/inventory.ts.
   const featured = allProducts.filter((p) => p.isFeatured);

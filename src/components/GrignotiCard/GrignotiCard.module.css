@@ -1,0 +1,140 @@
+/* Colors come from the --gri-* tokens set on the /grignoti page wrapper. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 2px solid var(--gri-line);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gri-orange);
+  box-shadow: 0 6px 0 var(--gri-orange-deep);
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--gri-cream-deep);
+  display: grid;
+  place-items: center;
+}
+
+.image {
+  object-fit: contain;
+  padding: 1rem;
+}
+
+.placeholder {
+  font-family: var(--font-grignoti), var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--gri-orange);
+  text-transform: uppercase;
+}
+
+.badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1;
+  background: var(--gri-orange);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem 1.1rem;
+  flex: 1;
+}
+
+.name {
+  font-family: var(--font-grignoti), var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--gri-ink);
+}
+
+.detail {
+  font-size: 0.85rem;
+  color: var(--gri-ink-soft);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-weight: 700;
+  color: var(--gri-ink);
+}
+
+.add {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gri-orange);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  min-height: 40px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--gri-orange-deep);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.add:hover:not(:disabled) {
+  background: var(--gri-orange-deep);
+}
+
+.add:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--gri-orange-deep);
+}
+
+.add:focus-visible {
+  outline: 3px solid var(--gri-ink);
+  outline-offset: 2px;
+}
+
+.add:disabled {
+  background: var(--gri-line);
+  color: var(--gri-ink-soft);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.soldOut .media {
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .add {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}

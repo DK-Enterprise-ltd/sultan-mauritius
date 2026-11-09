@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatMur } from "@/lib/format";
+import { PRODUCT_TYPE_LABELS, formatSizeMl } from "@/lib/product-lines";
 import { isAdmin } from "@/lib/auth";
 import pageStyles from "../../page.module.css";
 import StockAdjuster from "../StockAdjuster";
@@ -64,12 +65,12 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
           <div className={styles.definitionGrid}>
             <div className={styles.definitionRow}>
               <span className={styles.definitionLabel}>Type</span>
-              <span className={styles.definitionValue}>{product.type}</span>
+              <span className={styles.definitionValue}>{PRODUCT_TYPE_LABELS[product.type]}</span>
             </div>
             <div className={styles.definitionRow}>
               <span className={styles.definitionLabel}>Size</span>
               <span className={styles.definitionValue}>
-                {product.sizeMl}ml {product.packCount > 1 ? `× ${product.packCount}` : ""}
+                {formatSizeMl(product.sizeMl) ?? "—"} {product.packCount > 1 ? `× ${product.packCount}` : ""}
               </span>
             </div>
             <div className={styles.definitionRow}>

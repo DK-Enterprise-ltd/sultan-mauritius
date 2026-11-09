@@ -3,6 +3,7 @@ import { Prisma, type Product } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { resolvePrice } from "@/lib/pricing";
 import type { Viewer } from "@/lib/auth";
+import { isGrignotiType, isSultanType, type GrignotiType, type SultanType } from "@/lib/product-lines";
 
 // ponytail: storefront pages were hitting the remote Neon DB fresh on every
 // request (getViewer()'s cookies() call already forces dynamic rendering),
@@ -58,6 +59,29 @@ export async function getActiveProducts() {
   return withCopyImage((await cachedActiveProducts()).map(rehydrate));
 }
 
+/** A Sultan water product: STILL/SPARKLING, always with a volume (the admin
+ * form requires one for these types). */
+export type SultanProduct = Product & { type: SultanType; sizeMl: number };
+export type GrignotiProduct = Product & { type: GrignotiType };
+
+export function isSultanProduct(product: Product): product is SultanProduct {
+  return isSultanType(product.type) && product.sizeMl !== null;
+}
+
+export function isGrignotiProduct(product: Product): product is GrignotiProduct {
+  return isGrignotiType(product.type);
+}
+
+/** Active products for the Sultan water pages (home, /products). */
+export async function getActiveSultanProducts(): Promise<SultanProduct[]> {
+  return (await getActiveProducts()).filter(isSultanProduct);
+}
+
+/** Active products for the Grignoti Store page (/grignoti). */
+export async function getActiveGrignotiProducts(): Promise<GrignotiProduct[]> {
+  return (await getActiveProducts()).filter(isGrignotiProduct);
+}
+
 const cachedProductById = unstable_cache(
   async (id: string) => prisma.product.findUnique({ where: { id } }),
   ["product-by-id"],
@@ -88,7 +112,7 @@ export function parsePackPhotos(value: Prisma.JsonValue): PackPhoto[] {
 // Single bottle plus its pre-packed multi-buys (6-pack, 24-case) are
 // separate Product rows sharing type/flavor/size; group them here so a
 // card's variant picker can offer pack sizes without a second query.
-export function productVariants(product: Product, allProducts: Product[], viewer: Viewer) {
+export function productVariants(product: SultanProduct, allProducts: SultanProduct[], viewer: Viewer) {
   return allProducts
     .filter((p) => p.type === product.type && p.flavor === product.flavor && p.sizeMl === product.sizeMl)
     .sort((a, b) => a.packCount - b.packCount)

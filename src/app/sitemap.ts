@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo";
+import { SULTAN_TYPES } from "@/lib/product-lines";
 
 // Product rows change from the admin panel, not from a redeploy: without
 // this, the sitemap would only ever reflect the catalog as of the last
@@ -11,6 +12,7 @@ export const revalidate = 86400;
 const STATIC_PATHS = [
   "",
   "/products",
+  "/grignoti",
   "/about",
   "/wholesale",
   "/contact",
@@ -28,7 +30,8 @@ const STATIC_PATHS = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await prisma.product.findMany({
-    where: { isActive: true },
+    // Grignoti Store items have no /products/[id] page of their own.
+    where: { isActive: true, type: { in: [...SULTAN_TYPES] } },
     select: { id: true, updatedAt: true },
   });
 

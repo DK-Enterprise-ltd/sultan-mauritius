@@ -6,7 +6,7 @@ export type CartItem = {
   productId: string;
   name: string;
   flavor: string | null;
-  sizeMl: number;
+  sizeMl: number | null; // null for Grignoti items with no volume (snacks, misc)
   imageUrl: string | null;
   unitPrice: number; // retail or wholesale, resolved at add-to-cart time
   quantity: number;
